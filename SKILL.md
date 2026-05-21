@@ -1,6 +1,6 @@
 ---
 name: system-feature-design
-description: Use this skill when the user wants to design a new system feature and needs a complete, AI-development-ready specification. Triggers on requests like "幫我做 system feature design", "我想設計一個新功能", "做一份功能規格", or any request involving feature planning that will be handed off for AI-assisted full-stack development (frontend + backend + UX). Produces a folder of 9 interlinked spec documents covering problem framing, requirements, domain model, system flows, presentation spec, interface contracts, design decisions (ADRs), acceptance criteria, and rollout — designed so each artifact can be claimed by a different role (PM / backend / frontend / UX / QA / SRE) and consumed by AI coding agents downstream.
+description: Use this skill when the user wants to design a new system feature and needs a complete, AI-development-ready specification. Triggers on requests like "幫我做 system feature design", "我想設計一個新功能", "做一份功能規格", "design a new feature spec", "write a feature design document", "create a PRD for X", or any request involving feature planning that will be handed off for AI-assisted full-stack development (frontend + backend + UX). Produces a folder of 9 interlinked spec documents covering problem framing, requirements, domain model, system flows, presentation spec, interface contracts, design decisions (ADRs), acceptance criteria, and rollout — designed so each artifact can be claimed by a different role (PM / backend / frontend / UX / QA / SRE) and consumed by AI coding agents downstream.
 ---
 
 # system-feature-design
@@ -38,6 +38,15 @@ Do NOT use this skill for:
 - The full-spec review flow at the end
 
 Every behavioral guideline below is grounded in this file. **Do not skip reading it.**
+
+### Context budget: read on demand, not upfront
+
+This skill ships with 10 reference guides (`0-skill-mode.md` + 9 per-document guides) and a full example folder. **Do NOT read all of them at the start** — that will burn through context before you start producing.
+
+The correct pattern:
+- **At start**: read only `references/0-skill-mode.md`.
+- **Before each document N**: read only `references/{N}-{name}.guide.md` and `templates/{N}-{name}.template.md`.
+- **Examples folder (`examples/automation-template-export/`)**: **reference only when stuck** — for example, when the user has trouble visualizing what a finished document looks like. It is a "finished product reference", **not a step-by-step SOP to copy**. Do not preload it.
 
 ## Step 2: Opening — collect the minimum from the user
 
@@ -124,7 +133,7 @@ The user may:
 
 Check the reflection checklist in the guide. If anything is incomplete or inconsistent, fix it before moving to the next document. Then give the closing summary and confirm with the user before proceeding.
 
-## Step 4: Document order and output location
+## Step 4: Document order, output location, and write timing
 
 Produce documents in this exact order (later docs reference earlier ones):
 
@@ -141,9 +150,26 @@ Produce documents in this exact order (later docs reference earlier ones):
 Plus:
 - `README.md` — Index, ID system reference, revision history
 
-**Output location**: All files go into a feature-specific folder under `/mnt/user-data/outputs/{feature-name}/`. Create the folder structure mirroring `examples/automation-template-export/`.
+### Output location
+
+Files go into **a `{feature-name}/` folder in the user's current working directory** (not a fixed sandbox path). At the start of the session, decide the folder name with the user — usually a kebab-case slug derived from the feature, e.g. `template-export-import/`. Create the folder structure mirroring `examples/automation-template-export/`.
+
+If the user is in an existing project repo, ask whether to put the spec under `docs/specs/{feature-name}/` or at repo root — don't assume.
 
 Use the corresponding files in `templates/` as the structural starting point — copy and fill in, don't reinvent the structure.
+
+### When to write each file
+
+**Write each document to disk as soon as the user confirms it** (end of step 3e for that document). Do NOT wait until all 9 are done. Reasons:
+- The user can review the actual file between docs.
+- Later docs reference earlier docs by §X.Y — having them on disk lets you re-read instead of re-deriving from memory.
+- If the session is interrupted, work is preserved.
+
+After writing, briefly note the path (`wrote 3-domain-model.md`) so the user knows where it landed.
+
+### When to write README.md
+
+Create `README.md` **immediately after §1 is confirmed** (so it exists as an index from the start), with placeholder rows for §2–§9. Update its Revision History row with `v0.1 — Initial draft` and the current date. After §9 (or §8 if §9 is skipped), do a final pass to make sure all document links and the ID system table are accurate.
 
 ## Step 5: Full-spec review (after all 9 documents)
 
