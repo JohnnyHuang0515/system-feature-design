@@ -26,18 +26,17 @@ Do NOT use this skill for:
 - Architecture decisions at the system-of-systems level (this is feature-scoped)
 - Pure brainstorming / ideation (the user should have at least a rough direction)
 
+## How SKILL.md and 0-skill-mode.md split responsibilities
+
+This SKILL.md is the **flow skeleton** — what to read, what order to produce documents in, where files go, when to write them, the ID system.
+
+`references/0-skill-mode.md` is the **work philosophy** — derive vs ask, the marker system (`[需確認]` / `[待拍板]`), everyday-language questioning style, propagation rules, full-spec review checks.
+
+When this file says "follow the X pattern in 0-skill-mode.md", go read that section there. Don't try to do everything from this file alone.
+
 ## Step 1: Read the working model first
 
-**Before responding to the user**, read `references/0-skill-mode.md` in full. This file defines:
-
-- The **derive → show → verify** loop that applies to every document
-- The marking system: `[需確認]` for Claude's inferences, `[待拍板]` for decisions needing user input
-- When to derive vs when to ask (key principle: derive structure, ask about business/context decisions)
-- Friendly questioning style (avoid technical jargon — use everyday language)
-- Allowing the user to go back and modify previous sections, with propagation
-- The full-spec review flow at the end
-
-Every behavioral guideline below is grounded in this file. **Do not skip reading it.**
+**Before responding to the user**, read `references/0-skill-mode.md` in full. Every behavioral guideline in this skill is grounded in that file — opening pattern, derive-vs-ask judgment, marker rules, propagation, full review checks.
 
 ### Context budget: read on demand, not upfront
 
@@ -46,92 +45,41 @@ This skill ships with 10 reference guides (`0-skill-mode.md` + 9 per-document gu
 The correct pattern:
 - **At start**: read only `references/0-skill-mode.md`.
 - **Before each document N**: read only `references/{N}-{name}.guide.md` and `templates/{N}-{name}.template.md`.
-- **Examples folder (`examples/automation-template-export/`)**: **reference only when stuck** — for example, when the user has trouble visualizing what a finished document looks like. It is a "finished product reference", **not a step-by-step SOP to copy**. Do not preload it.
+- **Examples folder (`examples/automation-template-export/`)**: reference only when stuck — for example, when the user has trouble visualizing what a finished document looks like. It is a "finished product reference", **not a step-by-step SOP to copy**. Do not preload it.
 
-## Step 2: Opening — collect the minimum from the user
+## Step 2: Opening
 
-After reading the skill mode reference, greet the user with:
+Follow the opening pattern defined in `0-skill-mode.md` (the "開場" section): greet, accept the user's one-sentence description, ask at most 1–3 everyday-language follow-ups, then start §1 immediately. Do not ask the user to fill out a structured form.
 
-> 要做新的 system feature design 嗎?跟我說說你想做什麼就好 —
-> 一段話描述「**要做什麼、給誰用、重點是什麼**」即可,細節我會幫你展開。
->
-> 例如:
-> 「我想做模板匯出匯入功能,給 PM 用,重點是讓模板可以跨工作區搬移,
->  也要支援 AI 生成的模板能寫入。」
-
-If the user's response is very brief ("我想做 X"), compensate with 1-2 follow-up questions (NOT 5). Ask in everyday language:
-
-- 你說想做 [X] — 主要想解決什麼困擾?
-- 主要是給誰用?
-
-After getting a basic picture, optionally check 1-3 of these only when relevant:
-- 這是 POC、MVP、還是要直接上 prod?
-- 有時程壓力嗎?
-- 跟哪些既有系統有關聯?
-
-Then start §1 immediately. **Do not ask the user to fill out a structured form**.
-
-## Step 3: For each document, follow the per-document loop
+## Step 3: Per-document loop
 
 The spec has 9 documents, produced in order. For each one:
 
 ### 3a. Read the document's reference guide
 
-Before starting document N, read `references/{N}-{name}.guide.md`. Each guide tells you:
-- What this document is for
-- The opening line to say to the user
-- A derivation table: what to infer from prior documents
-- Required questions (what Claude must ask) vs forbidden questions (what Claude must derive)
-- Open Question candidates (situations needing `[待拍板]`)
-- The display format (usually 3 steps: summary → full content → necessary decisions)
-- Common stuck points and how to handle them
-- Reflection checklist before moving on
-- Closing summary template
+Before starting document N, read `references/{N}-{name}.guide.md` and `templates/{N}-{name}.template.md`. The guide tells you the derivation table, required questions, OQ candidates, display format, stuck points, reflection checklist, and closing summary template.
 
 ### 3b. Derive internally
 
-Use:
-- The user's initial description
-- Previously completed documents
-- The reference guide's derivation table
-- The example folder (`examples/automation-template-export/`) as a reference if needed
+Use the user's initial description, previously completed documents on disk, and the guide's derivation table. Apply the **derive vs ask** judgment from `0-skill-mode.md` — derive structure, ask about business/context decisions.
 
-**Mark inferences clearly**:
-- `[需確認]` — Claude inferred this, user should verify (default for inferred numbers, persona pain points, derived FRs, etc.)
-- `[待拍板]` — Two reasonable options, or missing information; user must decide
+Mark every inference:
+- `[需確認]` — Claude inferred this; user verifies
+- `[待拍板]` — Two reasonable options exist; **must come with options (a)(b)(c) + recommended direction** (see the rule in `0-skill-mode.md`)
 
-**Never fabricate**: if information is missing and can't be inferred, mark `[待拍板]` and ask.
+Never fabricate. If you can't derive and can't form options, stop and ask the user for context.
 
-### 3c. Show to user (3-step display)
+### 3c. Show to user
 
-1. **Summary first** (3-5 lines): the core content of this document
-2. **Full content**: filled-in template with markers visible
-3. **Necessary decisions**: 1-3 items needing the user's call, asked in everyday language
-
-Example of decision-asking style:
-
-> ✅ 「同名模板要怎麼處理?常見做法有三種:
->     (a) 直接拒絕,請使用者改名後再匯入
->     (b) 自動覆蓋
->     (c) 跳出選單讓使用者選『覆蓋 / 建立新的 / 取消』
->     你傾向哪個?」
-
-NOT:
-
-> ❌ 「Idempotency 策略是?同名衝突如何 handle?」
+Use the 3-step display format (summary → full content → necessary decisions) defined in `0-skill-mode.md` and refined per-document in each guide. Ask decisions in everyday language with concrete options, not jargon.
 
 ### 3d. Receive feedback and iterate
 
-The user may:
-- **Confirm** → move to next document
-- **Small fix** → adjust and re-confirm
-- **Major change** → re-derive the affected section
-- **Go back and modify a prior document** → accept, then proactively scan downstream documents for propagation effects; ask the user if they want those synced
-- **Request more detail** → expand the relevant section
+Handle confirm / small fix / major change / back-edit / request-more-detail per the patterns in `0-skill-mode.md`. When the user back-edits a prior document, proactively scan downstream for propagation effects and ask before syncing.
 
-### 3e. Internal reflection before moving on
+### 3e. Reflect, write to disk, and move on
 
-Check the reflection checklist in the guide. If anything is incomplete or inconsistent, fix it before moving to the next document. Then give the closing summary and confirm with the user before proceeding.
+Run the guide's reflection checklist. Fix gaps. Write the document to disk (see Step 4). Give the closing summary. Confirm the user is ready before proceeding to the next document.
 
 ## Step 4: Document order, output location, and write timing
 
@@ -171,48 +119,9 @@ After writing, briefly note the path (`wrote 3-domain-model.md`) so the user kno
 
 Create `README.md` **immediately after §1 is confirmed** (so it exists as an index from the start), with placeholder rows for §2–§9. Update its Revision History row with `v0.1 — Initial draft` and the current date. After §9 (or §8 if §9 is skipped), do a final pass to make sure all document links and the ID system table are accurate.
 
-## Step 5: Full-spec review (after all 9 documents)
+## Step 5: Full-spec review
 
-Once all documents are complete, **proactively ask the user**:
-
-> 9 份文件都完成了!
->
-> 要不要跑一次完整 spec 的總 review?
-> 我會檢查跨文件的一致性,例如:
-> - 所有 FR 是否都有對應的驗收條件
-> - 編號 reference 是否全部對得上
-> - 同一個概念在不同文件描述是否一致
-> - 有沒有遺漏或孤兒內容
->
-> 預估 5-10 分鐘,會列出問題清單讓你決定要不要修。
->
-> 要跑嗎?
-
-If yes, run all 5 checks defined in `references/0-skill-mode.md` (the "完整 spec 做完後的總 review" section):
-1. Cross-document ID reference consistency
-2. Required coverage completeness
-3. Orphan check (defined-but-unused elements)
-4. Concept consistency across documents
-5. Unresolved items
-
-Report results in three buckets:
-- ✅ **Pass** (no action needed)
-- ⚠️ **Warning** (suggest review)
-- ❌ **Error** (recommend fixing)
-
-Offer to fix the Errors and show Warnings on request.
-
-If no, deliver the spec with a brief handoff guide:
-
-> Spec 完成!建議的角色認領:
-> - PM 看 §1, §2, §5, §7, §8
-> - 後端工程師看 §3, §4, §6, §8
-> - 前端工程師看 §5, §6, §8
-> - UX 設計師看 §5
-> - QA 看 §8
-> - SRE 看 §9
->
-> 未來想跑總 review 隨時告訴我。
+After the last document is written, proactively offer the full-spec review. The wording, the 5 check categories, and the result-bucketing format are all defined in `0-skill-mode.md` (the "完整 spec 做完後的總 review" section). If the user declines, deliver the handoff guide (role-by-section reading recommendations).
 
 ## ID system (used across all documents)
 
@@ -233,61 +142,32 @@ If no, deliver the spec with a brief handoff guide:
 
 When introducing new items in any section, automatically assign the next number in sequence and tell the user explicitly (e.g., "I'm adding this as FR-3").
 
-## Key principles (summary)
-
-1. **Derive > ask** — Claude does the structural work; user provides direction and decisions
-2. **Show > silently fill** — every derivation is displayed for user verification
-3. **Everyday language > jargon** — see vocabulary table in `0-skill-mode.md`
-4. **Two markers, not five** — `[需確認]` and `[待拍板]` only
-5. **Cross-document consistency matters** — for AI development handoff, references must be exact
-6. **Allow backtracking** — user can go back any time; Claude propagates changes
-7. **End with optional full review** — ask, don't force
-
 ## Folder structure (this skill)
 
 ```
 system-feature-design/
-├── SKILL.md                          (this file)
+├── SKILL.md                          (this file — flow skeleton)
 ├── templates/                        (structural skeletons to fill)
 │   ├── README.template.md
 │   ├── 1-problem-scope.template.md
-│   ├── 2-requirements.template.md
-│   ├── 3-domain-model.template.md
-│   ├── 4-flows.template.md
-│   ├── 5-presentation-spec.template.md
-│   ├── 6-interfaces.template.md
-│   ├── 7-decisions.template.md
-│   ├── 8-acceptance.template.md
-│   ├── 9-rollout.template.md
+│   ├── ... (2-9)
 │   └── decisions/
 │       └── NNNN-template.md
 ├── references/                       (how-to guides for Claude)
-│   ├── 0-skill-mode.md               ← READ FIRST
+│   ├── 0-skill-mode.md               ← READ FIRST (work philosophy)
 │   ├── 1-problem-scope.guide.md
-│   ├── 2-requirements.guide.md
-│   ├── 3-domain-model.guide.md
-│   ├── 4-flows.guide.md
-│   ├── 5-presentation-spec.guide.md
-│   ├── 6-interfaces.guide.md
-│   ├── 7-decisions.guide.md
-│   ├── 8-acceptance.guide.md
-│   └── 9-rollout.guide.md
-└── examples/                         (filled-out example for reference)
+│   └── ... (2-9)
+└── examples/                         (filled-out example — reference only when stuck)
     └── automation-template-export/
-        ├── README.md
-        ├── 1-problem-scope.md
-        ├── ... (all 9 docs)
-        └── decisions/
-            └── 0001-*.md, etc.
 ```
 
 ## Final reminder
 
-This skill produces specs that will be read by AI coding agents. Cross-document precision is the whole point — vague references defeat the purpose. Always:
+This skill produces specs that will be read by AI coding agents. Cross-document precision is the whole point. Always:
 
 - Use exact IDs (FR-3, not "the third requirement")
-- Mark inferences with `[需確認]`, never leave them ambiguous
-- Mark open decisions with `[待拍板]`, never invent business rules
+- Mark inferences with `[需確認]`
+- Mark open decisions with `[待拍板]` **together with options + recommendation** — never standalone
 - Verify with the user before moving on
 
-If at any point you're uncertain about scope or direction, **stop and ask the user**, in everyday language, with a concrete choice rather than an open question.
+If you're uncertain about scope or direction, stop and ask in everyday language with a concrete choice.
