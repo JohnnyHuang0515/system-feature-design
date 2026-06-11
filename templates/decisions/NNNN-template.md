@@ -3,8 +3,12 @@
 - **Status**: Proposed | Accepted | Deprecated | Superseded by D-N
 - **Date**: YYYY-MM-DD
 - **Affects**: §{section}, §{section}
+- **Owner / Target Date**: {Status 為 Proposed 時必填，例：@johnny / Post-POC；Accepted 後可移除}
 - **Supersedes**: —
 - **Superseded by**: —
+
+> Status 為 Proposed（Open Question）時：「Decision」節改寫為「Options」 —
+> 列 (a)(b)(c) 選項（各附 Pros / Cons）+ 建議方向；使用者拍板後再改寫成正式 Decision + Rationale。
 
 ## Context
 

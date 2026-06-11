@@ -65,7 +65,7 @@
 
 ## 2.4 Priority Summary
 
-> 選填。FR + NFR 合計 > 15 條時建議做。
+> 選填。FR + NFR 合計 > 10 條時建議做（與 guide 門檻一致）。
 > **Source of truth 是 2.1 與 2.2 的 Priority 欄位**，本節為匯總視圖。
 
 | Priority | Items |

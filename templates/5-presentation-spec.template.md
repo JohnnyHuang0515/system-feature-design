@@ -10,6 +10,9 @@
 
 選擇本 feature 對外的呈現方式（可選多個，標明主要類型）：
 
+> 類型指「使用者怎麼接觸 feature」，不是 feature 的領域。
+> 例：站內通知中心有鈴鐺 + 面板 UI → 主類型是 GUI；Notification 指 email / push 等投遞通道本身。
+
 - [ ] **GUI** — 圖形使用者介面（網頁、app）
 - [ ] **API Only** — 純對外 API，無 UI
 - [ ] **Background Job** — 定時任務或事件驅動，使用者不直接觸發

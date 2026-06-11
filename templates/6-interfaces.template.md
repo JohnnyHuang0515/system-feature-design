@@ -10,6 +10,7 @@
 |------|------------|-----------|---------|
 | REST API | `POST /endpoint` | Inbound | {用途} |
 | Webhook | {名稱} | Inbound | {用途} |
+| Event subscription | `{EventName}` | Inbound | {用途} |
 | Event | `{EventName}` | Outbound | {用途} |
 | External call | `{Service.method}` | Outbound | {用途} |
 
@@ -53,7 +54,10 @@
 
 ## 6.3 Webhooks / Inbound Events
 
-> 選填：無外部 callback 的 feature 省略。
+> 選填：feature 不被外部觸發時省略。
+> 兩種形態：**Webhook**（外部主動 HTTP 呼叫我們）用第一個區塊；
+> **Event Subscription**（我們訂閱 message queue / event bus）用第二個區塊。
+> 事件驅動的 FR 沒有 §6.2 endpoint 是正常的 — 它的介面契約寫在這裡。
 
 ### POST {/webhook-path}
 
@@ -79,6 +83,28 @@
 - **401** — {說明}
 
 **Triggers**: SF-{N} 的 webhook 階段
+
+---
+
+### Event Subscription: {EventName}
+
+{描述：訂閱誰的事件、為什麼}
+
+**Source**: {哪個 service / 系統}
+**Channel**: {Kafka topic / SNS / Pub/Sub topic 名稱}
+**Related**: FR-{N}, SF-{N}
+**Idempotency**: {去重策略，例：以 event_id 去重}
+**Failure handling**: {消費失敗的處理，例：retry N 次後進 DLQ}
+
+#### Payload
+
+```json
+{
+  "field_name": "type"
+}
+```
+
+**Triggers**: SF-{N}
 
 ## 6.4 Outbound Events & Integrations
 

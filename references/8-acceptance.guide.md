@@ -49,7 +49,7 @@
 - **寫入類 FR**(POST/PUT/DELETE/狀態變更):至少 1 happy + 1 failure
 - **純查詢類 FR**:至少 1 happy(failure 由 §6.5 error model 涵蓋)
 - **涉及 authorization 的 FR**:必須額外有「未授權」AC
-- **每條 state transition**:合法 + 違規兩個 AC + catch-all
+- **每條 state transition**:合法 + 違規兩個 AC + catch-all(無介面可觸發違規時,寫「不適用 + 原因」,不要發明 error code — 見 template AC-S.99 註記)
 - **每條 BR**:獨立 AC 或 reference
 
 ### UI 行為的處理
@@ -129,7 +129,7 @@ NFR-1 測試:我推測在 staging 跑 load test(50 concurrent users, 10 分鐘)�
 ## 反思檢查(進 §9 前)
 
 - [ ] 每條 §2.1 FR 都有對應 AC
-- [ ] 每條 state transition 都有合法 + 違規 AC + catch-all
+- [ ] 每條 state transition 都有合法 + 違規 AC + catch-all(或明確的「不適用 + 原因」說明)
 - [ ] 每條 §3.4 BR 都有對應 AC 或 reference
 - [ ] 每條 §4.2 EF + §4.3 EC 都有對應 AC
 - [ ] 每條 §2.2 NFR 都有對應 AC + verification level

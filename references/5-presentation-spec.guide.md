@@ -30,6 +30,11 @@
 - 命令列工具 → CLI
 - 通知 / email / push → Notification
 
+**判斷基準是「使用者怎麼接觸 feature」,不是 feature 的領域**:
+- Notification 類型指投遞通道本身(email / push 的觸發與內容),**不是**「功能跟通知有關」
+- 例:站內通知中心有鈴鐺、面板、設定頁 → 主類型是 GUI(Notification 可作次要類型)
+- 拿不準時:只要使用者會「看畫面、點東西」,就有 GUI 成分 → §5.4-5.6 要寫
+
 **標 `[需確認]` 讓使用者確認**(可能有多種類型)
 
 ### 後續節推導(依 Presentation Type)

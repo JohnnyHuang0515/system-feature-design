@@ -40,7 +40,7 @@
 其餘節依需求填:
 - §9.2 Migration / Seed - 有資料遷移時必寫
 - §9.4 Alerting - 寫了 observability 通常一起寫
-- §9.5 Runbook - 有 alert 時必寫(本 spec 階段提供骨架 + TODO 標記)
+- §9.5 Runbook - 有 alert 時必寫(本 spec 階段提供骨架 + 「由運維補」佔位)
 - §9.7 Post-Launch Review - 有 success metrics 時建議
 
 我會推導所有節,沒適用的標 「[不適用]」 或省略。
@@ -80,11 +80,11 @@
 
 ### Runbook 推導
 
-每個 alert 對應一個 RB,**用骨架 + TODO 標記**:
+每個 alert 對應一個 RB,**用骨架 + 「由運維補」佔位**:
 - Symptoms:從 alert 條件推
-- Diagnosis Steps:推可推的(看哪個 dashboard、查哪個 log),不可推的標 `[TODO 由運維補]`
+- Diagnosis Steps:推可推的(看哪個 dashboard、查哪個 log),不可推的留 `{由運維補：...}` 佔位(同 template 寫法)
 - Common Causes:推 3-5 個常見原因
-- Escalation:標 `[TODO 由運維補]`(需實際運維知識)
+- Escalation:留 `{由運維補：...}` 佔位(需實際運維知識)
 
 ### Rollback 推導
 
@@ -126,7 +126,7 @@
 - Migration:{有 schema change / 有 seed data / 無}
 - Observability:{N} 個核心 SLI、{M} 個業務 metric
 - Alerts:{N} 個(P0:X / P1:Y / P2:Z / P3:W)
-- Runbooks:{N} 份(骨架 + TODO 標記)
+- Runbooks:{N} 份(骨架 + 「由運維補」佔位)
 - Rollback:三層 + 演練 sign-off
 
 需要你拍板:[N 個]
@@ -162,7 +162,7 @@ POC 階段重點展示 §9.1 + §9.3 + §9.6。其他節給「精簡版 / 完整
 
 ### Runbook 內容寫不出來
 
-接受「骨架 + TODO 由運維補」,不要編造運維操作步驟。
+接受「骨架 + 由運維補佔位」,不要編造運維操作步驟。
 
 ## 反思檢查(進總 review 前)
 
@@ -171,7 +171,7 @@ POC 階段重點展示 §9.1 + §9.3 + §9.6。其他節給「精簡版 / 完整
 - [ ] 每個 §9.4 alert 都有對應 §9.5 runbook
 - [ ] §9.6 Rollback Triggers 量化(不主觀)
 - [ ] §9.6 Rehearsal 有明確 sign-off 機制
-- [ ] Runbook TODO 標記都清楚
+- [ ] Runbook 的「由運維補」佔位都清楚
 
 ## 文件結束時的 summary
 
@@ -182,7 +182,7 @@ POC 階段重點展示 §9.1 + §9.3 + §9.6。其他節給「精簡版 / 完整
 - Migration / Seed:{有 / 無}
 - Metrics:{N} 個 SLI + {M} 業務指標
 - Alerts:{N} 個
-- Runbooks:{N} 份(含 TODO 由運維補)
+- Runbooks:{N} 份(含「由運維補」佔位)
 - Rollback:三層 + 演練 sign-off
 
 整份 spec 9 份文件 + decisions/ 子目錄都已產出!

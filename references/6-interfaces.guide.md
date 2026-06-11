@@ -43,9 +43,13 @@
 
 **所有 §6.2 endpoint 用到的 code 必須在 §6.5 catalog 註冊**。Claude 推導時自動建立 catalog。
 
-### Webhooks(若有)
+### Webhooks / Inbound Events(若有)
 
-從 §4.1 SF 中接收外部 callback 的部分推。沒有就跳過。
+從 §4.1 SF 中「由外部觸發」的部分推,分兩種:
+- **Webhook**:外部系統主動 HTTP 呼叫我們(有 path / HMAC / HTTP response)
+- **Event Subscription**:我們訂閱 message queue / event bus 的事件(有 channel / 去重 / DLQ,沒有 HTTP response)
+
+事件驅動的 FR(例:「收到來源事件就建立 X」)沒有 endpoint 是正常的,它的介面契約就寫在這節。兩種都沒有就跳過。
 
 ### Outbound Events 推導
 
@@ -141,7 +145,7 @@ External integrations({N} 個):
 
 ## 反思檢查(進 §7 前)
 
-- [ ] 每條 §2.1 FR 都對應到至少 1 個 endpoint
+- [ ] 每條 §2.1 FR 都對應到至少 1 個 endpoint、inbound event / webhook(§6.3)、或 background job 觸發點
 - [ ] 每個 endpoint 都對應到至少 1 個 SF
 - [ ] 每個 endpoint 的 errors 都在 §6.5 catalog 註冊
 - [ ] 每個 published event 都在 §3.5 列出

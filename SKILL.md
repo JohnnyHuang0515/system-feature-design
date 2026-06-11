@@ -57,7 +57,7 @@ The spec has 9 documents, produced in order. For each one:
 
 ### 3a. Read the document's reference guide
 
-Before starting document N, read `references/{N}-{name}.guide.md` and `templates/{N}-{name}.template.md`. The guide tells you the derivation table, required questions, OQ candidates, display format, stuck points, reflection checklist, and closing summary template.
+Before starting document N, read `references/{N}-{name}.guide.md` and `templates/{N}-{name}.template.md`. The guide tells you the derivation table, required questions, OQ candidates（§7/§8 的 guide 屬彙整階段，原則上不產新 OQ）, display format, stuck points, reflection checklist, and closing summary template.
 
 ### 3b. Derive internally
 
@@ -79,7 +79,7 @@ Handle confirm / small fix / major change / back-edit / request-more-detail per 
 
 ### 3e. Reflect, write to disk, and move on
 
-Run the guide's reflection checklist. Fix gaps. Write the document to disk (see Step 4). Give the closing summary. Confirm the user is ready before proceeding to the next document.
+Run the guide's reflection checklist. Fix gaps. **Strip resolved markers before writing**: delete `[需確認]` / `[待拍板]` on items the user confirmed; convert deferred `[待拍板]` into §7.2 Open Questions and replace the inline marker with a reference (see the "標記的生命週期" rule in `0-skill-mode.md`). Write the document to disk (see Step 4). Give the closing summary. Confirm the user is ready before proceeding to the next document.
 
 ## Step 4: Document order, output location, and write timing
 
@@ -91,9 +91,11 @@ Produce documents in this exact order (later docs reference earlier ones):
 4. `4-flows.md` — System flows, error flows, edge cases (system-side only)
 5. `5-presentation-spec.md` — Presentation type, user stories, user flows, components, pages
 6. `6-interfaces.md` — REST APIs, events, integrations, error catalog
-7. `7-decisions.md` + `decisions/NNNN-*.md` — ADRs, open questions
+7. `7-decisions.md` + `decisions/NNNN-*.md` — ADRs, open questions（`7-decisions.md` 是索引：decision index + open questions；完整 ADR 內文在 `decisions/NNNN-*.md`）
 8. `8-acceptance.md` — Acceptance criteria (BDD format)
 9. `9-rollout.md` (optional) — Rollout, observability, runbook, rollback
+
+If the user skips §9: scan §1–§8 for forward references to §9 (e.g. an NFR saying「詳見 §9.3」, an EF pointing at「§9.4 alert」), rewrite or remove them, and drop the §9 row from README's index.
 
 Plus:
 - `README.md` — Index, ID system reference, revision history
@@ -139,6 +141,8 @@ After the last document is written, proactively offer the full-spec review. The 
 | T-N | Page Section | §5.6 |
 | D-NNNN | Decision (ADR) | decisions/ |
 | AC-* | Acceptance Criteria | §8 |
+
+> 註：domain events（§3.5）以事件名稱（PascalCase，如 `TemplateImported`）引用，不另編 ID。
 
 When introducing new items in any section, automatically assign the next number in sequence and tell the user explicitly (e.g., "I'm adding this as FR-3").
 

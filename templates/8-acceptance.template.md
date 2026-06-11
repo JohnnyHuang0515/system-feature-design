@@ -66,9 +66,14 @@
 **Given** Entity 處於任何狀態
 **When** 嘗試執行該狀態不允許的轉換（參照 §3.3 state machine）
 **Then**
-- 回傳 INVALID_STATE_TRANSITION
+- 回傳 {error code — 必須是 §6.5 catalog 已註冊的 code}
 - 狀態不改變
 - 不觸發 side effect
+
+> 注意：
+> - 這裡引用的 error code 必須存在於 §6.5 catalog（屬既有系統 error model 時，加註說明而非塞進 catalog）。
+> - 若**沒有任何對外介面能嘗試非法轉換**（例：狀態只有兩態、唯一操作是冪等的單向轉換），
+>   把本條改寫成一句「不適用 + 原因」，**不要為了填格式發明 error code**。
 
 ## 8.3 AC for Business Rules
 
