@@ -63,6 +63,8 @@ Before starting document N, read `references/{N}-{name}.guide.md` and `templates
 
 Use the user's initial description, previously completed documents on disk, and the guide's derivation table. Apply the **derive vs ask** judgment from `0-skill-mode.md` — derive structure, ask about business/context decisions.
 
+If §1 established this is a **POC / side project**, also apply the **POC 快速模式** rule from `0-skill-mode.md`: auto-apply recommendations for low-risk decisions (announce them in one line), hard-stop only on high-risk forks (irreversible / money-direction / data-model-shaping). Target ≤5–8 hard stops across the whole session.
+
 Mark every inference:
 - `[需確認]` — Claude inferred this; user verifies
 - `[待拍板]` — Two reasonable options exist; **must come with options (a)(b)(c) + recommended direction** (see the rule in `0-skill-mode.md`)
@@ -120,6 +122,12 @@ After writing, briefly note the path (`wrote 3-domain-model.md`) so the user kno
 ### When to write README.md
 
 Create `README.md` **immediately after §1 is confirmed** (so it exists as an index from the start), with placeholder rows for §2–§9. Update its Revision History row with `v0.1 — Initial draft` and the current date. After §9 (or §8 if §9 is skipped), do a final pass to make sure all document links and the ID system table are accurate.
+
+The README's document index has a **狀態 column** (`✅ v0.1` / `⬜ 待產` / `⏭️ 跳過`) — update it every time a document is written to disk. This is the session's progress tracker.
+
+### Resuming an interrupted session
+
+If the conversation restarts mid-spec: read `README.md`'s 狀態 column to find where work stopped, then **re-read the documents already on disk** (they are the source of truth — do not re-derive from memory), and continue the per-document loop from the first `⬜ 待產` document.
 
 ## Step 5: Full-spec review
 
