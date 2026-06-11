@@ -5,7 +5,7 @@
 ### SF-1: 從檔案匯入模板
 
 **Related FR**: FR-2, FR-3, FR-4, FR-5, FR-6
-**Related UF**: UF-1（見 §5.3）
+**Related UF**: UF-1, UF-2（見 §5.3）
 **Components involved**: Template Service, Validation Service, DB
 
 ```mermaid
@@ -50,7 +50,7 @@ sequenceDiagram
 ### SF-2: 匯出模板為檔案
 
 **Related FR**: FR-1
-**Related UF**: UF-5
+**Related UF**: UF-3（見 §5.3）
 **Components involved**: Template Service, DB
 
 ```mermaid
@@ -80,7 +80,7 @@ sequenceDiagram
 ### SF-3: AI 生成結果寫入
 
 **Related FR**: FR-7
-**Related UF**: UF-2
+**Related UF**: UF-4（見 §5.3）
 **Components involved**: AI Service, Template Service, Validation Service, DB
 
 ```mermaid
@@ -193,7 +193,7 @@ sequenceDiagram
 
 **System behavior**:
 1. Validation Service 回傳 invalid
-2. 走 EF-1 流程，error code: INVALID_REFERENCE
+2. 走 EF-1 流程，error code: INVALID_STRUCTURE（與 EF-3 共用同一 error code，見 §6.5；response 以 `details.path` / `reason` 區分成因 — 節點自連 vs 欄位引用無效）
 3. Response 標明：`條件引用了不存在的欄位：{field_key}`
 
 **Recovery**: 修正檔案

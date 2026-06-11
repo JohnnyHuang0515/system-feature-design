@@ -124,7 +124,7 @@ POC 階段單一 service 內 feature，無跨 service 追蹤需求。
 **Symptoms**: 匯入成功率 < 90%，持續 30 分鐘
 
 **Diagnosis Steps**:
-1. [TODO 由運維補：哪個 dashboard 查 import metrics]
+1. {由運維補：哪個 dashboard 查 import metrics}
 2. 看失敗集中在哪個 error code（參照 §6.5）：
    - 大量 INVALID_SCHEMA → 可能是 schema 升版相容性問題或使用者上傳異常檔案
    - 大量 INVALID_STRUCTURE → 可能是 Validation Service 邏輯 bug
@@ -134,12 +134,12 @@ POC 階段單一 service 內 feature，無跨 service 追蹤需求。
 
 **Common Causes & Actions**:
 - **Validation Service 異常**: 確認其健康狀態，必要時 page validation team
-- **DB connection pool exhausted**: [TODO 由運維補：實際操作步驟，如擴容或 restart]
+- **DB connection pool exhausted**: {由運維補：實際操作步驟，如擴容或 restart}
 - **Recent deploy 引發 regression**: 評估 rollback（feature flag off）
 - **某種特定檔案結構觸發 bug**: 收集 failed payload sample 給 RD 分析
-- **[TODO 由運維新增上線後實際遇到的 cause]**
+- **{由運維新增：上線後實際遇到的 cause}**
 
-**Escalation**: [TODO 由運維補：升級條件與對象]
+**Escalation**: {由運維補：升級條件與對象}
 
 ---
 
@@ -148,7 +148,7 @@ POC 階段單一 service 內 feature，無跨 service 追蹤需求。
 **Symptoms**: 匯入 API p99 latency > 1s，持續 10 分鐘
 
 **Diagnosis Steps**:
-1. [TODO 由運維補：查 latency dashboard]
+1. {由運維補：查 latency dashboard}
 2. 看 latency 是集中在哪個階段：
    - Validation 階段慢 → Validation Service 問題
    - DB 寫入慢 → DB 問題（lock contention? slow query?）
@@ -156,11 +156,11 @@ POC 階段單一 service 內 feature，無跨 service 追蹤需求。
 3. 查當前 throughput，是否異常高
 
 **Common Causes & Actions**:
-- **DB lock contention**: [TODO 由運維補]
+- **DB lock contention**: {由運維補：實際操作步驟}
 - **Validation Service 變慢**: 確認其 latency metrics，必要時 escalate
 - **Traffic spike**: 評估是否需要 scale up
 
-**Escalation**: [TODO]
+**Escalation**: {由運維補：升級條件與對象}
 
 ---
 
@@ -178,7 +178,7 @@ POC 階段單一 service 內 feature，無跨 service 追蹤需求。
 - **使用者集中上傳異常檔案**: 可能是某個第三方工具產生不合 schema 的檔案，shrug
 - **Schema 升版了但客戶端尚未跟上**: 評估是否需 backwards compat
 
-**Escalation**: [TODO]
+**Escalation**: {由運維補：升級條件與對象}
 
 ---
 
@@ -204,7 +204,7 @@ POC 階段單一 service 內 feature，無跨 service 追蹤需求。
 **Symptoms**: 偵測到不合法 state（例：Active 模板無節點，違反 BR）
 
 **Diagnosis Steps**:
-1. [TODO 由運維補：哪個 query 查資料完整性]
+1. {由運維補：哪個 query 查資料完整性}
 2. 確認受影響範圍（多少 templates / workspaces）
 3. 確認是否仍在發生中
 

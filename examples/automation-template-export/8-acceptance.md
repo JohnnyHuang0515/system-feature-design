@@ -291,6 +291,8 @@
 - 狀態不改變
 - 不觸發 side effect
 
+> 註：`BUSINESS_RULE_VIOLATION`、`INVALID_STATE_TRANSITION` 屬既有系統 activate() / archive() 等 endpoint 的 error model，不在本 feature §6.5 catalog 範圍內（§6.5 只收本 feature 三支 API 的 error contract）。
+
 ## 8.3 AC for Business Rules
 
 ### BR-1: Template name unique in workspace
@@ -304,6 +306,7 @@
 - 不建立新 Template
 
 > 註：匯入路徑的同名處理見 AC-5.1 ~ AC-5.4，那是預期行為（提供使用者選擇），非錯誤。
+> `DUPLICATE_NAME` 屬既有系統「直接建立 Template」endpoint 的 error model，不在本 feature §6.5 catalog 範圍內。
 
 ### BR-2: Schema version supported
 
