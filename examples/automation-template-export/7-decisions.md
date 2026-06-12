@@ -9,9 +9,9 @@
 | ID | Title | Status | Date | Affects |
 |----|-------|--------|------|---------|
 | [D-0001](./decisions/0001-task-fields-embedded-with-future-ref.md) | Task 欄位採內嵌儲存，預留外部引用欄位 | Accepted | 2026-05-14 | §3.2 (Node.task_template_ref, Node.fields), §4.1 (SF-1) |
-| [D-0002](./decisions/0002-placeholder-mapping-deferred-to-editor.md) | Placeholder 對應統一在編輯器，預覽頁不做 mapping | Accepted | 2026-05-14 | §4.3 (EC-2), §5.3 (UF-1, UF-5), §5.6 (P-5) |
+| [D-0002](./decisions/0002-placeholder-mapping-deferred-to-editor.md) | Placeholder 對應統一在編輯器，預覽頁不做 mapping | Accepted | 2026-05-14 | §4.3 (EC-2), §5.3 (UF-1, UF-5), §5.7 (P-5) |
 | [D-0003](./decisions/0003-no-encryption-for-poc.md) | POC 階段匯出檔案不做加密 / 簽章 | Accepted | 2026-05-14 | §2.2 (NFR-5), §1.5.1 |
-| [D-0004](./decisions/0004-duplicate-name-modal-on-confirm.md) | 同名模板處理用 Modal 三選一（覆蓋 / 建新 / 取消） | Accepted | 2026-05-14 | §4.3 (EC-1), §5.3 (UF-1), §5.5 (C-7), §6.2 (POST /import/confirm) |
+| [D-0004](./decisions/0004-duplicate-name-modal-on-confirm.md) | 同名模板處理用 Modal 三選一（覆蓋 / 建新 / 取消） | Accepted | 2026-05-14 | §4.3 (EC-1), §5.3 (UF-1), §5.6 (C-7), §6.2 (POST /import/confirm) |
 | [D-0005](./decisions/0005-structure-validation-strictness.md) | 結構驗證嚴格度：自連禁、孤兒警告、環狀放行 | Accepted | 2026-05-14 | §3.4 (BR-4), §4.2 (EF-3), §4.3 (EC-3, EC-4, EC-5, EC-6) |
 | [D-0006](./decisions/0006-seed-templates-via-folder.md) | 系統內建模板透過 seed 資料夾載入，POC 不做後台 | Accepted | 2026-05-14 | §4.1 (SF-4), §5.3 (UF-6), §9.2 |
 | [D-0007](./decisions/0007-self-contained-templates.md) | 模板採 self-contained（檔案內完整），不依賴外部引用 | Accepted | 2026-05-14 | §3.2 (Entities, JSON Schema), §4.1 (SF-1, SF-2) |

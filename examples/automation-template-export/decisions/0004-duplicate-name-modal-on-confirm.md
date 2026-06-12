@@ -2,7 +2,7 @@
 
 - **Status**: Accepted
 - **Date**: 2026-05-14
-- **Affects**: §4.3 (EC-1), §5.3 (UF-1 step 8), §5.5 (C-7), §6.2 (POST /import/confirm)
+- **Affects**: §4.3 (EC-1), §5.3 (UF-1 step 8), §5.6 (C-7), §6.2 (POST /import/confirm)
 - **Supersedes**: —
 - **Superseded by**: —
 

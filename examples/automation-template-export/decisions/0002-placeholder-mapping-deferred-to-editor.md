@@ -2,7 +2,7 @@
 
 - **Status**: Accepted
 - **Date**: 2026-05-14
-- **Affects**: §4.3 (EC-2), §5.3 (UF-1, UF-5), §5.6 (P-5)
+- **Affects**: §4.3 (EC-2), §5.3 (UF-1, UF-5), §5.7 (P-5)
 - **Supersedes**: —
 - **Superseded by**: —
 

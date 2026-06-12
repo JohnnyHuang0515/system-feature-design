@@ -32,19 +32,22 @@
 **判斷基準是「使用者怎麼接觸 feature」,不是 feature 的領域**:
 - Notification 類型指投遞通道本身(email / push 的觸發與內容),**不是**「功能跟通知有關」
 - 例:站內通知中心有鈴鐺、面板、設定頁 → 主類型是 GUI(Notification 可作次要類型)
-- 拿不準時:只要使用者會「看畫面、點東西」,就有 GUI 成分 → §5.4-5.7 要寫
+- 拿不準時:只要使用者會「看畫面、點東西」,就有 GUI 成分 → §5.4-5.9 要寫
 
 **標 `[需確認]` 讓使用者確認**(可能有多種類型)
 
 ### 後續節推導(依 Presentation Type)
 
-| Type | 5.2 | 5.3 | 5.4-5.7 |
+| Type | 5.2 | 5.3 | 5.4-5.9 |
 |---|---|---|---|
 | GUI | User Story | User Flow | 寫 |
 | API Only | Consumer Story | Consumer Flow | 跳 |
 | Background Job | Trigger Story | Execution Flow | 跳 |
 | CLI | Command Story | Command Flow | 跳 |
 | Notification | Recipient Story | Trigger Flow | 跳 |
+
+> §5.4 User Journey 與 §5.9 Design Handoff 是 GUI 專屬。非 GUI 類型的「旅程」已由 §5.3 的
+> consumer / execution flow 承擔,不另寫;沒有視覺產物,也不需要 §5.9 交接。
 
 ### User Story 推導
 
@@ -60,12 +63,33 @@
 - 每個 SF 對應 1-N 個 UF
 - 用 step by step 描述,不要寫系統內部細節
 
-### Component / Page 推導(僅 GUI)
+### User Journey 推導(§5.4,僅 GUI)
+
+UF 寫完後,把它們**抽高一層**成旅程 — 不是重寫 UF,是把散落的 UF 串成「使用者達成目標的完整歷程」:
+
+- **階段切分**:從 §1 persona 的目標 + UF 順序歸納出 3-6 個階段(例:認知/進入 → 操作 → 完成/後續)
+- **每階段填**:使用者想完成什麼、觸及哪些 UF / Page、可能卡點(對齊 §4 EF / EC)、體驗重點
+- **多 persona**:每個主要 persona 各一條;次要 / 一次性的可省略
+- 旅程**不另編 ID**,用階段名稱 + 引用既有 UF-N / P-N
+
+為什麼要這層:UF 是「逐步操作」,旅程是「整體體驗的起伏」。前端 / UX 靠旅程看出「哪個階段最該順、哪裡最容易流失」,這是逐條 UF 看不出來的。
+
+### Component / Page 推導(§5.6 / §5.7,僅 GUI)
 
 從 user flow 推:
 - 每個 step 涉及的 UI 元素 → component(C-N)
 - 每個 step 發生在哪個畫面 → page(P-N)
 - 每個 page 的版面結構 → 區塊(T-N)
+
+### Design Handoff 推導(§5.9,僅 GUI)
+
+§5 寫的是結構 + 互動,**視覺(mockup / 色彩 / 字級)是下游產物,不在本 spec**。§5.9 是把這條邊界從「靜默開洞」變成「明確留白並指路」:
+
+- **Design System 狀態**(對齊 §5.5 拍板):已有 → 填來源連結;**沒有 → 標為前端開工前置條件**,建議用哪個工具 / skill 產(ckm-design-system / ui-ux-pro-max / design-taste-frontend / Pencil MCP),並於 §7 記一條 OQ / ADR 補 Owner + Target Date
+- **Mockup 接法**:說明把 §5.6 component + §5.7 page(版面 ASCII)+ §5.8 互動決策餵給設計工具產 hi-fi;視覺以工具產出為準,衝突時回頭同步 spec
+- **前置清單**:Design System、mockup / 視覺參照、響應式斷點(對齊 §5.8)、文案 microcopy 來源 — 逐項打勾,缺的明確標出
+
+判斷線:不要讓這個 skill 自己變成設計工具去產 mockup(環境有專門的 design skill)。§5.9 的責任是**交接**,不是**產出**。
 
 ### 回填 §4
 
@@ -97,7 +121,7 @@
 3. **打包拍板**:
    - 非 POC:照 0-skill-mode 的 AskUserQuestion 規則,一輪 2-3 題分批問
    - POC 快速模式:**不是默默套預設值**,而是「一輪確認包」 — 把相關維度的建議值列成清單一次展示:「前端體驗我建議這樣:(清單)。有要改的嗎?都 OK 我就照這個寫」。整包算 1 個硬停
-4. **落盤**:拍板結果寫進 §5.7 決策表(不適用的維度寫 N/A + 原因)。影響資料模型或不可逆的(例:部分成功策略牽動 API 設計)升級為 ADR
+4. **落盤**:拍板結果寫進 §5.8 決策表(不適用的維度寫 N/A + 原因)。影響資料模型或不可逆的(例:部分成功策略牽動 API 設計)升級為 ADR
 
 ### 為什麼前端不適用「默默採建議值」
 
@@ -109,7 +133,8 @@
 
 1. **Presentation Type 確認**:推測類型後讓使用者確認
 2. **前端體驗決策清單**(僅 GUI):見上節 — 相關維度逐一給建議值,打包拍板
-3. **Component 視覺細節**:若使用者有特殊視覺要求(例:節點卡片必須是 160x140),補問
+3. **Design System 存不存在**(僅 GUI):這是 §5.5 / §5.9 的關鍵拍板 — 沿用既有(問來源)還是尚無(標前置條件)。問法見下方 Design System 那段
+4. **Component 視覺細節**:若使用者有特殊視覺要求(例:節點卡片必須是 160x140),補問
 
 ### 不該問的(結構推導,Claude 自己做)
 
@@ -126,6 +151,7 @@
 - Page 配置多種合理(獨立頁 vs Modal vs 抽屜)
 - 空狀態 / 部分成功的呈現方式多種合理
 - 裝置支援範圍使用者未明說(桌機 only vs RWD)
+- 尚無 Design System,由誰 / 用什麼工具產出未定(§5.9 前置條件)
 
 ## 展示給使用者的格式
 
@@ -146,6 +172,7 @@
 - Presentation type:{類型}
 - User stories:{N 個} (覆蓋 {M} 個 persona)
 - User flows:UF-1 ~ UF-{N}
+- User journey(若 GUI):{N} 個階段
 - Components(若 GUI):C-1 ~ C-{N}
 - Pages(若 GUI):P-1 ~ P-{N}
 
@@ -157,7 +184,9 @@
 對 GUI 類:
 - 先確認 user stories(快)
 - 再 user flows(中等)
-- 最後 components + pages(慢,需要視覺確認)
+- 再 user journey(把 UF 串成階段,快)
+- 再 components + pages(慢,需要視覺確認)
+- 最後 design handoff(確認 Design System 狀態 + 交接清單)
 
 ### 步驟 4:問必要決策點(以前端體驗決策清單為主軸)
 
@@ -181,9 +210,22 @@
 
 明確說:「我們不寫實作層(props、event handler 等),只寫:這個 component 角色是什麼、有哪些狀態、用在哪些 page。視覺細節歸 Design System。」
 
+### 確認 Design System 存不存在(§5.5 / §5.9 必問)
+
+別假設一定有。用生活化問法:
+
+```
+✅ 「你們現在有沒有一套共用的設計規範 / 元件庫?(例:Figma 上的 design system、
+    或程式裡共用的 UI component 庫)還是這個功能要從零刻 UI?」
+```
+
+- **有** → 問來源(Figma / Storybook / 程式庫),§5.5 填參照,§5.9 標「沿用既有」
+- **沒有** → 這不是小事:**前端開工前得先有一套基礎 design system**,否則每個畫面各刻一套。§5.9 標為前置條件,於 §7 記一條 OQ / ADR(Owner + Target Date),並建議用哪個工具 / skill 產
+- POC 也要問 — 可以決定「POC 先用最小 token 集,正式再補」,但這個決定本身要明講,不能默默跳過
+
 ### 使用者想直接給 Figma 連結
 
-接受。Reference 寫:「視覺以 Figma 為準([連結]),本 spec 只描述結構 + 互動」。
+接受。Reference 寫:「視覺以 Figma 為準([連結]),本 spec 只描述結構 + 互動」。§5.9 的 Design System 來源填該 Figma。
 
 ### 使用者描述 UI 卡在抽象
 
@@ -202,11 +244,14 @@
 - [ ] Presentation type 已確認
 - [ ] 每個 user story 對應到至少 1 個 persona + FR
 - [ ] 每個 user flow 對應到 SF(GUI 類)
+- [ ] User journey 每個階段都引用到實際 UF / Page,卡點對齊 §4 EF / EC(GUI 類)
 - [ ] §4 各 SF 的 "Related UF" 欄位已回填
-- [ ] 每個 page 用到的 component 都在 §5.5 定義(GUI 類)
+- [ ] 每個 page 用到的 component 都在 §5.6 定義(GUI 類)
 - [ ] 每個 component 至少出現在 1 個 page(無孤兒)(GUI 類)
 - [ ] 前端體驗決策清單 8 個維度都檢視過:相關的已拍板、不相關的已註明 N/A(GUI 類)
-- [ ] 拍板結果已寫入 §5.7 決策表,重大決策已升級 ADR(GUI 類)
+- [ ] 拍板結果已寫入 §5.8 決策表,重大決策已升級 ADR(GUI 類)
+- [ ] Design System 狀態已拍板(沿用既有 / 尚無→§5.9 前置條件 + §7 OQ)(GUI 類)
+- [ ] §5.9 交接清單已填,缺的前置條件已明確標出(GUI 類)
 
 ## 文件結束時的 summary
 
@@ -216,9 +261,11 @@
 - Presentation type:{類型}
 - User stories:{N 個}
 - User flows:UF-1 ~ UF-{N}
+- User journey:{N} 個階段(若 GUI)
 - Components:C-1 ~ C-{N}(若 GUI)
 - Pages:P-1 ~ P-{N}(若 GUI)
-- 前端體驗決策:{M} 個維度已拍板,{K} 個不適用(§5.7)(若 GUI)
+- 前端體驗決策:{M} 個維度已拍板,{K} 個不適用(§5.8)(若 GUI)
+- Design System:{沿用既有 / 尚無—已列前置條件}(若 GUI)
 - §4 SF 的 "Related UF" 已回填
 
 接下來進入 §6 interfaces,我會推導對外 API、events、整合點。要進嗎?

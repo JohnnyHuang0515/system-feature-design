@@ -446,7 +446,7 @@ Claude 推導後的內容用兩種標記區分使用者該做什麼：
 逐份做的時候每份文件只看當下，但跨文件的問題只有放在一起才看得出來：
 - 編號 reference 是否全部對得上（例：FR-7 在 §8.1 找得到對應 AC 嗎？）
 - 同一概念在不同文件描述是否一致（例：§3.3 state machine 跟 §4.1 SF 描述的狀態流轉一致嗎？）
-- 是否有「孤兒」（例：§5.5 列了 C-9 但 §5.6 沒有任何 page 用到）
+- 是否有「孤兒」（例：§5.6 列了 C-9 但 §5.7 沒有任何 page 用到）
 - 是否有遺漏（例：所有 SF 都有對應 UF 嗎？反之？）
 - 是否每份文件的 ID 編號正確 reference 前後文件
 
@@ -471,7 +471,7 @@ Claude 推導後的內容用兩種標記區分使用者該做什麼：
 ### 使用者選「要跑」時的流程
 
 Claude 執行以下檢查清單，把問題分類列出。兩個前置條件：
-- §5 Presentation Type 非 GUI 時，跳過所有 §5.4-5.7 相關項目（component / page / T-N / 互動決策表）
+- §5 Presentation Type 非 GUI 時，跳過所有 §5.4-5.9 相關項目（user journey / component / page / T-N / 互動決策表 / design handoff）
 - 使用者跳過 §9 時，跳過 §9 相關項目，但要反向確認 §1-§8 沒有殘留對 §9 的引用
 
 #### Check 0: 機械化檢查（先跑，再肉眼）
@@ -501,8 +501,9 @@ grep -oE "\| (4[0-9]{2}|500) \| [A-Z_]+" 6-interfaces.md | sort -u
 - §4.1 SF 的 Related FR → FR-N 是否存在
 - §4.1 SF 的 Related UF → UF-N 是否存在於 §5.3
 - §4.2 EF 的 Triggers in → SF step 是否存在
-- §5.5 component 的 Used in → P-N 是否存在於 §5.6
-- §5.6 page 的 Entry from → UF-N 是否存在
+- §5.4 user journey 各階段引用的 UF-N / P-N → 是否存在
+- §5.6 component 的 Used in → P-N 是否存在於 §5.7
+- §5.7 page 的 Entry from → UF-N 是否存在
 - §6.2 endpoint 的 Related FR → FR-N 是否存在
 - §6.2 endpoint 的 Errors → error code 是否在 §6.5 catalog 註冊
 - §6.4.1 published event → 是否在 §3.5 列出
@@ -517,8 +518,9 @@ grep -oE "\| (4[0-9]{2}|500) \| [A-Z_]+" 6-interfaces.md | sort -u
 - 每條 BR 是否有對應 AC 或 reference（§8.3）
 - 每條 EF / EC 是否有對應 AC（§8.4）
 - 每條 NFR 是否有對應 AC（§8.5）
-- 每個 page 用到的 component 是否都在 §5.5 定義
-- §5.7 互動決策表每個維度是否都有決定（或「N/A + 原因」），重大決策是否有對應 ADR
+- 每個 page 用到的 component 是否都在 §5.6 定義
+- §5.8 互動決策表每個維度是否都有決定（或「N/A + 原因」），重大決策是否有對應 ADR
+- §5.9 Design System 若標「尚無」，§7 是否有對應 OQ / ADR（含 Owner + Target Date）
 - §6.2 每個 endpoint 至少有 1 個 happy path + 對應 error responses
 - §9.4 每個 alert 是否有對應 §9.5 runbook
 
@@ -527,7 +529,7 @@ grep -oE "\| (4[0-9]{2}|500) \| [A-Z_]+" 6-interfaces.md | sort -u
 反向掃描，找出「定義了但沒用到」的元素：
 
 - §3.2 entity 是否每個都至少被某個 FR / SF / API 用到
-- §5.5 component 是否每個都至少出現在某個 page
+- §5.6 component 是否每個都至少出現在某個 page
 - §6.5 error code 是否每個都至少被某個 endpoint 使用
 - §3.5 domain event 是否每個都有 producer 跟（潛在）consumer
 
@@ -540,6 +542,8 @@ grep -oE "\| (4[0-9]{2}|500) \| [A-Z_]+" 6-interfaces.md | sort -u
 - §1.3 persona 的痛點 vs §2.1 FR 的描述
 - §1.5 in scope vs §2.1 FR（FR 是否都在 scope 內）
 - §1.5.1 POC 表格 vs §7 ADR（是否都展開成 ADR）
+- §5.4 user journey 的階段 vs §5.3 UF（旅程是否確實由 UF 串成，無憑空階段）
+- §5.5 Design System 狀態 vs §5.9 交接內容（兩處對「有 / 沒有」的描述一致）
 
 #### Check 5: 未拍板事項
 
@@ -558,7 +562,7 @@ grep -oE "\| (4[0-9]{2}|500) \| [A-Z_]+" 6-interfaces.md | sort -u
 
 ⚠️ Warning 項目（建議處理）：
 - §3.5 列了 TemplateActivated 事件但沒有任何 consumer
-- §5.5 C-9 (Toast) 沒有明確被任何 page 引用（但實際使用上隱含）
+- §5.6 C-9 (Toast) 沒有明確被任何 page 引用（但實際使用上隱含）
 - ...
 
 ❌ Error 項目（建議必修）：

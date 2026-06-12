@@ -91,7 +91,7 @@ Produce documents in this exact order (later docs reference earlier ones):
 2. `2-requirements.md` — FRs, NFRs, priority
 3. `3-domain-model.md` — Entities, state machines, business rules, events
 4. `4-flows.md` — System flows, error flows, edge cases (system-side only)
-5. `5-presentation-spec.md` — Presentation type, user stories, user flows, components, pages, interaction decisions（§5.7 前端體驗拍板結果）
+5. `5-presentation-spec.md` — Presentation type, user stories, user flows, user journey（§5.4）, components, pages, interaction decisions（§5.8 前端體驗拍板結果）, design handoff（§5.9）
 6. `6-interfaces.md` — REST APIs, events, integrations, error catalog
 7. `7-decisions.md` + `decisions/NNNN-*.md` — ADRs, open questions（`7-decisions.md` 是索引：decision index + open questions；完整 ADR 內文在 `decisions/NNNN-*.md`）
 8. `8-acceptance.md` — Acceptance criteria (BDD format)
@@ -144,9 +144,9 @@ After the last document is written, proactively offer the full-spec review. The 
 | EF-N | Error Flow | §4.2 |
 | EC-N | Edge Case | §4.3 |
 | UF-N | User Flow | §5.3 |
-| P-N | Page | §5.6 |
-| C-N | Component | §5.5 |
-| T-N | Page Section | §5.6 |
+| P-N | Page | §5.7 |
+| C-N | Component | §5.6 |
+| T-N | Page Section | §5.7 |
 | D-NNNN | Decision (ADR) | decisions/ |
 | AC-* | Acceptance Criteria | §8 |
 

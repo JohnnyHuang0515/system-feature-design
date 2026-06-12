@@ -132,7 +132,28 @@
 
 **Expected outcome**: 系統內建模板出現在「選擇模板」面板供使用者套用。
 
-## 5.4 Design System & Visual Notes
+## 5.4 User Journey（使用者旅程）
+
+> 把 §5.3 的 UF 抽高一層 — PM 從拿到外部模板到讓它在自己工作區生效的完整歷程。
+> 卡點欄對齊 §4 的 EF / EC。
+
+**主要旅程：PM / 流程設計者 — 把外部模板變成可用的流程**
+
+| 階段 | 使用者想完成 | 觸及點（UF / Page） | 可能卡點（EF / EC） | 體驗重點 |
+|---|---|---|---|---|
+| 1. 取得與決定匯入 | 拿到同事匯出的 `.json`，想匯入自己的工作區 | UF-1 / P-1（建立選單） | — | 匯入入口要好找，不被埋在深層選單 |
+| 2. 匯入與預覽 | 確認這個檔案是不是我要的、結構有沒有問題 | UF-1, UF-2 / P-5（匯入預覽頁） | EF-1 schema 驗證失敗；EC-3 孤兒節點警告 | 失敗訊息要看得懂；預覽要能一眼判斷要不要 |
+| 3. 確認寫入 | 把模板寫進工作區，不要誤覆蓋既有的 | UF-1 / P-5 + C-7（同名 Modal） | EC-1 同名衝突 | 同名時清楚知道「覆蓋 vs 建新」的後果 |
+| 4. 調整與啟用 | 補上執行人 placeholder，啟用模板 | UF-5 / P-2（編輯器）+ C-8（啟用前確認） | EC-2 未對應 placeholder 軟提示 | 啟用前知道風險，但不被硬擋（軟提示） |
+| 5. 使用 | 模板生效，相關 task 能被觸發派發 | P-2 | — | 確認真的 Active 了 |
+
+> AI 生成入口（UF-4）走相同的「預覽 → 寫入 → 啟用」後段，差別只在來源不是檔案；Seed 載入（UF-6）是系統行為，不在使用者旅程內。
+
+## 5.5 Design System & Visual Notes
+
+**既有 Design System 狀態**:
+- [x] **已有** — 沿用既有後台 Design System（既有 status indicator / chip / graph component token）
+- [ ] 沒有
 
 **Existing tokens used**: 沿用既有 Design System
 
@@ -145,7 +166,7 @@
 - 節點狀態指示點：綠 / 橙 / 紅，沿用既有 status indicator token
 - 條件標籤：膠囊狀小元件，沿用既有 chip / tag token
 
-## 5.5 Component Inventory
+## 5.6 Component Inventory
 
 ### C-1: 節點卡片 (Node Card)
 
@@ -292,7 +313,7 @@
 
 **Variants**: success / error / info
 
-## 5.6 Page / Screen 結構
+## 5.7 Page / Screen 結構
 
 > （P-4 已於設計過程中併入 P-3，編號保留不重用）
 
@@ -415,7 +436,7 @@
 > - 節點分組 / 子流程
 > - 連線分支條件的視覺化區分
 
-## 5.7 Interaction Decisions（互動體驗決策）
+## 5.8 Interaction Decisions（互動體驗決策）
 
 > 前端體驗決策清單的拍板結果。不適用的維度寫「N/A — 原因」。
 
@@ -429,6 +450,24 @@
 | 操作回饋與防呆 | 成功用 Toast（C-9）；覆蓋既有模板需經同名 Modal（C-7）；啟用前軟提示（C-8）；匯入後一律為草稿需主動啟用 | 高風險操作攔截，低風險輕回饋 | D-0004, D-0008 |
 | 資料量呈現 | P-1 卡片網格不分頁、不搜尋（POC 假設模板數 < 50） | POC 範圍取捨，預留升級空間 | — |
 | 裝置與即時性 | 桌機 only；手動刷新，無即時同步 | 流程編輯器不適合行動裝置；POC 為單人編輯情境 | — |
+
+## 5.9 Design Handoff（前端設計交接）
+
+**Design System 來源**:
+- 沿用既有後台 Design System（status indicator / chip / graph component token 既有）。本 feature 僅新增 `--node-canvas-bg`、`--connection-line` 兩個 token，已列於 §5.5。無前置條件缺口。
+
+**Mockup / 視覺稿**:
+- 產出方式：實作階段由前端依既有 Design System 定案；節點卡片、連線等特殊視覺已於 §5.6 給尺寸與狀態規範
+- 餵給實作 / 設計工具的輸入：§5.6 component（角色 + 狀態 + 尺寸）、§5.7 page（版面 ASCII + Key states）、§5.8 互動決策
+- 視覺以既有 Design System 為準；新增 component（節點卡片 C-1、連線 C-2）的視覺於實作階段定案後，回頭同步 §5.6
+
+**前端開工前的前置清單**:
+- [x] Design System / tokens 就緒（沿用既有 + 2 個新 token）
+- [x] 視覺參照備妥（既有後台元件庫）
+- [x] 響應式斷點確認（桌機 only，無需斷點，對齊 §5.8）
+- [ ] 文案 / microcopy 來源 — 錯誤訊息、空狀態、軟提示文案散見 §5.3 / §5.6（C-8 啟用前確認文案已定），實作前由 PM 收斂為一份文案表
+
+> 本 feature 無「尚無 Design System」的前置缺口，故 §7 不需額外 OQ。
 
 ## 文件結束 — 回填 §4
 
