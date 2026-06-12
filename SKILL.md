@@ -91,7 +91,7 @@ Produce documents in this exact order (later docs reference earlier ones):
 2. `2-requirements.md` — FRs, NFRs, priority
 3. `3-domain-model.md` — Entities, state machines, business rules, events
 4. `4-flows.md` — System flows, error flows, edge cases (system-side only)
-5. `5-presentation-spec.md` — Presentation type, user stories, user flows, components, pages
+5. `5-presentation-spec.md` — Presentation type, user stories, user flows, components, pages, interaction decisions（§5.7 前端體驗拍板結果）
 6. `6-interfaces.md` — REST APIs, events, integrations, error catalog
 7. `7-decisions.md` + `decisions/NNNN-*.md` — ADRs, open questions（`7-decisions.md` 是索引：decision index + open questions；完整 ADR 內文在 `decisions/NNNN-*.md`）
 8. `8-acceptance.md` — Acceptance criteria (BDD format)

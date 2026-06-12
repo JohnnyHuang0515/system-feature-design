@@ -14,7 +14,7 @@
 | 2 | [requirements.md](./2-requirements.md) | 功能需求清單（FR）、非功能需求（NFR）、優先級 | ⬜ 待產 |
 | 3 | [domain-model.md](./3-domain-model.md) | 核心 entity、欄位、狀態機、業務規則 | ⬜ 待產 |
 | 4 | [flows.md](./4-flows.md) | 系統內部流程、錯誤處理流程、邊界情境 | ⬜ 待產 |
-| 5 | [presentation-spec.md](./5-presentation-spec.md) | 呈現方式、使用者故事、使用者流程、UI 元件、頁面結構 | ⬜ 待產 |
+| 5 | [presentation-spec.md](./5-presentation-spec.md) | 呈現方式、使用者故事、使用者流程、UI 元件、頁面結構、互動體驗決策 | ⬜ 待產 |
 | 6 | [interfaces.md](./6-interfaces.md) | 對外 API、事件、整合點、錯誤回應格式 | ⬜ 待產 |
 | 7 | [decisions.md](./7-decisions.md) | 關鍵設計決策索引、待決議事項 | ⬜ 待產 |
 | 8 | [acceptance.md](./8-acceptance.md) | 每個 FR 對應的驗收情境（Given-When-Then） | ⬜ 待產 |

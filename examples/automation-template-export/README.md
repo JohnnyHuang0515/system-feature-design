@@ -14,7 +14,7 @@
 | 2 | [requirements.md](./2-requirements.md) | 功能需求（FR）、非功能需求（NFR）、優先級 |
 | 3 | [domain-model.md](./3-domain-model.md) | Template / Node / Connection entities、狀態機、業務規則、JSON schema |
 | 4 | [flows.md](./4-flows.md) | 匯出 / 匯入 / AI 生成 / Seed 載入的系統流程、錯誤處理、邊界情境 |
-| 5 | [presentation-spec.md](./5-presentation-spec.md) | 使用者故事、使用者流程、UI 元件、頁面結構 |
+| 5 | [presentation-spec.md](./5-presentation-spec.md) | 使用者故事、使用者流程、UI 元件、頁面結構、互動體驗決策 |
 | 6 | [interfaces.md](./6-interfaces.md) | 匯出 / 匯入 API、錯誤碼 |
 | 7 | [decisions.md](./7-decisions.md) | POC 階段的關鍵設計決策（ADR）、待決議事項 |
 | 8 | [acceptance.md](./8-acceptance.md) | 對應 FR / state / BR / error / NFR 的驗收情境 |
