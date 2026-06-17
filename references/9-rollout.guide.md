@@ -184,7 +184,7 @@ POC 階段重點展示 §9.1 + §9.3 + §9.6。其他節給「精簡版 / 完整
 - Runbooks:{N} 份(含「由運維補」佔位)
 - Rollback:三層 + 演練 sign-off
 
-整份 spec 9 份文件 + decisions/ 子目錄都已產出!
+整份 spec 所有文件 + decisions/ 子目錄都已產出!
 
 要不要跑一次完整 spec 的總 review?
 我會檢查跨文件的一致性(編號 reference、必填覆蓋、孤兒檢查、概念一致性)。

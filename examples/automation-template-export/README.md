@@ -10,6 +10,7 @@
 
 | # | File | What's inside |
 |---|------|---------------|
+| 0 | [market-research.md](./0-market-research.md) | 需求規模、客群分群、競品（Make/n8n/Zapier…）、研究型 persona、差異化機會 |
 | 1 | [problem-scope.md](./1-problem-scope.md) | 要解決的問題、目標使用者、成功指標、scope 邊界（POC 設計決定） |
 | 2 | [requirements.md](./2-requirements.md) | 功能需求（FR）、非功能需求（NFR）、優先級 |
 | 3 | [domain-model.md](./3-domain-model.md) | Template / Node / Connection entities、狀態機、業務規則、JSON schema |
@@ -24,6 +25,10 @@
 
 | Prefix | Meaning | Defined in |
 |--------|---------|------------|
+| MS-N | Market Segment | 0-market-research.md §0.2 |
+| CMP-N | Competitor / Comparable | 0-market-research.md §0.3 |
+| PER-N | Persona (research-backed) | 0-market-research.md §0.4 |
+| OPP-N | Differentiation Opportunity | 0-market-research.md §0.6 |
 | FR-N | Functional Requirement | 2-requirements.md §2.1 |
 | NFR-N | Non-Functional Requirement | 2-requirements.md §2.2 |
 | BR-N | Business Rule | 3-domain-model.md §3.4 |

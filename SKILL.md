@@ -1,13 +1,13 @@
 ---
 name: system-feature-design
-description: Use this skill when the user wants to design a new system feature and needs a complete, AI-development-ready specification. Triggers on requests like "幫我做 system feature design", "我想設計一個新功能", "做一份功能規格", "design a new feature spec", "write a feature design document", "create a PRD for X", or any request involving feature planning that will be handed off for AI-assisted full-stack development (frontend + backend + UX). Produces a folder of 9 interlinked spec documents covering problem framing, requirements, domain model, system flows, presentation spec, interface contracts, design decisions (ADRs), acceptance criteria, and rollout — designed so each artifact can be claimed by a different role (PM / backend / frontend / UX / QA / SRE) and consumed by AI coding agents downstream.
+description: Use this skill when the user wants to design a new system feature and needs a complete, AI-development-ready specification. Triggers on requests like "幫我做 system feature design", "我想設計一個新功能", "做一份功能規格", "design a new feature spec", "write a feature design document", "create a PRD for X", as well as market-research requests that precede a feature ("幫我做市場調研", "競品分析", "market research", "competitive analysis", "市場規模 / TAM SAM SOM") — or any request involving feature planning that will be handed off for AI-assisted full-stack development (frontend + backend + UX). Produces a folder of up to 10 interlinked spec documents covering (optional) market research, problem framing, requirements, domain model, system flows, presentation spec, interface contracts, design decisions (ADRs), acceptance criteria, and rollout — designed so each artifact can be claimed by a different role (PM / backend / frontend / UX / QA / SRE) and consumed by AI coding agents downstream.
 ---
 
 # system-feature-design
 
 ## What this skill does
 
-Guide the user through producing a complete, multi-document feature spec — designed for handoff to AI-assisted full-stack development. The output is a folder of 9 interlinked markdown documents (plus an ADR sub-folder), each with a single focus and explicit cross-references via a shared ID system.
+Guide the user through producing a complete, multi-document feature spec — designed for handoff to AI-assisted full-stack development. The output is a folder of up to 10 interlinked markdown documents (plus an ADR sub-folder), each with a single focus and explicit cross-references via a shared ID system. The first document — §0 market research — is **optional** and runs before §1: in it Claude does live web research + ingests any data the user provides, then feeds the findings (personas, differentiation opportunities, sizing) forward into problem framing and requirements.
 
 This skill is **not** a passive template. The core working model is:
 
@@ -40,7 +40,7 @@ When this file says "follow the X pattern in 0-skill-mode.md", go read that sect
 
 ### Context budget: read on demand, not upfront
 
-This skill ships with 10 reference guides (`0-skill-mode.md` + 9 per-document guides) and a full example folder. **Do NOT read all of them at the start** — that will burn through context before you start producing.
+This skill ships with 11 reference guides (`0-skill-mode.md` + `0-market-research.guide.md` + 9 per-document guides) and a full example folder. **Do NOT read all of them at the start** — that will burn through context before you start producing.
 
 The correct pattern:
 - **At start**: read only `references/0-skill-mode.md`.
@@ -49,11 +49,13 @@ The correct pattern:
 
 ## Step 2: Opening
 
-Follow the opening pattern defined in `0-skill-mode.md` (the "開場" section): greet, accept the user's one-sentence description, ask at most 1–3 everyday-language follow-ups, then start §1 immediately. Do not ask the user to fill out a structured form.
+Follow the opening pattern defined in `0-skill-mode.md` (the "開場" section): greet, accept the user's one-sentence description, ask at most 1–3 everyday-language follow-ups. Do not ask the user to fill out a structured form.
+
+Then **offer §0 market research before starting §1** (also defined in the "開場" section). If the user wants it (or already has research to fold in), do §0 first; if they decline or it's clearly a pure internal tool with no market dimension, skip straight to §1 and mark §0 as skipped in the README. If the user's request is *itself* a market-research / competitive-analysis ask, §0 is the main event — do it, then offer to continue into the full spec.
 
 ## Step 3: Per-document loop
 
-The spec has 9 documents, produced in order. For each one:
+The spec has up to 10 documents — optional §0, then §1–§9 — produced in order. For each one:
 
 ### 3a. Read the document's reference guide
 
@@ -62,6 +64,8 @@ Before starting document N, read `references/{N}-{name}.guide.md` and `templates
 ### 3b. Derive internally
 
 Use the user's initial description, previously completed documents on disk, and the guide's derivation table. Apply the **derive vs ask** judgment from `0-skill-mode.md` — derive structure, ask about business/context decisions.
+
+> **§0 is the exception**: it is *research-driven*, not derive-driven. Instead of inferring from the user's sentence, use `WebSearch` / `WebFetch` to research the market and competitors, and `Read` to ingest any data files the user provides. Before the expensive research run, state the research plan in **one line** and get a single direction-confirm (the "開跑前的方向確認" gate) — then run to completion without interrupting. Every market figure or competitor fact must carry a source and a confidence level — never fabricate numbers. See `references/0-market-research.guide.md` ("開跑前的方向確認" + "研究方法") for the full rules.
 
 If §1 established this is a **POC / side project**, also apply the **POC 快速模式** rule from `0-skill-mode.md`: auto-apply recommendations for low-risk decisions (announce them in one line), hard-stop only on high-risk forks (irreversible / money-direction / data-model-shaping). Target ≤5–8 hard stops across the whole session.
 
@@ -87,6 +91,7 @@ Run the guide's reflection checklist. Fix gaps. **Strip resolved markers before 
 
 Produce documents in this exact order (later docs reference earlier ones):
 
+0. `0-market-research.md` (optional, runs first) — Market sizing, segments, competitors, research-backed personas, sentiment, differentiation; feeds §1 and §2
 1. `1-problem-scope.md` — Problem, users, success criteria, scope, assumptions
 2. `2-requirements.md` — FRs, NFRs, priority
 3. `3-domain-model.md` — Entities, state machines, business rules, events
@@ -96,6 +101,8 @@ Produce documents in this exact order (later docs reference earlier ones):
 7. `7-decisions.md` + `decisions/NNNN-*.md` — ADRs, open questions（`7-decisions.md` 是索引：decision index + open questions；完整 ADR 內文在 `decisions/NNNN-*.md`）
 8. `8-acceptance.md` — Acceptance criteria (BDD format)
 9. `9-rollout.md` (optional) — Rollout, observability, runbook, rollback
+
+If the user skips §0: do not create the file; mark its README row `⏭️ 跳過（原因）`. §1.3 personas then fall back to "derive from description + `[需確認]`" (no PER-N references). Nothing downstream hard-depends on §0, so no rewrite sweep is needed.
 
 If the user skips §9: scan §1–§8 for forward references to §9 (e.g. an NFR saying「詳見 §9.3」, an EF pointing at「§9.4 alert」), rewrite or remove them, and drop the §9 row from README's index.
 
@@ -112,7 +119,7 @@ Use the corresponding files in `templates/` as the structural starting point —
 
 ### When to write each file
 
-**Write each document to disk as soon as the user confirms it** (end of step 3e for that document). Do NOT wait until all 9 are done. Reasons:
+**Write each document to disk as soon as the user confirms it** (end of step 3e for that document). Do NOT wait until all of them are done. Reasons:
 - The user can review the actual file between docs.
 - Later docs reference earlier docs by §X.Y — having them on disk lets you re-read instead of re-deriving from memory.
 - If the session is interrupted, work is preserved.
@@ -137,6 +144,10 @@ After the last document is written, proactively offer the full-spec review. The 
 
 | Prefix | Meaning | Defined in |
 |--------|---------|------------|
+| MS-N | Market Segment | §0.2 |
+| CMP-N | Competitor / Comparable | §0.3 |
+| PER-N | Persona (research-backed) | §0.4 |
+| OPP-N | Differentiation Opportunity | §0.6 |
 | FR-N | Functional Requirement | §2.1 |
 | NFR-N | Non-Functional Requirement | §2.2 |
 | BR-N | Business Rule | §3.4 |
@@ -161,12 +172,14 @@ system-feature-design/
 ├── SKILL.md                          (this file — flow skeleton)
 ├── templates/                        (structural skeletons to fill)
 │   ├── README.template.md
+│   ├── 0-market-research.template.md (optional doc, runs first)
 │   ├── 1-problem-scope.template.md
 │   ├── ... (2-9)
 │   └── decisions/
 │       └── NNNN-template.md
 ├── references/                       (how-to guides for Claude)
 │   ├── 0-skill-mode.md               ← READ FIRST (work philosophy)
+│   ├── 0-market-research.guide.md    (research-driven; web search + data ingest)
 │   ├── 1-problem-scope.guide.md
 │   └── ... (2-9)
 └── examples/                         (filled-out example — reference only when stuck)

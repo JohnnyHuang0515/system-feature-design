@@ -13,8 +13,9 @@
 ## 1.3 Target Users / Personas
 
 > 功能 persona，不需要 UX persona 的人口統計細節。
+> 若有做 §0 market research，這裡的 persona 直接引用 §0.4 的 PER-N（標出 PER-X + 名稱），不再憑空反推。
 
-- **{Persona 名稱}**：{角色描述（一句）}。目標是{他想完成什麼}；痛點是{他現在怎麼受苦}。
+- **{PER-X / Persona 名稱}**：{角色描述（一句）}。目標是{他想完成什麼}；痛點是{他現在怎麼受苦}。{有 §0 則註：完整研究見 §0.4}
 - **{Persona 名稱}**：...
 - **{Persona 名稱}**：...
 

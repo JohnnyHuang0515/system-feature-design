@@ -20,13 +20,17 @@
 
 ### FR 推導來源
 
+> **若有做 §0 market research**：FR 優先級不只看 §1.5 —— 也吃 §0.6 的 differentiation opportunities。
+> 對應到某條 `OPP-N`（我們的差異化切入點）的 FR 應**提高優先級**，並在 Related 欄引用該 OPP-N。
+> 這是 §0.7 Implications 承諾「OPP → §2 優先級」的接收端，別讓機會在 §0 宣告完就斷掉。
+
 | 推導對象 | 推導來源 |
 |---|---|
 | FR 清單 | §1.5 in scope 的每一項展開為 1-N 條 FR |
 | FR Description | 用 "Allow X to do Y" 句型(系統能力,不寫使用者動作) |
-| FR Persona | 對應 §1.3 的 persona |
-| FR Priority | 從 §1.5 推測,POC 階段預設 Must,選填類預設 Should |
-| FR Related | reference 到 §1 的小節 |
+| FR Persona | 對應 §1.3 的 persona(有 §0 時即 PER-N) |
+| FR Priority | 從 §1.5 推測,POC 階段預設 Must,選填類預設 Should；**有 §0 時，承接 §0.6 OPP-N 的 FR 上調優先級** |
+| FR Related | reference 到 §1 的小節；承接差異化機會的 FR 加註對應 `OPP-N` |
 
 ### NFR 推導來源
 
@@ -46,6 +50,8 @@
 ### Priority Summary 推導
 
 FR + NFR 合計 > 10 條時自動產出 Priority Summary。
+
+**有做 §0 時**：承接 `OPP-N` 的 FR 多半也是 Must(跟 table-stakes 並列),光靠 Must/Should/Could 分不出「哪個 Must 才是差異化核心」。因此 Priority Summary 要**把承接 OPP-N 的 FR 獨立標為「差異化核心」並排在最前**,註明:優先實作、取捨時最後砍。這樣「最高優先級」才有可見的著力點,而不是淹沒在一堆 Must 裡。
 
 ## 必要決策點(要問使用者的)
 
@@ -117,6 +123,7 @@ NFR 分類:[列出有用到的分類]
 
 - [ ] 每條 §1.5 in scope 都對應至少 1 條 FR
 - [ ] 每條 FR 的 Persona 都對應到 §1.3 列出的 persona
+- [ ] 有做 §0 時，§0.6 每條 OPP-N 都有對應到某條被提高優先級的 FR(機會沒斷掉)
 - [ ] NFR 至少涵蓋 Security & Authorization
 - [ ] FR + NFR 合計 > 10 條時有 Priority Summary
 - [ ] 標記都已使用得當
