@@ -215,7 +215,7 @@ One condition alone is something else, and has a home already:
 要這樣走嗎?
 ```
 
-**Don't decide this one yourself.** Escalating a session into a heavier process is the user's call, and the cost of guessing wrong lands on them. Your job is that they see the choice clearly — a run that quietly starts specifying without naming these items has taken the decision by omission, which is the failure this count exists to prevent.
+**The reading is done when the user has answered.** Escalating a session into a heavier process is their call — the cost of guessing wrong lands on them — and your job is that they can see it clearly enough to make it. The completion criterion is theirs, not yours: the count, each item's blocked section, and the rewrite cost are in front of them, and they have said which way to go.
 
 **The user's own words settle whether an item counts.** 「不知道,要查了才知道」、「要先有人把資料撈出來看過才有辦法談」 — a user saying the answer needs someone to go and *find a fact* has named fog. A plan to run the spec in parallel while the fact is gathered doesn't change what it is; it describes paying the rewrite.
 

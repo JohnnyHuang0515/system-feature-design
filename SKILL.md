@@ -1,6 +1,6 @@
 ---
 name: system-feature-design
-description: Design a feature as an AI-development-ready spec, chart work too large for one session as a map of decisions, break a spec into buildable tickets, or scaffold a project's Claude Code conventions. Use when the user wants a spec / PRD / 功能規格 for a new feature to hand off to AI-assisted full-stack development ("設計一個新功能", "做一份功能規格", "create a PRD for X", "design a feature spec"); when they want the market research that precedes one ("市場調研", "競品分析", "market research", "competitive analysis", "TAM SAM SOM"); when the work is too big to think through in one sitting and needs charting as decisions before anything is specified ("這件事很大", "先幫我理清楚", "太多不確定", "this is too big to plan in one go", "map this out first"); when they have a spec or plan and want it cut into tickets or tasks ("拆任務", "拆票", "break this into tickets", "split the spec into tasks"); or when they want to set up, initialize, or migrate a codebase onto Claude Code conventions — CLAUDE.md, rules, sub-agents ("初始化專案", "設定 CLAUDE.md", "scaffold a Claude Code project", "anatomy of .claude").
+description: Spec a feature for AI-assisted development, research the market that shapes it, chart oversized work as a map of decisions, cut a spec into tickets, or scaffold a repo's Claude Code conventions. Use when the user asks for 「做一份功能規格」 or a spec / PRD for a new feature; 「市場調研」 or competitive analysis and market sizing; 「這件事很大,先幫我理清楚」 or "this is too big to plan in one go"; 「拆票」 or "break this into tickets"; 「初始化專案」 or "scaffold a Claude Code project" — CLAUDE.md, rules, sub-agents.
 ---
 
 # system-feature-design
@@ -103,7 +103,7 @@ The same moment takes one more reading: **which decisions here can nobody answer
 
 Report the count as a number and name what each item blocks. Then say the thing the user can't see: those sections would be written from a guess and rewritten when the fact lands. **Planning to write a provisional version and reconcile later is what being blocked looks like, not a way around it.**
 
-Then recommend the Map branch and stop. Escalating into a heavier process is the user's call — but specifying anyway without naming these items decides it by omission, and that is the failure this reading exists to prevent. `references/1-problem-scope.guide.md` carries the detail; this paragraph is the whole rule.
+Then recommend the Map branch and hand back. Escalating into a heavier process is the user's call, and they can make it only once they can see it — so the reading is done when the count, the blocked sections and the cost are in front of them and they have answered. `references/1-problem-scope.guide.md` carries the detail; this paragraph is the whole rule.
 
 | Path | Carries | Depth |
 |---|---|---|

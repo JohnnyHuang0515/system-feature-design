@@ -17,8 +17,10 @@ The evidence was already in the package. The marker invariant — the one rule t
 
 ## Consequences
 
-This cuts against progressive disclosure, which is why it needs stating: **the branch that decides whether to keep going cannot be disclosed progressively.** Read-on-demand is right for a document's derivation table, which is only needed once that document starts; it is wrong for a check that determines whether that document should be written at all.
+This is not an exception to progressive disclosure — it is the test being applied correctly, which the first version of this ADR got wrong. `writing-great-skills` states it directly: **inline what every branch needs, and push behind a pointer what only some branches reach.** Every Spec run needs the fog reading, so it is inline; only §1 needs §1's derivation table, so that stays disclosed. The rule was never "disclose everything you can".
 
-The cost is duplication between `SKILL.md` and the guide, which the package otherwise treats as sediment. Accept it for gates, and only for gates. When they drift, `SKILL.md` is the copy that ran.
+It also names the mechanism behind the shallow runs: **a context pointer's wording, not its target, decides how reliably the agent reaches the material.** The pointer here was a table row — *starting document N → read the guide* — which states an occasion and no reason.
+
+The remaining cost is that "fog" now has a definition in two files. Carry it as a **leading word** rather than a restatement: the guide defines it once, `SKILL.md` uses the word and states the action. When they drift, `SKILL.md` is the copy that ran.
 
 What catches the regression: a run whose tool-call count is low. If a shallow run still applies a rule, the rule is placed correctly; if only deep runs apply it, it is buried. See `docs/adr/0001`.
