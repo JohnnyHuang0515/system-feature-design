@@ -44,6 +44,8 @@ The script exits non-zero with the reason. Fix the named cause and re-run it —
 | Template not found | The skill's own files are incomplete — tell the user to reinstall. |
 | VALIDATION FAILED — unreplaced placeholders | Rare. The files landed with raw `{{FOO}}` in them; report the specific placeholders and ask the user what they should be. |
 | Config missing required fields | A required key is absent from the JSON. Add it and re-run. |
+| Skill templates nothing ships | A `.md` sits at the top of `templates/skills/` that no config path emits. Add it to the shipped list, or move it to `in-progress/`. |
+| `X` is in skills/in-progress/ but the scaffold still ships it | The folder and the shipped list disagree. Pick one. |
 
 ## Anatomy of the output
 
@@ -77,6 +79,20 @@ Eight ship on every scaffold, plus `deploy` when a deploy target is configured:
 | `security-review` | Trust boundaries, classic vulnerabilities, auth and secrets. |
 
 `domain-glossary` is the bridge back to the Spec branch: §3's entities and business rules seed `CONTEXT.md`, and `decisions/NNNN-*.md` seed `docs/adr/`. From then on the repo's copies are the living ones.
+
+#### Three states, and the folder is which
+
+A skill template ships, or it doesn't yet, or it used to:
+
+| Where it sits | State |
+|---|---|
+| `templates/skills/*.md` | **live** — ships on every scaffold, or on its config key |
+| `templates/skills/in-progress/` | **drafted** — being written, tested, or waiting on a decision |
+| `templates/skills/deprecated/` | **retired** — kept so the reasoning survives, and so a superseding skill can point at it |
+
+Neither subfolder reaches a target repo. `scaffold.py` enforces it both ways: a live template nothing ships is an error, and a name sitting in a subfolder while still on the shipped list is an error rather than a silent preference.
+
+Both folders arrive with their first occupant. A skill goes to `in-progress/` the moment it stops being ready — half-written, or failing the run that would have proved it — which is what keeps the live set meaning *tested*. It comes back out when a run passes, not when it reads well.
 
 ### .claude/agents/
 Specialised roles, each in its own context window with its own tool scope — which is the point: a reviewer that cannot edit code, an implementer uncontaminated by the planner's exploratory reads.

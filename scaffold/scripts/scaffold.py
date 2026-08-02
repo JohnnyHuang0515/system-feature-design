@@ -190,6 +190,38 @@ def find_unreplaced_placeholders(text: str) -> list[str]:
     return re.findall(r"\{\{(\w+)\}\}", text)
 
 
+RETIRED_DIRS = ("in-progress", "deprecated")
+
+
+def check_skill_lifecycle(skills_dir: Path, shipped: list[str], known: list[str]) -> None:
+    """Skill templates live in one of three states, and the folder is which.
+
+    Top level ships. `in-progress/` is drafted but not ready; `deprecated/` is
+    retired and kept for reference. Neither subfolder ever reaches a target repo,
+    so a name in both places is a contradiction rather than a preference — this
+    raises instead of guessing which one was meant.
+    """
+    for state in RETIRED_DIRS:
+        d = skills_dir / state
+        if not d.is_dir():
+            continue
+        for f in sorted(d.glob("*.md")):
+            if f.stem in shipped:
+                raise ValueError(
+                    f"'{f.stem}' is in skills/{state}/ but the scaffold still ships it. "
+                    f"Move it out of {state}/, or take it off the shipped list."
+                )
+
+    orphans = sorted(
+        f.stem for f in skills_dir.glob("*.md") if f.stem not in known
+    )
+    if orphans:
+        raise ValueError(
+            "Skill templates nothing ships: " + ", ".join(orphans) + ". "
+            "Add each to the shipped list, or move it to skills/in-progress/."
+        )
+
+
 def copy_template(
     src: Path, dst: Path, replacements: dict, dry_run: bool,
 ) -> list[str]:
@@ -330,15 +362,17 @@ def scaffold(
         "handoff",
         "resolving-merge-conflicts",
     ]
-    for skill_name in ALWAYS_SKILLS:
+    CONDITIONAL_SKILLS = ["deploy"]  # ships only when its config key is set
+    shipped = list(ALWAYS_SKILLS)
+    if cfg.get("deploy_target"):
+        shipped.append("deploy")
+    check_skill_lifecycle(
+        templates_dir / "skills", shipped, ALWAYS_SKILLS + CONDITIONAL_SKILLS,
+    )
+    for skill_name in shipped:
         jobs.append((
             templates_dir / "skills" / f"{skill_name}.md",
             target / ".claude" / "skills" / skill_name / "SKILL.md",
-        ))
-    if cfg.get("deploy_target"):
-        jobs.append((
-            templates_dir / "skills" / "deploy.md",
-            target / ".claude" / "skills" / "deploy" / "SKILL.md",
         ))
 
     # 6. Agents.
