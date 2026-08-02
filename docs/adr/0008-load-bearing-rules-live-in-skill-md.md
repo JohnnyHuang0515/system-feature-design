@@ -28,6 +28,12 @@ Inlining is the fallback, not the first move. Two cases here, and only one of th
 
 So the rule stated above is narrower than it reads: **a rule that decides whether the run proceeds belongs in `SKILL.md` once a sharpened pointer has failed to reach it, or cannot fire at all.**
 
+**The sharpened pointer was then measured, and it works.** A cheap-model run given no instruction to read anything reproduced 「fog 檢查:0 項 — 都問得出選項」 and 「這次走:MVP」 — phrasings that appear zero times in `SKILL.md` and only at line 256 of a 264-line guide. It opened the guide and read to the end of it.
+
+That does **not** license pulling the fog rule back down, for two reasons. The run had zero fog, so it never exercised the path that failed five times; and there is nothing left to pull, since the duplication was already resolved by making `SKILL.md` own the test and the guide point up at it. What remains inline costs ten lines and is the only configuration nine runs have verified.
+
+The result matters for everything else instead: **a rule placed in a guide can now be expected to be reached.** Rules do not need hoisting into `SKILL.md` by default — only when their pointer cannot fire, as with §0's skip.
+
 The remaining cost is that "fog" now has a definition in two files. Carry it as a **leading word** rather than a restatement: the guide defines it once, `SKILL.md` uses the word and states the action. When they drift, `SKILL.md` is the copy that ran.
 
 What catches the regression: a run whose tool-call count is low. If a shallow run still applies a rule, the rule is placed correctly; if only deep runs apply it, it is buried. See `docs/adr/0001`.
