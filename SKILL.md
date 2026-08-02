@@ -99,7 +99,11 @@ Write the file, note its path, give the closing summary, and confirm the user is
 
 §1's stage question — POC, MVP, or production — settles **which documents this run carries and how deep each goes**. Say which path you're on once it's answered; a path carrying documents it doesn't need is the most common way this gets heavy.
 
-The same moment settles one more fork: whether this run fits at all. §1's fog count decides it, and a run that doesn't fit goes to the Map branch before §2 opens.
+The same moment takes one more reading: **which decisions here can nobody answer yet?** One that you can name but **cannot write options for**, and which **also blocks §2 onward**, is **fog** — a fact someone has to go and find, not a choice the user can make. 「不知道,要查了才知道」 is fog; 「沒想過,你建議呢」 is a `[待拍板]`.
+
+Report the count as a number and name what each item blocks. Then say the thing the user can't see: those sections would be written from a guess and rewritten when the fact lands. **Planning to write a provisional version and reconcile later is what being blocked looks like, not a way around it.**
+
+Then recommend the Map branch and stop. Escalating into a heavier process is the user's call — but specifying anyway without naming these items decides it by omission, and that is the failure this reading exists to prevent. `references/1-problem-scope.guide.md` carries the detail; this paragraph is the whole rule.
 
 | Path | Carries | Depth |
 |---|---|---|
