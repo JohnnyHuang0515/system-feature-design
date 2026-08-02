@@ -35,7 +35,8 @@ Read everything else on demand — 10 guides, 11 spec templates and a worked exa
 | When | Read |
 |---|---|
 | starting document N | `references/{N}-*.guide.md` + `templates/{N}-*.template.md` |
-| checking how an ID resolves across documents | the matching file under `examples/automation-template-export/` — read it to verify the chain, not to source content |
+| checking your own spec's IDs resolve | run `python3 <skill-path>/scripts/check-example-ids.py <spec-folder>` — it reports dangling IDs and broken coverage chains |
+| wanting to see what a finished chain looks like | the matching file under `examples/automation-template-export/` — read it for shape, never to source content |
 
 ## Opening
 
@@ -167,9 +168,11 @@ Then offer the two branches the spec feeds:
 | D-NNNN | Decision (ADR) | `decisions/` |
 | AC-* | Acceptance Criteria | §8 |
 
-Domain events (§3.5) are referenced by PascalCase name — `TemplateImported` — with no ID.
+Domain events (§3.5) are referenced by PascalCase name — `TemplateImported` — with no ID. §6's error codes (`UPPER_SNAKE_CASE`) and §9's runbooks (`RB-N`) are **document-local**: cite them freely inside their own document, and don't expect them to resolve from elsewhere.
 
 Cite by ID, always: `FR-3`, never "the third requirement". When a section gains an item, assign the next number in sequence and say so out loud — "adding this as FR-3".
+
+**A `D-NNNN` citation means the file exists.** Two decisions reach `decisions/` by different routes and only one of them is immediate: a `[待拍板]` the user **defers** gets its number and its file right then, because §7.2 needs something to point at. A decision the user **settles on the spot** is authored at §7, the consolidation stage — so until §7 runs, leave the `Related ADR` column as `—` rather than citing a number you have not written yet. A cited ID with no file is exactly what `check-example-ids.py` reports as dangling.
 
 ---
 
