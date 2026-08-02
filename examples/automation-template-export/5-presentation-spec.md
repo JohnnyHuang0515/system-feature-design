@@ -149,22 +149,18 @@
 
 > AI 生成入口（UF-4）走相同的「預覽 → 寫入 → 啟用」後段，差別只在來源不是檔案；Seed 載入（UF-6）是系統行為，不在使用者旅程內。
 
-## 5.5 Design System & Visual Notes
+## 5.5 Design System 依賴
 
 **既有 Design System 狀態**:
-- [x] **已有** — 沿用既有後台 Design System（既有 status indicator / chip / graph component token）
+- [x] **已有** — 沿用既有後台 Design System
 - [ ] 沒有
 
-**Existing tokens used**: 沿用既有 Design System
+**來源**: 既有後台 Design System（status indicator / chip / graph component）
 
-**New tokens introduced by this feature**:
-- `--node-canvas-bg`: 流程編輯器畫布背景色（淺灰或格點，POC 二擇一）
-- `--connection-line`: 連線顏色（既有 graph component 沿用）
-
-**Component-specific visual notes**:
-- 連線使用**貝茲曲線**（非直線），本 feature 特有的視覺風格
-- 節點狀態指示點：綠 / 橙 / 紅，沿用既有 status indicator token
-- 條件標籤：膠囊狀小元件，沿用既有 chip / tag token
+**本 feature 需要、但既有 Design System 還沒有的**:
+- 畫布需要一個可與節點卡片明確區分的底層表面 —— 既有 token 沒有涵蓋「可平移縮放的工作區背景」
+- 連線需要能表達方向與可選條件標籤；既有 graph component 有線條但無條件標籤形式
+- 節點狀態需要三個級距的表現（設定完整 / 尚未指派 / 條件衝突），沿用既有 status indicator 的三級即可
 
 ## 5.6 Component Inventory
 
@@ -333,7 +329,7 @@
 - **T-3 節點設定側邊面板**：使用 C-3。未選取節點時收合，選取節點時出現
 
 **版面約束**:
-- T-3 出現時 T-2 必須仍可見且可操作 —— 使用者要邊看流程邊改設定，設定面板不能蓋掉正在編輯的節點
+- T-3 出現時 T-2 必須仍可見且可操作 —— 因為使用者要邊看流程邊改設定，設定面板蓋掉正在編輯的節點就等於要來回切換
 
 **Canvas 行為**:
 - 平移：空白處按住拖曳

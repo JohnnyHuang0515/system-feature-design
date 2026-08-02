@@ -77,6 +77,10 @@ From the user flows: the UI elements a step touches → components (C-N); the sc
 
 Where the arrangement genuinely matters, write it as a **constraint with its reason** rather than a picture — 「T-1 與 T-2 必須同時可見,因為改 T-1 會即時改變 T-2 的可選項」. That is spec: it holds however the page is drawn. A box diagram is one way of satisfying it, chosen before anyone has seen the real content.
 
+**A constraint says what must stay true; a placement says where something sits.** 「捲動時必須保持可見」 is a constraint — pinned top, floating bottom and a side rail all satisfy it. 「在頁面底部」、「佔主要空間」、`sticky`、`z-index` are placements, and prose doesn't make them spec; they are the diagram with its lines removed. **The test: if only one arrangement satisfies it, it is a placement.**
+
+The `因為` is what does the work here. A constraint you can't finish that sentence for is one you inferred from a layout you were already picturing.
+
 ### Design handoff (§5.9, GUI only)
 
 §5 carries structure and interaction. **Visuals — mockups, colour, type scale — are downstream and out of this spec.** §5.9 turns that boundary from a silent hole into an explicit gap with directions:
