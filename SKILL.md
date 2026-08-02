@@ -1,15 +1,16 @@
 ---
 name: system-feature-design
-description: Design a feature as an AI-development-ready spec, break a spec into buildable tickets, or scaffold a project's Claude Code conventions. Use when the user wants a spec / PRD / 功能規格 for a new feature to hand off to AI-assisted full-stack development ("設計一個新功能", "做一份功能規格", "create a PRD for X", "design a feature spec"); when they want the market research that precedes one ("市場調研", "競品分析", "market research", "competitive analysis", "TAM SAM SOM"); when they have a spec or plan and want it cut into tickets or tasks ("拆任務", "拆票", "break this into tickets", "split the spec into tasks"); or when they want to set up, initialize, or migrate a codebase onto Claude Code conventions — CLAUDE.md, rules, sub-agents ("初始化專案", "設定 CLAUDE.md", "scaffold a Claude Code project", "anatomy of .claude").
+description: Design a feature as an AI-development-ready spec, chart work too large for one session as a map of decisions, break a spec into buildable tickets, or scaffold a project's Claude Code conventions. Use when the user wants a spec / PRD / 功能規格 for a new feature to hand off to AI-assisted full-stack development ("設計一個新功能", "做一份功能規格", "create a PRD for X", "design a feature spec"); when they want the market research that precedes one ("市場調研", "競品分析", "market research", "competitive analysis", "TAM SAM SOM"); when the work is too big to think through in one sitting and needs charting as decisions before anything is specified ("這件事很大", "先幫我理清楚", "太多不確定", "this is too big to plan in one go", "map this out first"); when they have a spec or plan and want it cut into tickets or tasks ("拆任務", "拆票", "break this into tickets", "split the spec into tasks"); or when they want to set up, initialize, or migrate a codebase onto Claude Code conventions — CLAUDE.md, rules, sub-agents ("初始化專案", "設定 CLAUDE.md", "scaffold a Claude Code project", "anatomy of .claude").
 ---
 
 # system-feature-design
 
-Three branches. Each runs alone, and each can start from what another produced.
+Four branches. Each runs alone, and each can start from what another produced.
 
 | Branch | Produces | Reach for it when |
 |---|---|---|
 | **Spec** | up to 10 interlinked documents (§0–§9) in a `{feature-name}/` folder | the user has a feature in mind and needs it specified |
+| **Map** | a map of decision tickets, resolved one per session | the work doesn't fit one context window — too many unanswerable questions to specify it yet. Runs *before* Spec |
 | **Tickets** | tracer-bullet tickets with blocking edges | a spec, plan or conversation is ready to become buildable work |
 | **Scaffold** | a repo's `CLAUDE.md` + `.claude/` — rules, skills, sub-agents | the user is starting a codebase, or moving an existing one onto Claude Code conventions |
 
@@ -51,6 +52,8 @@ Then offer §0 market research, and take one of three routes:
 **Keep the whole Spec branch — and Tickets, if it follows — in one unbroken context window.** Don't compact and don't clear between documents: §5 re-reads §4, §8 re-reads everything, and a summarized §3 is a §3 you will silently get wrong.
 
 The ceiling is the window in which the model still reasons sharply, roughly 120k tokens on current models. Approaching it before the spec is finished, don't push on degraded — write out what's confirmed, hand off to a fresh session, and resume from the README's 狀態 column.
+
+Work that was never going to fit takes the **Map** branch instead, and §1's fog count is where that gets decided rather than discovered at 110k. Handing off mid-spec rescues a run that ran long; a Map is for work whose *decisions* don't fit, which handing off does not fix.
 
 Implementation is the opposite: each ticket starts in a **fresh** window, working from the ticket alone.
 
@@ -96,6 +99,8 @@ Write the file, note its path, give the closing summary, and confirm the user is
 
 §1's stage question — POC, MVP, or production — settles **which documents this run carries and how deep each goes**. Say which path you're on once it's answered; a path carrying documents it doesn't need is the most common way this gets heavy.
 
+The same moment settles one more fork: whether this run fits at all. §1's fog count decides it, and a run that doesn't fit goes to the Map branch before §2 opens.
+
 | Path | Carries | Depth |
 |---|---|---|
 | **POC / side project** | §1–§8. §0 and §9 skipped | POC fast mode. §4 takes the happy path plus the failures that will actually happen, not an exhaustive sweep. §6 covers what the frontend actually calls. §5.4–§5.9 only where there's a GUI |
@@ -114,7 +119,7 @@ A `{feature-name}/` folder in the user's current working directory — settle th
 
 **Create the `{feature-name}/` folder up front** — every document lands inside it, and the README's index is only meaningful relative to it. Writing spec documents loose in the working directory is wrong even for a single-document run.
 
-**Its subfolders grow as their contents arrive**, though: `decisions/` appears when the first ADR is written, `issues/` when the Tickets branch runs. An empty subdirectory named after a document that doesn't exist yet is noise the user has to interpret.
+**Its subfolders grow as their contents arrive**, though: `decisions/` appears when the first ADR is written, `map/` when the Map branch charts one, `issues/` when the Tickets branch runs. An empty subdirectory named after a document that doesn't exist yet is noise the user has to interpret.
 
 Names are literal — the subfolder is `decisions/`, never `{decisions}/`. Braces in this file mark a slot for you to fill, never a character to type.
 
@@ -162,6 +167,26 @@ Cite by ID, always: `FR-3`, never "the third requirement". When a section gains 
 
 ---
 
+# Branch: Map
+
+For work that **does not fit one context window** — charted as decision tickets and resolved one per session, until the way to the destination is clear and the Spec branch can run normally. Read `references/map.guide.md` before step 1; templates are `templates/map.template.md` and `templates/map-ticket.template.md`.
+
+**The trigger is a count, not a feeling.** §1's fog count decides it: a decision you can name but **cannot write options for**, which **also blocks §2 onward**, is fog. One or more means chart a map. Both conditions as written — an unphrasable decision that doesn't block is a §7.2 Open Question, and ten decisions you *can* write options for are a spec run however long the list. A user arriving with 「這件事很大」 enters here directly.
+
+**Two modes.**
+
+**Chart** — name the destination first, since it fixes the scope. Then grill **breadth-first** across the whole space rather than deep on one thread. If that surfaces no fog, stop and say so: the work fits, and a map for it is pure overhead. Otherwise write `map.md`, write the tickets you can phrase, wire the blocking edges in a second pass, name the frontier, and stop. Charting resolves nothing.
+
+**Work through** — read the map, take a frontier ticket, claim it before any work, resolve it, record the answer in the ticket and one line on the map. Then update the edges: graduate fog that became phrasable, rule out anything the answer pushed past the destination. **One ticket per session**, research excepted.
+
+**Plan, don't do.** Every ticket resolves a decision. The urge to just build it is the signal you've reached the edge of the map — hand off there. A `task` ticket is the one that does rather than decides, and it earns that by unblocking a decision, never by delivering the destination.
+
+**A HITL ticket only resolves through live exchange with the human.** An agent that answers its own grilling questions has broken the single rule this branch has.
+
+Map items are **questions** and land in `map/`; Tickets items are **slices** and land in `issues/`. Both have blocking edges and a frontier, which is why they get confused — the Map's frontier is what can be **decided** now, the Tickets frontier is what can be **built** now. A Map never writes into `issues/`.
+
+---
+
 # Branch: Tickets
 
 Cuts a spec, a plan, or the current conversation into **tracer bullets** — vertical slices, each declaring the tickets that block it. Read `references/tickets.guide.md` before step 2; it carries the slicing rules, the expand–contract exception, and the spec-to-ticket mapping. Ticket bodies start from `templates/ticket.template.md`, and `examples/automation-template-export/issues/` is a worked set with its dependency graph.
@@ -169,6 +194,8 @@ Cuts a spec, a plan, or the current conversation into **tracer bullets** — ver
 **1. Gather the source.** Work from what's in the conversation. Given a path, an issue number or a URL, fetch it and read the body and comments in full. A `{feature-name}/` spec folder means reading §2 (FR), §5.3 (UF), §7 (ADRs) and §8 (AC) at minimum.
 
 **2. Survey the codebase**, where there is one — greenfield, or a spec sitting outside any repo, skips this step. Ticket titles use the project's own vocabulary, and ADRs in the area you're touching still bind. Note any prefactoring that would make the slices land easier — *make the change easy, then make the easy change* — and give it its own ticket, first.
+
+Where the source is a conversation or a plan rather than a spec that already ran §1, run the prior-art check from `references/1-problem-scope.guide.md` here — searching by domain concept rather than the request's wording, and reporting where you looked. Slicing up work that already exists is the one mistake this step is positioned to catch.
 
 **3. Draft the slices.** Each cuts a narrow but complete path through every layer, lands demoable on its own, and fits in one fresh context window. Give each its blocking edges. A wide refactor goes to expand–contract instead — see the guide.
 

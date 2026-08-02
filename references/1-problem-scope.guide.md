@@ -16,6 +16,22 @@ Define **why we're building it, who for, and where the edges are**. This is the 
 這份決定整個 spec 的方向,所以會比較仔細跟你確認。
 ```
 
+## Prior art, before deriving
+
+Where there is a codebase or an earlier spec folder, **check whether this already exists** before specifying it. The most expensive failure this document can produce is a complete spec for behaviour that shipped last quarter, and it is only catchable here — §2 onward inherits the premise.
+
+Search **by domain concept, not by the user's wording.** Someone asking for「匯出範本」 will not match `export` if the code calls it `serialize` or `snapshot`; take the entities the request implies and search for those. Read any sibling `{feature-name}/` folders and `.out-of-scope/` (below).
+
+**Report where you looked** — the paths and the terms — alongside what you found. An unreported search is indistinguishable from no search, and a "nothing found" the user can't audit is worth nothing.
+
+Three outcomes:
+
+- **Already built** → say so, point at where it lives, and ask whether the user wants a change to it instead of a new feature. Don't start §1.1 on the assumption they're wrong.
+- **Partly built** → name the overlap; it usually belongs in §1.5 Out of Scope with a pointer, not in scope again.
+- **Previously declined** → `.out-of-scope/` has a matching entry. Surface it with its reason and ask whether something has changed.
+
+Greenfield, or a spec sitting outside any repo, skips this.
+
 ## Derivation
 
 Pull the pieces out of the user's opening 重點 + 方向 + 結果.
@@ -41,6 +57,24 @@ Pull the pieces out of the user's opening 重點 + 方向 + 結果.
 Inferred content takes `[需確認]`: quantitative targets, persona pain points the user never stated, out-of-scope entries you added yourself.
 
 A genuine fork takes `[待拍板]` with options and a recommendation. Missing information takes `[待拍板]` too, pending the user. Neither is a licence to invent.
+
+## `.out-of-scope/` — the declined-request record
+
+A sibling of the spec folders, holding one file per request **a human explicitly turned down**, with the reason. It exists so the same proposal doesn't walk through the whole spec flow again next quarter, and so the prior-art check above has something to find.
+
+**Only a decline the user actually made gets written.** §1.5's 3–5 unprompted out-of-scope entries are *your* proposed scope boundaries — they belong in §1.5 and nowhere else. Writing them here fills the record with speculation within three features and it stops being read, which costs more than not having it.
+
+The test: can you quote the user declining it? Then write it. Otherwise it's a scope line.
+
+```md
+# {The request, in the user's own words}
+
+Declined 2026-08-02 · raised during {feature-name}
+
+{Why — one or two sentences. What would have to change for this to come back.}
+```
+
+Something already built is **not** an entry here; point at where it lives instead. This record is for what was rejected, not for what exists.
 
 ## Questions you must ask
 
@@ -140,8 +174,34 @@ Pull out the three things — 重點 / 方向 / 結果 — and hold the rest for
 
 Later requests like 「persona 再加一個」 or 「scope 要擴」 follow `Amending earlier documents` in `0-skill-mode.md`.
 
+## The fog count, at the same moment as the Path
+
+Q-Stage settles the Path — POC, MVP, production — and that is the moment to settle the other fork: **does this run fit one context window, or does it need a Map first?**
+
+Count the **fog** items §1 surfaced. An item is fog when **both** hold:
+
+1. You can name the area of the decision but **cannot write its options** (a)(b)(c), because the options depend on an answer you don't have.
+2. **§2 onward cannot be written until it is answered.**
+
+Both conditions as written. One of them alone is something else and has a home already:
+
+| What you have | Where it goes |
+|---|---|
+| Can't write options, but §2–§8 can proceed without it | §7.2 Open Question with a `D-NNNN` — not fog |
+| Can write options, and it blocks | A `[待拍板]` you put to the user now |
+| Can write options, doesn't block | A `[待拍板]`, or §7.2 if deferred |
+| Can't write options **and** it blocks | **Fog** |
+
+**One or more fog items → chart a Map before §2.** Say so out loud, name the fog items, and switch to `references/map.guide.md`. Zero → §2 opens normally.
+
+**Calibration.** Ten decisions you can write options for are ten answerable questions and they fit one window — that is a spec run, however long the list. A single unanswerable blocking one does not fit, because everything downstream of it is guesswork. The count that matters is of what you *can't* phrase, never of what's open.
+
+The user saying 「不用畫地圖,直接寫規格」 closes this — record the fog items as §7.2 Open Questions and carry on, noting that the documents downstream of them are provisional.
+
 ## Reflection check, before §2
 
+- [ ] Prior art checked where there's a codebase or sibling spec, and the paths and terms searched were reported
+- [ ] Fog counted; zero, or a Map charted, or the user waived it
 - [ ] §1.1 problem has the user's explicit confirmation
 - [ ] §1.3 personas are specific, not a vague 「使用者」
 - [ ] §1.4 has at least one sentence of pass/fail criteria
