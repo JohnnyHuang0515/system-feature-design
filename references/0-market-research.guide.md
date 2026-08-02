@@ -17,17 +17,11 @@ The research feeds the rest of the spec:
 
 > Positioning: this is **market research inside a feature-design flow**, not a business plan. Even at full PM depth (TAM/SAM/SOM + segments + competitors + personas + sentiment + differentiation), the point remains **how these findings change the feature we're about to design**. Every section closes by answering "so what — what does this imply for §1 and §2?"
 
-## This document is optional
+## Where the user already has research
 
-Offer §0 unprompted; it can still be skipped. Three cases:
+「我們已經做過市場調研了」, 「我貼給你」 — don't start from scratch. Eat their data, fill the gaps, and structure the known competitors, personas and figures into §0's format. First-hand material outranks anything you find yourself; the source table below says how much.
 
-1. **The user wants it** → run the full §0 (or the compressed POC version below).
-2. **The user already has research** (「我們已經做過市場調研了」, 「我貼給你」) → don't start from scratch. Eat their data, fill the gaps, structure the known competitors, personas and figures into §0 format.
-3. **The user explicitly skips** (「不用市調，我很清楚市場」, 「這是純內部工具」) → skip §0, mark the README row `⏭️ 跳過（原因）`, go straight to §1. §1.3 personas fall back to derive-plus-`[需確認]`.
-
-The reason recorded is **theirs, in their words**. Where they gave none — just 「跳過」 — write 「使用者要求跳過」 and stop there; that is a complete reason. Reconstructing why they might have wanted it skipped puts a justification on the record that nobody made, and the README is read later as if someone had.
-
-> How to raise it in the opening: see `Opening` in `0-skill-mode.md`, which already includes the §0 question.
+> Whether §0 runs at all, and how a skip gets recorded, is settled in `SKILL.md` before you reach this file. `Opening` in `0-skill-mode.md` carries the question that raises it.
 
 ## Research method
 
