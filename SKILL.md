@@ -173,6 +173,8 @@ For work that **does not fit one context window** — charted as decision ticket
 
 **The trigger is a count, not a feeling.** §1's fog count decides it: a decision you can name but **cannot write options for**, which **also blocks §2 onward**, is fog. One or more means chart a map. Both conditions as written — an unphrasable decision that doesn't block is a §7.2 Open Question, and ten decisions you *can* write options for are a spec run however long the list. A user arriving with 「這件事很大」 enters here directly.
 
+**Fog fired means chart.** Which documents a run produces is structural, so it stays on your side — the first thing you ask is what the map produces, never whether to draw one. A gate offered as (a) chart or (b) carry on is answered by whichever sounds faster, and a user who replies 「你看著辦」 then gets nothing at all.
+
 **Two modes.**
 
 **Chart** — name the destination first, since it fixes the scope. Then grill **breadth-first** across the whole space rather than deep on one thread. If that surfaces no fog, stop and say so: the work fits, and a map for it is pure overhead. Otherwise write `map.md`, write the tickets you can phrase, wire the blocking edges in a second pass, name the frontier, and stop. Charting resolves nothing.
