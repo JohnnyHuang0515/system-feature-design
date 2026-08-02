@@ -237,7 +237,7 @@ The user saying 「不用畫地圖,直接寫規格」 closes this — record the
 - [ ] §1.5 in scope is itemized, not a single line like 「做匯入匯出功能」
 - [ ] §1.5 out of scope has at least 2 entries — the section people new to specs most often skip
 - [ ] §1.5.1 POC table exists, where this is a POC
-- [ ] Marker lifecycle done: confirmed markers deleted, surviving `[待拍板]` carry options and a recommendation, deferred ones converted to a D-NNNN reference
+- [ ] Marker lifecycle done
 
 Anything unconfirmed gets finished before §2 starts.
 

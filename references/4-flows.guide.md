@@ -116,7 +116,7 @@ Group them into common vs rare. The rare ones can go if the user judges them uni
 - [ ] Every SF has at least 1–2 EFs — an SF with no failure mode is suspicious
 - [ ] Every state transition and event named in an SF is defined in §3
 - [ ] All three §4.4 trigger questions are answered
-- [ ] Marker lifecycle done: confirmed markers deleted, surviving `[待拍板]` carry options and a recommendation, deferred ones converted to a D-NNNN reference
+- [ ] Marker lifecycle done
 
 ## Closing summary
 

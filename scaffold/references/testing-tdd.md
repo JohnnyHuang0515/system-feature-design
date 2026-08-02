@@ -151,7 +151,6 @@ Mock the DB only when the test is about business logic that happens to call a re
 - Setup over 10 lines moves to a factory or a `conftest.py` fixture
 - Assert the value the test is named for — `assert user.email == "alice@example.com"` earns its keep where `assert result is not None` catches nothing
 - Assert the body alongside the status — a bare `assert response.status_code == 200` proves only that the route resolved
-- Strip `.only` / `.skip` / `fdescribe` / `xit` before committing
 
 ---
 

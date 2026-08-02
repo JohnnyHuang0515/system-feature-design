@@ -213,7 +213,7 @@ This is the best possible fuel for §0.5 sentiment. Split by segment, score sent
 - [ ] Every §0.6 OPP points at something actionable, not a vague 「做得更好」
 - [ ] §0.7 explicitly states which findings feed which parts of §1 and §2
 - [ ] Every low-confidence item is in the §0.8 to-verify list
-- [ ] Marker lifecycle done: confirmed markers deleted, surviving `[待拍板]` carry options and a recommendation, deferred ones converted to a D-NNNN reference
+- [ ] Marker lifecycle done
 
 ## Closing summary
 

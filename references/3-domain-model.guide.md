@@ -135,7 +135,7 @@ Two things follow for how you write §3:
 - [ ] Every BR names its enforcement mechanism
 - [ ] Fields use logical types (UUID, Timestamp…), not DB types (BIGSERIAL…)
 - [ ] One canonical word per concept across the whole spec, with rejected synonyms noted — this is what seeds the repo's `CONTEXT.md`
-- [ ] Marker lifecycle done: confirmed markers deleted, surviving `[待拍板]` carry options and a recommendation, deferred ones converted to a D-NNNN reference
+- [ ] Marker lifecycle done
 
 ## Closing summary
 
