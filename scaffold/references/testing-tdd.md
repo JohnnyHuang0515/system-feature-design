@@ -105,7 +105,7 @@ assert user_service.find(42).email == "alice@example.com"
 mailer.send.assert_called_once_with(to="alice@example.com", subject="Welcome")
 ```
 
-Do not verify interactions for queries. Do not skip interaction verification for commands.
+Queries are judged on what they return; commands on the call they made.
 
 ---
 

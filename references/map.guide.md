@@ -78,7 +78,7 @@ The map is **deliberately incomplete**. Beyond the live tickets are the decision
 - **Ticket** when the question is already sharp, even if it is blocked and unactionable.
 - **Not yet specified** when you can't phrase it that sharply yet.
 
-Don't pre-slice fog into ticket-sized pieces. It is coarser than a ticket, and one patch may graduate into several tickets, or none, once the frontier reaches it.
+Leave fog at the size you can actually see it. It is coarser than a ticket, and one patch may graduate into several tickets, or none, once the frontier reaches it.
 
 Resolving a ticket clears the fog ahead of it. Whatever has become phrasable **graduates into fresh tickets** and leaves **Not yet specified**, so it lives in exactly one place.
 
@@ -109,7 +109,7 @@ Where the user themselves declines the request, it also earns an entry in `.out-
 4. **Record the resolution** in the ticket, mark it resolved, and append one line plus a link to the map's **Decisions so far**.
 5. **Update the map's edges** — add tickets the answer surfaced, graduate fog that became phrasable and clear it from Not yet specified, rule out-of-scope anything the answer pushed past the destination, and revise or delete tickets the decision invalidated.
 
-**Never resolve more than one ticket per session** — research tickets excepted, since they return facts rather than decisions. Each resolution changes the map, and a second ticket worked from the pre-change picture is worked from a map that no longer exists.
+**Resolve exactly one ticket per session** — research tickets excepted, since they return facts rather than decisions. Each resolution changes the map, and a second ticket worked from the pre-change picture is worked from a map that no longer exists.
 
 The user may work unblocked tickets in parallel, so expect the files to have moved since you read them.
 

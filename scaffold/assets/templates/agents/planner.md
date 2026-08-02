@@ -30,7 +30,7 @@ Read the user's request and conversation. If the ask is vague, ask 2–4 sharp q
 - Explicitly out of scope?
 - How will we know it's done?
 
-Don't proceed until clear.
+Proceed once every one of these has an answer.
 
 ### 2. Survey the existing codebase
 
