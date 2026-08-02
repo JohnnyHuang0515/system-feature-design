@@ -1,6 +1,8 @@
 # The Map branch triggers on counted fog at the §1 gate
 
-Status: accepted · 2026-08-02
+Status: superseded by `0007` · 2026-08-02
+
+> The count, its two conditions and the Map/Tickets separation below all still hold. What `0007` reverses is the branch **switch** — a non-zero count now reports and recommends rather than escalating on its own. Read the runs recorded at the bottom; they are why.
 
 Work can be too large to specify in one context window. The Spec branch's context-hygiene rule — keep the whole run in one unbroken window, ceiling around 120k — says what to do when the work fits and is silent when it doesn't. The Map branch fills that, charting the work as decision tickets resolved one per session.
 

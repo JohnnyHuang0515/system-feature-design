@@ -171,9 +171,9 @@ Cite by ID, always: `FR-3`, never "the third requirement". When a section gains 
 
 For work that **does not fit one context window** — charted as decision tickets and resolved one per session, until the way to the destination is clear and the Spec branch can run normally. Read `references/map.guide.md` before step 1; templates are `templates/map.template.md` and `templates/map-ticket.template.md`.
 
-**The trigger is a count, not a feeling.** §1's fog count decides it: a decision you can name but **cannot write options for**, which **also blocks §2 onward**, is fog. One or more means chart a map. Both conditions as written — an unphrasable decision that doesn't block is a §7.2 Open Question, and ten decisions you *can* write options for are a spec run however long the list. A user arriving with 「這件事很大」 enters here directly.
+**The user brings you here.** 「這件事很大」、「先幫我理清楚」, or §1's fog count showing them what nobody can answer yet and what it blocks. Escalating into a heavier process is their call — §1 makes the cost visible and recommends; it doesn't switch branches on its own. `references/1-problem-scope.guide.md` carries the count.
 
-**Fog fired means chart.** Which documents a run produces is structural, so it stays on your side — the first thing you ask is what the map produces, never whether to draw one. A gate offered as (a) chart or (b) carry on is answered by whichever sounds faster, and a user who replies 「你看著辦」 then gets nothing at all.
+**Fog** is a decision you can name but **cannot write options for**, which **also blocks §2 onward**. Both conditions — an unphrasable decision that doesn't block is a §7.2 Open Question, and ten decisions you *can* write options for are a spec run however long the list.
 
 **Two modes.**
 

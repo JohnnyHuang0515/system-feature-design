@@ -11,12 +11,9 @@ A Map holds **questions**. It is not a plan of what to build — that is the Tic
 
 ## When it runs
 
-Two ways in:
+**The user asks for it.** Either they arrive knowing the work is large — 「這件事很大,先幫我理清楚」 — or §1's fog count showed them decisions nobody can answer yet, they saw what those block, and they chose this. Both routes end in the user saying so; §1 recommends and does not switch on its own.
 
-- **From §1**, when the fog count fires — one or more decisions you cannot write options for *and* which block §2 onward. `references/1-problem-scope.guide.md` carries the count.
-- **Directly**, when the user arrives already knowing the work is large: 「這件事很大,先幫我理清楚」.
-
-Where the work fits one window, it does not need a map and charting one is pure overhead. The fog count is the bar; a long list of answerable questions is a spec run, not a map.
+Where the work fits one window, it does not need a map and charting one is pure overhead. A long list of answerable questions is a spec run, not a map — and if breadth-first grilling below turns up no fog at all, say so and stop rather than charting anyway.
 
 ## Plan, don't do
 

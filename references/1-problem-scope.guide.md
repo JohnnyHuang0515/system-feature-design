@@ -178,7 +178,9 @@ Later requests like 「persona 再加一個」 or 「scope 要擴」 follow `Ame
 
 ## The fog count, at the same moment as the Path
 
-Q-Stage settles the Path — POC, MVP, production — and that is the moment to settle the other fork: **does this run fit one context window, or does it need a Map first?**
+Q-Stage settles the Path — POC, MVP, production — and that is the moment to take the other reading: **which decisions here can nobody answer yet, and what do they block?**
+
+This is a count and a report, not a branch switch. You surface what can't be answered and say what it costs; **what the user does about it is theirs**, and the Map branch is the usual answer.
 
 Count the **fog** items §1 surfaced. An item is fog when **both** hold:
 
@@ -196,32 +198,30 @@ One condition alone is something else, and has a home already:
 | Can write options, doesn't block | A `[待拍板]`, or §7.2 if deferred |
 | Can't write options **and** it blocks | **Fog** |
 
-**Report the count as a number, and only after you have taken it.** 「fog 檢查:0 項」 is checkable — a reader can ask which decisions you counted. 「沒有卡住後面的未知」 is not, and a reassurance with no number beside it is the sentence this gate is skipped with. The count belongs in the closing summary, which comes *after* the close; a run that announces its fog outcome in the step-1 summary has announced a count it has not taken.
+**Report the count as a number, and only after you have taken it.** 「fog 檢查:0 項」 is checkable — a reader can ask which decisions you counted. 「沒有卡住後面的未知」 is not, and a bare reassurance is what a skipped count sounds like. It belongs in the closing summary, which comes *after* the close; a fog outcome announced in the step-1 summary is a count that was never taken.
 
-**One or more fog items → chart a Map before §2.** Say so out loud, name the fog items, and switch to `references/map.guide.md`. Zero → §2 opens normally.
-
-**Move into charting.** Which set of documents this run produces is **structural decomposition, which `Derive vs ask` in `0-skill-mode.md` keeps on your side** — the user verifies and corrects, and business decisions are theirs, but this fork is not one of them. You derived it from a count you just took in front of them.
-
-So say it with this script, which asks for the destination rather than for permission:
+**Non-zero — say what it costs, then stop and hand back.** Name each item, name the section it would change, and say the one thing the user can't see for themselves: those sections would be written from a guess and rewritten when the fact lands. Then put it to them, with the Map as your recommendation:
 
 ```
-這裡有 [N] 個卡點,在它們解掉之前,後面的文件只能用猜的:
+有 [N] 件事現在沒有人答得出來,而後面的文件要靠它們:
 
-- [fog 項目一] — 會決定 [§X 的什麼]
-- [fog 項目二] — 會決定 [§Y 的什麼]
+- [fog 項目一] — §X 的 [什麼] 要等它
+- [fog 項目二] — §Y 的 [什麼] 要等它
 
-這幾個不是「你還沒想過」,是「要有人去查了才談得下去」,
-所以先畫一張決策地圖,一個一個解掉,再回來寫規格。
-先寫規格的話,這幾份等資料進來要重寫。
+這幾個不是「你還沒想過」,是「要有人去查了才談得下去」。
+現在硬寫下去,這幾份等資料進來都要重寫。
 
-第一件事:這張地圖走到底,你要的產出是什麼?
+我建議先畫一張決策地圖,把這幾個卡點一個一個解掉,再回來寫規格。
+要這樣走嗎?
 ```
 
-The last line is the Map's first step, so the user is answering a question either way — the difference is which one. 「要畫地圖還是直接寫規格?」 is a menu, and a gate offered as (a) or (b) is answered by whichever option sounds faster. The override below stays available; volunteering it is the user's move, not yours.
+**Don't decide this one yourself.** Escalating a session into a heavier process is the user's call, and the cost of guessing wrong lands on them. Your job is that they see the choice clearly — a run that quietly starts specifying without naming these items has taken the decision by omission, which is the failure this count exists to prevent.
 
-**The user's own words close a row.** 「不知道,要查了才知道」、「要先有人把資料撈出來看過才有辦法談」 — a user telling you the answer needs someone to go and *find a fact* has produced fog. Running the spec in parallel while that fact is gathered does not undo it; it means the documents downstream get written from a guess and rewritten when the guess lands, which is the cost this gate exists to avoid. Schedule pressure is not an override — a Map is faster than a spec rewritten twice.
+**The user's own words settle whether an item counts.** 「不知道,要查了才知道」、「要先有人把資料撈出來看過才有辦法談」 — a user saying the answer needs someone to go and *find a fact* has named fog. A plan to run the spec in parallel while the fact is gathered doesn't change what it is; it describes paying the rewrite.
 
 **Calibration, both directions.** Ten decisions you can write options for are ten answerable questions and they fit one window — that is a spec run, however long the list. One 「要查了才知道」 about something §3 or §6 is built on is fog, however reasonable a parallel plan sounds.
+
+**Zero → §2 opens normally**, and the closing summary reports the zero with what you counted.
 
 What separates them is **what the user needs in order to answer**:
 
@@ -262,7 +262,7 @@ Anything unconfirmed gets finished before §2 starts.
 - 成功標準:[一句話判定 + 量化指標]
 - 既有實作:[查過哪些路徑跟關鍵詞,找到什麼;無 codebase 則省略此行]
 - 這次走:[POC / MVP / 正式上線],寫 [文件範圍]
-- fog 檢查:[N] 項 —— [N=0 寫「都問得出選項,可以直接往下」;N>0 逐項列出,而且這段不會出現,因為要先畫地圖]
+- fog 檢查:[N] 項 —— [N=0:「都問得出選項,可以直接往下」;N>0:逐項列出,加上使用者決定怎麼走]
 - POC 設計表格:[若有,N 條議題]
 - Open Questions:[若有,等 §7 拍板]
 
