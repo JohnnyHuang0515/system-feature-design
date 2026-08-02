@@ -30,7 +30,9 @@ Three outcomes:
 - **Partly built** → name the overlap; it usually belongs in §1.5 Out of Scope with a pointer, not in scope again.
 - **Previously declined** → `.out-of-scope/` has a matching entry. Surface it with its reason and ask whether something has changed.
 
-Greenfield, or a spec sitting outside any repo, skips this.
+Report the search **whether or not it found anything**. A hit evidences itself; a miss doesn't, and a miss is the case this exists for — 「沒找到類似的功能」 with no terms beside it is the one sentence a model will write without having looked.
+
+Greenfield, or a spec sitting outside any repo, has nothing to search: say the check doesn't apply here, rather than reporting one you didn't run.
 
 ## Derivation
 
@@ -181,9 +183,11 @@ Q-Stage settles the Path — POC, MVP, production — and that is the moment to 
 Count the **fog** items §1 surfaced. An item is fog when **both** hold:
 
 1. You can name the area of the decision but **cannot write its options** (a)(b)(c), because the options depend on an answer you don't have.
-2. **§2 onward cannot be written until it is answered.**
+2. **The answer would change something you are about to write.** Name the section it lands in — §3's entities, §6's interfaces, §8's criteria.
 
-Both conditions as written. One of them alone is something else and has a home already:
+Both conditions as written. Condition 2 asks what the answer *changes*, not whether you could produce text without it — you always could. **Writing a section provisionally and reconciling when the answer arrives is condition 2 being met**, not a way past it. If your plan is to design something reasonable now and map the real answer onto it later, that plan is the evidence.
+
+One condition alone is something else, and has a home already:
 
 | What you have | Where it goes |
 |---|---|
@@ -194,7 +198,20 @@ Both conditions as written. One of them alone is something else and has a home a
 
 **One or more fog items → chart a Map before §2.** Say so out loud, name the fog items, and switch to `references/map.guide.md`. Zero → §2 opens normally.
 
-**Calibration.** Ten decisions you can write options for are ten answerable questions and they fit one window — that is a spec run, however long the list. A single unanswerable blocking one does not fit, because everything downstream of it is guesswork. The count that matters is of what you *can't* phrase, never of what's open.
+**Move into charting; don't offer it beside carrying on.** The Map's first step is naming the destination, which is a question — so the user is talking to you either way, and the difference is what you asked. 「這張地圖走到底要產出什麼?」 is charting. 「要畫地圖還是直接寫規格?」 is a menu, and a gate offered as (a) or (b) is answered by whichever option sounds faster. The user can still override, below; volunteering the override is theirs, not yours.
+
+**The user's own words close a row.** 「不知道,要查了才知道」、「要先有人把資料撈出來看過才有辦法談」 — a user telling you the answer needs someone to go and *find a fact* has produced fog. Running the spec in parallel while that fact is gathered does not undo it; it means the documents downstream get written from a guess and rewritten when the guess lands, which is the cost this gate exists to avoid. Schedule pressure is not an override — a Map is faster than a spec rewritten twice.
+
+**Calibration, both directions.** Ten decisions you can write options for are ten answerable questions and they fit one window — that is a spec run, however long the list. One 「要查了才知道」 about something §3 or §6 is built on is fog, however reasonable a parallel plan sounds.
+
+What separates them is **what the user needs in order to answer**:
+
+| The user says | It is |
+|---|---|
+| 「不知道,**要查了才知道**」 | **fog** — a fact has to be found before the question can even be phrased |
+| 「沒想過,**你建議呢**」 | a `[待拍板]` — they can decide the moment you put options up |
+
+The count that matters is of what you *can't* phrase, never of what's open.
 
 The user saying 「不用畫地圖,直接寫規格」 closes this — record the fog items as §7.2 Open Questions and carry on, noting that the documents downstream of them are provisional.
 
