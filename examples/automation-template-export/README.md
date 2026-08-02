@@ -21,6 +21,23 @@
 | 8 | [acceptance.md](./8-acceptance.md) | 對應 FR / state / BR / error / NFR 的驗收情境 |
 | 9 | [rollout.md](./9-rollout.md) | Seed 載入、Observability、Rollback Plan（POC 階段精簡版） |
 
+### 規格之後
+
+| 資料夾 | 內容 |
+|---|---|
+| [issues/](./issues/) | 由這份規格切出的 7 張 tracer bullet 票，含依賴圖與 frontier |
+
+---
+
+> **維護者請注意**：這份範例存在的唯一理由是示範「ID 怎麼跨文件串」，所以它自己有斷掉的引用時，教的就是反面教材。
+> 改動任何 §N 結構之後，對它跑一次：
+>
+> ```bash
+> python3 scripts/check-example-ids.py examples/automation-template-export
+> ```
+>
+> 乾淨時 exit 0。這比事後開一個 commit 修 cross-doc reference 便宜得多。
+
 ## ID 編號系統
 
 | Prefix | Meaning | Defined in |
