@@ -34,7 +34,7 @@ Read everything else on demand — 10 guides, 11 spec templates and a worked exa
 
 | When | Read |
 |---|---|
-| starting document N | `references/{N}-*.guide.md` + `templates/{N}-*.template.md` |
+| starting document N — **before writing a word of it** | `references/{N}-*.guide.md` + `templates/{N}-*.template.md`. The guide holds that document's **gates**, not only its shape: what has to be counted, what closes a row, what the close checks. A document written without opening its guide reads finished and is missing the checks that would have caught it |
 | checking your own spec's IDs resolve | run `python3 <skill-path>/scripts/check-example-ids.py <spec-folder>` — it reports dangling IDs and broken coverage chains |
 | wanting to see what a finished chain looks like | the matching file under `examples/automation-template-export/` — read it for shape, never to source content |
 

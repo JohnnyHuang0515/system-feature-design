@@ -19,7 +19,14 @@ The evidence was already in the package. The marker invariant — the one rule t
 
 This is not an exception to progressive disclosure — it is the test being applied correctly, which the first version of this ADR got wrong. `writing-great-skills` states it directly: **inline what every branch needs, and push behind a pointer what only some branches reach.** Every Spec run needs the fog reading, so it is inline; only §1 needs §1's derivation table, so that stays disclosed. The rule was never "disclose everything you can".
 
-It also names the mechanism behind the shallow runs: **a context pointer's wording, not its target, decides how reliably the agent reaches the material.** The pointer here was a table row — *starting document N → read the guide* — which states an occasion and no reason.
+It also names the mechanism behind the shallow runs, and prescribes an order this ADR originally skipped. `GLOSSARY.md`'s **Context Pointer** entry: *its wording, not the target, decides when the agent reaches — and how reliably.* **A must-have target behind a weakly worded pointer is a variance bug: fix the wording first, and inline the material only if sharpening fails.**
+
+Inlining is the fallback, not the first move. Two cases here, and only one of them was handled right:
+
+- **The §0 skip reason** — no pointer can fire, because a run that skips §0 never opens §0's guide. Sharpening was never available, so inlining into `SKILL.md` beside the routing was correct.
+- **The fog reading** — the pointer *does* fire, since every Spec run starts §1 and opens its guide. It was simply weak: a table row reading *starting document N → read the guide*, stating an occasion and no reason. That one should have had its wording sharpened and measured before anything moved. It didn't; the material was inlined straight away.
+
+So the rule stated above is narrower than it reads: **a rule that decides whether the run proceeds belongs in `SKILL.md` once a sharpened pointer has failed to reach it, or cannot fire at all.**
 
 The remaining cost is that "fog" now has a definition in two files. Carry it as a **leading word** rather than a restatement: the guide defines it once, `SKILL.md` uses the word and states the action. When they drift, `SKILL.md` is the copy that ran.
 
