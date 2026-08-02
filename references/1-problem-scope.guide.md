@@ -180,16 +180,7 @@ Later requests like 「persona 再加一個」 or 「scope 要擴」 follow `Ame
 
 Q-Stage settles the Path — POC, MVP, production — and that is the moment to take the other reading: **which decisions here can nobody answer yet, and what do they block?**
 
-This is a count and a report, not a branch switch. You surface what can't be answered and say what it costs; **what the user does about it is theirs**, and the Map branch is the usual answer.
-
-Count the **fog** items §1 surfaced. An item is fog when **both** hold:
-
-1. You can name the area of the decision but **cannot write its options** (a)(b)(c), because the options depend on an answer you don't have.
-2. **The answer would change something you are about to write.** Name the section it lands in — §3's entities, §6's interfaces, §8's criteria.
-
-Both conditions as written. Condition 2 asks what the answer *changes*, not whether you could produce text without it — you always could. **Writing a section provisionally and reconciling when the answer arrives is condition 2 being met**, not a way past it. If your plan is to design something reasonable now and map the real answer onto it later, that plan is the evidence.
-
-One condition alone is something else, and has a home already:
+Count the **fog** items §1 surfaced, against the two conditions in `SKILL.md`'s Paths section. One condition alone is something else, and has a home already:
 
 | What you have | Where it goes |
 |---|---|
@@ -198,7 +189,7 @@ One condition alone is something else, and has a home already:
 | Can write options, doesn't block | A `[待拍板]`, or §7.2 if deferred |
 | Can't write options **and** it blocks | **Fog** |
 
-**Report the count as a number, and only after you have taken it.** 「fog 檢查:0 項」 is checkable — a reader can ask which decisions you counted. 「沒有卡住後面的未知」 is not, and a bare reassurance is what a skipped count sounds like. It belongs in the closing summary, which comes *after* the close; a fog outcome announced in the step-1 summary is a count that was never taken.
+**Report it as a number, in the closing summary.** 「fog 檢查:0 項」 is checkable — a reader can ask which decisions you counted. The closing summary comes after the close, which is where the count is taken.
 
 **Non-zero — say what it costs, then stop and hand back.** Name each item, name the section it would change, and say the one thing the user can't see for themselves: those sections would be written from a guess and rewritten when the fact lands. Then put it to them, with the Map as your recommendation:
 
@@ -219,7 +210,7 @@ One condition alone is something else, and has a home already:
 
 **The user's own words settle whether an item counts.** 「不知道,要查了才知道」、「要先有人把資料撈出來看過才有辦法談」 — a user saying the answer needs someone to go and *find a fact* has named fog. A plan to run the spec in parallel while the fact is gathered doesn't change what it is; it describes paying the rewrite.
 
-**Calibration, both directions.** Ten decisions you can write options for are ten answerable questions and they fit one window — that is a spec run, however long the list. One 「要查了才知道」 about something §3 or §6 is built on is fog, however reasonable a parallel plan sounds.
+**Calibration, both directions.** Ten decisions you can write options for are ten answerable questions and they fit one window — that is a spec run, however long the list. One 「要查了才知道」 about something §3 or §6 is built on is fog.
 
 **Zero → §2 opens normally**, and the closing summary reports the zero with what you counted.
 
