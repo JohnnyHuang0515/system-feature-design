@@ -1,14 +1,15 @@
 # Reference Guide: 7-decisions.md + decisions/
 
-> 基於 `0-skill-mode.md` 的推導模式。配合 `templates/7-decisions.template.md` + `templates/decisions/NNNN-template.md` 使用。
+> Runs on the `Derive → Show → Verify` model in `0-skill-mode.md`. Pairs with `templates/7-decisions.template.md` and `templates/decisions/NNNN-template.md`.
+> Instructions here are English; the quoted blocks are scripts spoken to the user — use them as written.
 
-## 文件目的
+## Purpose
 
-記錄關鍵設計決策 — 為什麼選 A 不選 B、考慮過哪些替代方案、有哪些待決議事項。
+Record the key design decisions — why A and not B, which alternatives were weighed, what remains undecided.
 
-ADR 拆檔:`7-decisions.md` 是索引,每個 decision 一個檔案在 `decisions/` 子目錄。
+The ADRs are split: `7-decisions.md` is the index, and each decision gets its own file under `decisions/`.
 
-## 進入這份文件時的開場
+## Opening
 
 ```
 進入第七份:設計決策。
@@ -21,67 +22,60 @@ ADR 拆檔:`7-decisions.md` 是索引,每個 decision 一個檔案在 `decisions
 3. 整理 Open Questions(待拍板事項)
 
 你的工作主要是「確認 ADR 內容對」+「為 Open Questions 拍板」。
-
 ```
 
-## Claude 推導指南
+## Derivation
 
-### 掃描前面文件蒐集 ADR 候選
+### Scan the earlier documents for ADR candidates
 
-從以下位置掃描:
-
-| 來源 | 通常產出 ADR 的位置 |
+| Source | What usually becomes an ADR |
 |---|---|
-| §1.5.1 POC 表格 | **每一條都是「ADR 候選」,不是「自動 ADR」**。逐條套用 ADR 門檻判斷,夠重要才展開。展開後 propagate 回 §1.5.1 的 `Related ADR` 欄;不展開的留 `—` |
+| §1.5.1 POC table | **Every row is a candidate, not an automatic ADR.** Apply the threshold below row by row; expand only what clears it. Expanded rows propagate back into §1.5.1's `Related ADR` column; the rest keep `—` |
 | §3.1 Bounded Contexts | 「為什麼這樣切?」 |
-| §3.3 State Machine | 狀態流轉的關鍵設計選擇 |
-| §4.1 SF | 跨服務互動方式(同步 vs 異步) |
-| §6.2 API | 重要的 API 設計選擇(單階段 vs 兩階段) |
-| §6.6 Versioning | versioning 策略 |
-| 整份 spec 的 `[待拍板]` 標記 | 全部變成 Open Question 候選 |
+| §3.3 State Machine | The load-bearing choices in the transitions |
+| §4.1 SF | How services interact (sync vs async) |
+| §6.2 API | Significant API design choices (single-stage vs two-stage) |
+| §6.6 Versioning | The versioning strategy |
+| Every `[待拍板]` in the spec | All become open-question candidates |
 
-### ADR 內容推導
+### ADR content
 
-對每個 ADR 候選,Claude 推導:
-
-| 欄位 | 推導來源 |
+| Field | Source |
 |---|---|
-| Title | 從決策本質一句話描述 |
-| Context | 從前面文件推「為什麼需要這個決定」 |
-| Decision | 已做的決定本身 |
-| Rationale | 從前面文件推「為什麼這樣做」 |
-| Alternatives | 主動推 2-3 個替代方案,各列 pros/cons |
-| Consequences | 推 positive / negative 影響 |
-| Affects | reference 到具體 §X.Y |
+| Title | One sentence naming the decision |
+| Context | Why this decision was needed, from the earlier documents |
+| Decision | The call that was made |
+| Rationale | Why it was made that way, from the earlier documents |
+| Alternatives | Derive 2–3 alternatives unprompted, each with pros and cons |
+| Consequences | Positive and negative effects |
+| Affects | References to specific §X.Y |
 
-### ADR 門檻
+### The ADR threshold
 
-判斷依據(任一條成立就寫):
+Any one of these justifies writing it:
 
-1. 三個月後可能被質疑「為什麼當初這樣?」
-2. 改變成本高(影響多個 section / 多個 service)
-3. 有合理替代方案(不是「業界標準」)
-4. 跨團隊影響
+1. In three months someone will ask 「為什麼當初這樣?」
+2. Changing it is expensive — it touches several sections or services
+3. A reasonable alternative exists (it isn't just the industry default)
+4. It affects another team
 
-**不該寫**:code style、業界定論(用 HTTPS)、純技術選型偏好。
+**Code style, settled industry practice (use HTTPS) and pure technology preference stay out.**
 
-### 先自篩再展示
+### Filter before you show
 
-用上述門檻**先在內部篩掉**不夠格的候選,只展示通過門檻的。被篩掉的一行帶過(「另有 N 個候選不到門檻,留在 §1.5 / §2.3 即可:{列名}」),讓使用者有機會撈回 — 但**不要先寫好全部候選的完整 ADR 才問要不要**,那是白做工。
+Apply the threshold **internally first** and show only what clears it. Mention the rest in one line — 「另有 N 個候選不到門檻,留在 §1.5 / §2.3 即可:{列名}」 — so the user can pull one back. Writing full ADRs for every candidate *before* asking is wasted work.
 
-純 scope 取捨(「POC 不做 X」這類,理由就是先簡化)通常不夠格:它們已記錄在 §1.5 / §2.3,展開成 ADR 只是噪音。
+Pure scope trade-offs (「POC 不做 X」, where the reason is simply "keep it simple first") rarely clear it: §1.5 and §2.3 already record them, and expanding them into ADRs is noise.
 
-註:examples 的範例 feature 規模較大(11 個 ADR),**不是數量基準**;小 feature 常見 3-6 個。
+Note: the example feature ships 11 ADRs because it is large — **that is not a target**. A small feature typically has 3–6.
 
-### Open Question 處理
+### Open questions
 
-整份 spec 中所有 `[待拍板]` 標記都集中到 §7.2,展開為 Status: Proposed 的 ADR 檔案。
+Every `[待拍板]` in the spec collects into §7.2 and expands into an ADR file with Status: Proposed.
 
-## 必要決策點(要問使用者的)
+## Questions you must ask
 
-### 必補問題
-
-ADR 寫完後,**對每個 Open Question 都要問使用者拍板**:
+Once the ADRs are written, **put every open question to the user**:
 
 ```
 有 {N} 個待拍板事項,我幫你整理選項,你決定:
@@ -93,21 +87,15 @@ D-{N}: {議題}
 - (c) 先放著 → 列入 §7.2 待解
 ```
 
-### 不該問的
+## Open question candidates
 
-- ❌ 「有哪些 decisions 要寫?」(掃描前面文件推)
-- ❌ 「Alternative 是什麼?」(主動推)
-- ❌ 「Rationale 是?」(從前面文件推)
+§7 raises no new open questions — its job is **converging the `[待拍板]` markers scattered through the earlier documents**.
 
-## Open Question 候選
+A genuinely new one here means an earlier section has a gap. Go back and fill it first.
 
-§7 階段不再產生新 Open Question — 這份的工作是「**收斂前面散落的 `[待拍板]`**」。
+## Display format
 
-如果有,代表前面節有遺漏,先回頭補。
-
-## 展示給使用者的格式
-
-### 步驟 1:摘要
+### Step 1: summary
 
 ```
 我從前面 6 份文件掃描出 {N} 個 ADR 候選:
@@ -123,9 +111,9 @@ Open Questions({K} 個,待拍板):
 - ...
 ```
 
-### 步驟 2:逐個 Accepted ADR 確認
+### Step 2: confirm each Accepted ADR
 
-對每個 Accepted ADR,給「一段話總結」讓使用者快速確認:
+Give a one-paragraph summary so the user can confirm quickly:
 
 ```
 D-0001: Task 欄位採內嵌儲存,預留外部引用欄位
@@ -138,7 +126,7 @@ D-0001: Task 欄位採內嵌儲存,預留外部引用欄位
 OK 嗎?有要補的 alternative 或 consequence?
 ```
 
-### 步驟 3:逐個 Open Question 拍板
+### Step 3: settle each open question
 
 ```
 D-0010: Schema 升版機制(待拍板)
@@ -156,30 +144,30 @@ D-0010: Schema 升版機制(待拍板)
 你的決定?(可以選一個,或說「現在不決定先放著」)
 ```
 
-## 容易卡住的點
+## Where you'll get stuck
 
-### 使用者覺得 ADR 太多
+### The user thinks there are too many ADRs
 
-主動篩選:「我列了 {N} 個候選,你看哪些是『真的重要要記』,哪些可以省」。
+Filter with them: 「我列了 {N} 個候選,你看哪些是『真的重要要記』,哪些可以省」.
 
-### 使用者對 alternatives 想不出來
+### The user can't think of alternatives
 
-Claude 主動推 2-3 個合理替代方案,使用者只要說「合理 / 不合理」。
+Derive 2–3 reasonable ones yourself; the user only has to say whether they're reasonable.
 
-### Open Question 使用者也答不出來
+### The user can't answer an open question either
 
-接受「先放著」,記入 §7.2 等未來決定。給 Owner 跟 Target Date(可以是「Post-POC」這種粗略 milestone)。
+Accept 「先放著」 and record it in §7.2 for later, with an Owner and a Target Date — a rough milestone like 「Post-POC」 is fine.
 
-## 反思檢查(進 §8 前)
+## Reflection check, before §8
 
-- [ ] 整份 spec 的 `[待拍板]` 標記都已處理(拍板 → Accepted,或留 §7.2)
-- [ ] 每個 Accepted ADR 都有 Alternatives Considered(至少 1 個)
-- [ ] 每個 ADR 的 Affects 欄位正確 reference §X.Y
-- [ ] 每個 Open Question 都有 Owner + Target Date
-- [ ] §1.5.1 POC 表格每一條都已用 ADR 門檻判斷 — 展開的填 `Related ADR`,不展開的留 `—`
-- [ ] §1.5.1 已 propagate 同步(新增 ADR 是否影響表格、ADR 標題 / Decision 變更是否同步)
+- [ ] Every `[待拍板]` in the spec is handled — settled into Accepted, or parked in §7.2
+- [ ] Every Accepted ADR has at least one Alternative Considered
+- [ ] Every ADR's Affects column references a real §X.Y
+- [ ] Every open question has Owner and Target Date
+- [ ] Every §1.5.1 POC row was judged against the ADR threshold — expanded rows carry `Related ADR`, the rest carry `—`
+- [ ] §1.5.1 is propagated in sync (new ADRs checked against the table; ADR title and Decision changes reflected)
 
-## 文件結束時的 summary
+## Closing summary
 
 ```
 §7 decisions 完成!

@@ -1,104 +1,76 @@
 # Reference Guide: 1-problem-scope.md
 
-> 給 Claude 看的引導指南。基於 `0-skill-mode.md` 的「推導 → 展示 → 驗證」模式。
-> 配合 `templates/1-problem-scope.template.md` 使用。
+> Runs on the `Derive → Show → Verify` model in `0-skill-mode.md`. Pairs with `templates/1-problem-scope.template.md`.
+> Instructions here are English; the quoted blocks are scripts spoken to the user — use them as written.
 
-## 文件目的
+## Purpose
 
-定義「**為什麼做、給誰、邊界在哪**」。整個 spec 的源頭,後面所有設計都會 reference 這份。
+Define **why we're building it, who for, and where the edges are**. This is the head of the whole spec; every later document references it.
 
-## 進入這份文件時的開場
-
-跟使用者說:
+## Opening
 
 ```
 我們進入第一份文件:問題與範圍。
 
 我會根據你剛才的描述先推導內容,再給你確認。
 這份決定整個 spec 的方向,所以會比較仔細跟你確認。
-
 ```
 
-## Claude 推導指南
+## Derivation
 
-### 從使用者輸入推導的內容
+Pull the pieces out of the user's opening 重點 + 方向 + 結果.
 
-從使用者最初的「重點 + 方向 + 結果」描述中拆出:
+> **Where §0 market research ran**, §1 no longer runs on that one sentence — take §0's findings first. §1.3 personas cite §0.4 PER-N directly rather than being reverse-engineered; §1.1 problem carries the sharpest pain from §0.5/§0.6; §1.4 quantitative targets benchmark against §0.1 and competitors; §1.5 scope is steered by §0.6 opportunities and §0.7 implications.
+> Where §0 was skipped, derive from the description per the table below and mark inferences `[需確認]`.
 
-> **若有做 §0 market research**：§1 不再只靠使用者那句話往下推 —— 優先吃 §0 的發現。
-> §1.3 persona 直接引用 §0.4 的 PER-N（不再憑空反推）；§1.1 problem 帶上 §0.5/§0.6 的最痛點；
-> §1.4 量化指標對標 §0.1 / 競品；§1.5 scope 受 §0.6 的機會與 §0.7 implications 引導。
-> 沒做 §0（被跳過）時，照下表從使用者描述推導，推測項標 `[需確認]`。
-
-| 推導對象 | 推導來源 |
+| Target | Source |
 |---|---|
-| §1.1 Problem Statement | 有 §0：§0.5/§0.6 最痛點 + §0.0 problem framing；無 §0：使用者描述中「現在的問題 / 缺什麼」+ 反推「不解決的後果」 |
-| §1.2 Background | 使用者提到的「既有系統 / 為什麼是現在」(沒提就標選填省略) |
-| §1.3 Personas | 有 §0：引用 §0.4 PER-N（標出 PER-X + 名稱，作為目標 persona）；無 §0：使用者說「給誰用」+ 反推「還有誰會間接受影響」 |
-| §1.4 Success Criteria(必填部分) | 使用者描述「想要的結果」反推；有 §0 則量化指標對標 §0.1 / 競品 |
-| §1.4 量化指標 | **標 `[需確認]`**,從 feature 性質推測,使用者調整 |
-| §1.5 In Scope | 使用者明確說要做的事 |
-| §1.5 Out of Scope | **主動推 3-5 條**,使用者「可能以為要做但實際不做」的事 |
-| §1.5 Future | 使用者提到「未來想做」或推測的合理擴張方向 |
-| §1.5.1 POC 表格 | 若使用者提到「POC」「先做簡單版」,主動列出可能的「現在簡 vs 未來擴」議題。`Related ADR` 欄此時全部留 `—`,§7 階段再回填 |
-| §1.6 Assumptions & Constraints | 從前後文推測(例:使用者提到 5MB 上限,就是 constraint) |
+| §1.1 Problem Statement | With §0: sharpest pain from §0.5/§0.6 + §0.0 problem framing. Without: the "what's broken / what's missing" in the description, plus the reverse-engineered cost of not solving it |
+| §1.2 Background | Existing systems and "why now" the user mentioned (omit the optional section if unmentioned) |
+| §1.3 Personas | With §0: cite §0.4 PER-N (name the PER-X and its label as the target persona). Without: who the user said it's for, plus the reverse-engineered "who else is indirectly affected" |
+| §1.4 Success Criteria (required part) | Reverse-engineered from the outcome the user described; with §0, benchmark quantitative targets against §0.1 and competitors |
+| §1.4 quantitative targets | **Mark `[需確認]`** — inferred from the nature of the feature, tuned by the user |
+| §1.5 In Scope | What the user explicitly said they want |
+| §1.5 Out of Scope | **Propose 3–5 unprompted** — things the user might assume are included but aren't |
+| §1.5 Future | Expansion the user mentioned wanting later, or a reasonable inferred direction |
+| §1.5.1 POC table | Where the user said "POC" or "簡單版 first", list the likely "simple now vs expand later" issues. `Related ADR` stays `—` at this stage; §7 backfills it |
+| §1.6 Assumptions & Constraints | Inferred from context — a 5MB limit the user mentioned is a constraint |
 
-### 推導要遵守的原則
+### Marking rules
 
-**推測類內容用 `[需確認]` 標記**:
-- 量化指標 → `[需確認]`
-- Persona 痛點(使用者沒明說) → `[需確認]`
-- Out of scope 條目(Claude 主動補的) → `[需確認]`
+Inferred content takes `[需確認]`: quantitative targets, persona pain points the user never stated, out-of-scope entries you added yourself.
 
-**兩種都合理的選擇用 `[待拍板]` 標記**,不要編造。
+A genuine fork takes `[待拍板]` with options and a recommendation. Missing information takes `[待拍板]` too, pending the user. Neither is a licence to invent.
 
-**找不到資訊**也用 `[待拍板]`,等使用者補。
+## Questions you must ask
 
-## 必要決策點(要問使用者的)
+One paragraph usually derives most of the document. A few things need asking when the user's description omits them.
 
-通常從一段話描述就能推導出大部分內容。但有幾個地方使用者沒提到就需要主動補問:
+### Required, when unmentioned
 
-### 必補問題(使用者最初描述沒提到時必問)
+**Q-Stage** — POC, MVP, or production launch? Decides whether §1.5.1's POC table exists, and shapes §1.6 constraints (a POC is usually schedule-tight).
 
-**Q-Stage**:這是 POC、MVP、還是正式上線?
-- 影響 §1.5.1 POC 表格是否要做
-- 影響 §1.6 的限制(POC 通常時程緊)
+**Q-Time** — any schedule pressure? Feeds §1.6 Constraints.
 
-**Q-Time**:有沒有時程壓力?
-- 影響 §1.6 Constraints
+**Q-Integration** — which existing systems does it touch? Feeds §1.2 Background and §1.6 Assumptions.
 
-**Q-Integration**:跟哪些既有系統有關聯?
-- 影響 §1.2 Background
-- 影響 §1.6 Assumptions
+### Optional, depending on the feature
 
-### 選補問題(看 feature 性質)
+Expected volume and scale (small tool vs high traffic)? Compliance requirements (payments, medical, PII)? Multi-user collaboration or single-user?
 
-- 預期使用量 / 規模?(小工具 vs 大流量)
-- 有合規要求嗎?(金流、醫療、PII)
-- 多人協作還是個人使用?
+Ask in everyday language, **3 questions at a time, maximum**.
 
-問法用生活化方式,**一次最多 3 題**。
+## Open question candidates
 
-### 不該問的(Claude 應該推)
+- Two reasonable ways to cut scope (「這算 in scope 還是 out of scope?」)
+- A fuzzy persona (「PM 是指流程設計者,還是含一般使用者?」)
+- An uncertain quantitative range (「成功率目標 95% 還是 99%?」)
 
-- ❌ 「Problem statement 寫什麼?」(從描述推)
-- ❌ 「Persona 有哪些?」(從「給誰用」推)
-- ❌ 「In scope 列哪些項目?」(從描述推,再讓使用者增刪)
-- ❌ 「Success criteria 是什麼?」(從「想要的結果」推)
+These go to the user, not to your own judgment.
 
-## Open Question 候選
+## Display format
 
-Claude 推導時遇到以下情況,標記為 Open Question 讓使用者拍板:
-
-- 看到兩種合理的 scope 切法(「這算 in scope 還是 out of scope?」)
-- Persona 描述模糊(「PM 是指流程設計者,還是含一般使用者?」)
-- 量化指標範圍不確定(「成功率目標 95% 還是 99%?」)
-
-不要自己決定,標 Open Question 等使用者拍板。
-
-## 展示給使用者的格式
-
-### 步驟 1:先給「摘要」
+### Step 1: summary
 
 ```
 我整理一下對你的 feature 的理解:
@@ -112,17 +84,13 @@ Claude 推導時遇到以下情況,標記為 Open Question 讓使用者拍板:
 需要你拍板:[N 個決策點,列關鍵詞]
 ```
 
-### 步驟 2:再給「完整內容」
+### Step 2: full content
 
-按 template 結構展示填好的 §1.1 ~ §1.6 完整內容。
+Show §1.1–§1.6 filled in against the template structure, with inferences marked: `[需確認]` for what you inferred or added (quantitative values, persona pain points, out-of-scope entries) and `[待拍板]` where two answers are reasonable or information is missing.
 
-對推測項目用標記區分(整份 spec 統一兩種標記):
-- `[需確認]` — Claude 推測或主動補的內容(量化值、persona 痛點、out of scope 條目等),使用者驗證
-- `[待拍板]` — 兩種都合理 / 缺資訊待補,使用者做選擇
+### Step 3: the decisions
 
-### 步驟 3:問必要決策點
-
-用生活化方式,**一次問 1-3 個**:
+Everyday language, **1–3 at a time**:
 
 ```
 有幾件事需要你拍板:
@@ -136,59 +104,55 @@ Claude 推導時遇到以下情況,標記為 Open Question 讓使用者拍板:
    (a) 直接報錯,使用者重新生成
    (b) 自動修正能修的部分
    (c) 視為「AI 生成失敗」走既有失敗流程
-   
+
 3. 你說這是 POC — 那 POC 結束後預期會進入什麼階段?是 MVP
    還是正式上線?(影響我幫你規劃 future work 的範圍)
 ```
 
-## 容易卡住的點 + 處理方式
+## Where you'll get stuck
 
-### 使用者只給「我想做 X」這種一句話
+### The user gives one sentence: 「我想做 X」
 
-別立刻拒絕,用 1-2 題補資訊:
+Catch it with 1–2 questions rather than sending it back:
 
 ```
 你說想做 [X] — 主要想解決什麼困擾?例如使用者現在沒這功能怎麼辦?
 順便問一下,主要是給誰用?
 ```
 
-得到回答後直接開始推導,不要連問 5 題才開始。
+Start deriving as soon as they answer. Five questions before you begin is worse than two.
 
-### 使用者描述很長很細
+### The user's description is long and detailed
 
-從中拆出「重點 + 方向 + 結果」三件事,其他細節留待後續節用:
+Pull out the three things — 重點 / 方向 / 結果 — and hold the rest for later sections:
 
 ```
 我從你的描述中拆出三個核心:
 - 重點:[一句話]
-- 方向:[一句話]  
+- 方向:[一句話]
 - 結果:[一句話]
 
 其他細節(例如 entity 設計、API 結構),我會在後續節展開。
 先看 §1 推導對不對。
 ```
 
-### 使用者改 §1 想 propagate
+### The user amends §1 and it needs to propagate
 
-使用者後來說「persona 再加一個」、「scope 要擴」等,按 `0-skill-mode.md` 的「允許回頭修改 + Propagate」處理。
+Later requests like 「persona 再加一個」 or 「scope 要擴」 follow `Amending earlier documents` in `0-skill-mode.md`.
 
-## 反思檢查(進 §2 前自我確認)
+## Reflection check, before §2
 
-進入 §2 之前,Claude 內部確認:
+- [ ] §1.1 problem has the user's explicit confirmation
+- [ ] §1.3 personas are specific, not a vague 「使用者」
+- [ ] §1.4 has at least one sentence of pass/fail criteria
+- [ ] §1.5 in scope is itemized, not a single line like 「做匯入匯出功能」
+- [ ] §1.5 out of scope has at least 2 entries — the section people new to specs most often skip
+- [ ] §1.5.1 POC table exists, where this is a POC
+- [ ] Marker lifecycle done: confirmed markers deleted, surviving `[待拍板]` carry options and a recommendation, deferred ones converted to a D-NNNN reference
 
-- [ ] §1.1 problem 已得到使用者明確確認
-- [ ] §1.3 persona 清單明確(不是「使用者」這種模糊詞)
-- [ ] §1.4 至少有一句話判定標準
-- [ ] §1.5 in scope 條列具體(不是「做匯入匯出功能」一行帶過)
-- [ ] §1.5 out of scope 至少 2 條(沒寫過 spec 容易漏這節)
-- [ ] §1.5.1 POC 表格已建立(若是 POC)
-- [ ] `[需確認]` / `[待拍板]` 標記都已使用得當
+Anything unconfirmed gets finished before §2 starts.
 
-未確認的項目回頭補完再進 §2。
-
-## 文件結束時的 summary
-
-填完所有節後,給使用者整理:
+## Closing summary
 
 ```
 §1 problem-scope 完成!摘要:
@@ -206,5 +170,3 @@ Claude 推導時遇到以下情況,標記為 Open Question 讓使用者拍板:
 
 要進嗎?
 ```
-
-確認後進 §2。

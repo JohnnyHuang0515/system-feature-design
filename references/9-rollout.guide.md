@@ -1,14 +1,15 @@
 # Reference Guide: 9-rollout.md
 
-> 基於 `0-skill-mode.md` 的推導模式。配合 `templates/9-rollout.template.md` 使用。
+> Runs on the `Derive → Show → Verify` model in `0-skill-mode.md`. Pairs with `templates/9-rollout.template.md`.
+> Instructions here are English; the quoted blocks are scripts spoken to the user — use them as written.
 
-## 文件目的
+## Purpose
 
-定義「怎麼安全地上線」+「上線後怎麼運維」。給 SRE / DevOps / on-call 看的。
+Define how it ships safely and how it's operated afterwards. Read by SRE, DevOps and whoever is on call.
 
-## 是否要做這份文件
+## Whether to write it at all
 
-進入這份前,先用一句話問:
+Ask in one line before starting:
 
 ```
 最後一份是 rollout(上線與運維)— 選填。
@@ -25,9 +26,9 @@
 要做 §9 嗎?
 ```
 
-使用者說「不做」→ 直接跳到 §9 後的「完整 spec 總 review」流程(見 `0-skill-mode.md`)。
+A 「不做」 goes straight to the flow in `references/full-spec-review.md`.
 
-## 進入這份文件時的開場
+## Opening
 
 ```
 進入第九份(最後一份):上線與運維。
@@ -44,79 +45,65 @@
 - §9.7 Post-Launch Review - 有 success metrics 時建議
 
 我會推導所有節,沒適用的標 「[不適用]」 或省略。
-
 ```
 
-## Claude 推導指南
+## Derivation
 
-### Rollout Strategy 推導
+### Rollout strategy
 
-從 §1 Stage(POC / MVP / 正式)+ §2 NFR 推:
-- POC → 簡化 stages(dogfood → beta → GA)
-- MVP / 正式 → 完整 5 stages(dogfood → canary 1% → 10% → 50% → 100%)
-- Feature flag 標準格式
+From §1 Stage (POC / MVP / production) plus §2 NFRs:
 
-### Migration 推導
+- POC → simplified stages (dogfood → beta → GA)
+- MVP or production → the full five (dogfood → canary 1% → 10% → 50% → 100%)
+- Feature flag in the standard format
 
-從 §3 entity 變化 + §1.5 提到的 seed data 推:
-- 有新 entity / 新欄位 → 寫 schema migration
-- 有 seed data → 寫 seed loading 機制
-- 都沒有 → 跳過
+### Migration
 
-### Observability 推導
+From §3 entity changes plus any seed data mentioned in §1.5. New entities or fields → a schema migration. Seed data → a loading mechanism. Neither → skip the section.
 
-從 §2.2.4 NFR 反推具體指標:
-- 核心 SLI:latency / error rate / throughput
-- 業務 metrics:從 §1.4 success criteria 反推
-- Logs 規範:Must log + Must NOT log(合規)
-- Tracing:跨 service 才需要
+### Observability
 
-### Alerts 推導
+Reverse-engineer concrete metrics from §2.2.4 NFRs:
 
-從 §9.3 metrics 推 alert 條件:
-- 每個關鍵 SLI 對應 1-2 個 alert
-- Severity 按業界標準(P0/P1/P2/P3)
+- Core SLIs: latency, error rate, throughput
+- Business metrics: reverse-engineered from §1.4 success criteria
+- Logging rules: must log, and must not log (compliance)
+- Tracing: only where services span
 
-### Runbook 推導
+### Alerts
 
-每個 alert 對應一個 RB,**用骨架 + 「由運維補」佔位**:
-- Symptoms:從 alert 條件推
-- Diagnosis Steps:推可推的(看哪個 dashboard、查哪個 log),不可推的留 `{由運維補：...}` 佔位(同 template 寫法)
-- Common Causes:推 3-5 個常見原因
-- Escalation:留 `{由運維補：...}` 佔位(需實際運維知識)
+From §9.3 metrics: 1–2 alerts per key SLI, severity on the standard scale (P0/P1/P2/P3).
 
-### Rollback 推導
+### Runbook
 
-按業界標準三層:
-- Level 1: feature flag off(秒級)
-- Level 2: code rollback(5-15 分鐘)
-- Level 3: schema rollback(小時級,通常 POC 不適用)
+One RB per alert, **as a skeleton with 「由運維補」 placeholders**:
 
-每個 Trigger 量化(不可主觀)。
+- Symptoms — derived from the alert condition
+- Diagnosis steps — derive what you can (which dashboard, which log); leave the rest as `{由運維補：...}` placeholders, matching the template
+- Common causes — derive 3–5
+- Escalation — a `{由運維補：...}` placeholder; this needs real operational knowledge
 
-## 必要決策點(要問使用者的)
+### Rollback
 
-### 必補問題
+Three standard levels: feature flag off (seconds), code rollback (5–15 minutes), schema rollback (hours, usually not applicable to a POC).
 
-1. **POC vs MVP vs 正式**:影響 stages 設計詳細度
-2. **是否有 SLA 承諾**:影響 alert threshold 設定
-3. **Rollback 演練 sign-off**:誰是 tech lead
+Every trigger is quantified, never subjective.
 
-### 不該問的
+## Questions you must ask
 
-- ❌ 「Rollout 怎麼分階段?」(從 stage 推)
-- ❌ 「要監控什麼?」(從 NFR 推)
-- ❌ 「Alert 條件是?」(從 metrics 推)
+1. **POC vs MVP vs production** — sets how detailed the stages get
+2. **Any SLA commitment** — sets alert thresholds
+3. **Rollback rehearsal sign-off** — who is the tech lead
 
-## Open Question 候選
+## Open question candidates
 
-- SLA 目標不確定
-- Canary 比例不確定(1% vs 5% vs 10%)
-- 監控工具選擇(Datadog vs Prometheus vs ...)
+- SLA target uncertain
+- Canary percentage uncertain (1% vs 5% vs 10%)
+- Monitoring tool choice (Datadog vs Prometheus vs …)
 
-## 展示給使用者的格式
+## Display format
 
-### 步驟 1:摘要
+### Step 1: summary
 
 ```
 我推導出 rollout 計畫:
@@ -131,11 +118,11 @@
 需要你拍板:[N 個]
 ```
 
-### 步驟 2:分節展示
+### Step 2: section by section
 
-POC 階段重點展示 §9.1 + §9.3 + §9.6。其他節給「精簡版 / 完整版」讓使用者選。
+For a POC, foreground §9.1 + §9.3 + §9.6. Offer the other sections as 精簡版 or 完整版 and let the user pick.
 
-### 步驟 3:問必要決策點
+### Step 3: the decisions
 
 ```
 有幾件事需要你拍板:
@@ -149,30 +136,30 @@ POC 階段重點展示 §9.1 + §9.3 + §9.6。其他節給「精簡版 / 完整
 3. Rollback 演練 sign-off 由誰負責?(影響 release gate 設計)
 ```
 
-## 容易卡住的點
+## Where you'll get stuck
 
-### 使用者沒做過 rollout planning
+### The user has never planned a rollout
 
-主動推完整版讓使用者刪除不需要的,比要求使用者從零想容易。
+Push a full version and let them delete what they don't need. Deleting is easier than starting from a blank page.
 
-### POC 階段使用者覺得「寫太多」
+### A POC user thinks it's too much
 
-提供「POC 精簡版 vs MVP 完整版」對照,POC 可以只寫 §9.1 + §9.3.2(logs) + §9.6 Level 1。
+Offer the POC-lite vs MVP-full comparison. A POC can run on §9.1 + §9.3.2 (logs) + §9.6 Level 1 alone.
 
-### Runbook 內容寫不出來
+### The runbook content won't come
 
-接受「骨架 + 由運維補佔位」,不要編造運維操作步驟。
+Accept the skeleton-plus-placeholder form. Inventing operational steps is worse than leaving the gap visible.
 
-## 反思檢查(進總 review 前)
+## Reflection check, before the full-spec review
 
-- [ ] §9.1 Rollout Stages 有量化 success / abort criteria
-- [ ] §9.3 Observability 對應 §2.2.4 NFR
-- [ ] 每個 §9.4 alert 都有對應 §9.5 runbook
-- [ ] §9.6 Rollback Triggers 量化(不主觀)
-- [ ] §9.6 Rehearsal 有明確 sign-off 機制
-- [ ] Runbook 的「由運維補」佔位都清楚
+- [ ] §9.1 rollout stages have quantified success and abort criteria
+- [ ] §9.3 observability maps to §2.2.4 NFRs
+- [ ] Every §9.4 alert has a §9.5 runbook
+- [ ] §9.6 rollback triggers are quantified, not subjective
+- [ ] §9.6 rehearsal has an explicit sign-off mechanism
+- [ ] Every 「由運維補」 placeholder in a runbook names what's missing and who fills it, rather than sitting blank
 
-## 文件結束時的 summary
+## Closing summary
 
 ```
 §9 rollout 完成!
@@ -189,8 +176,7 @@ POC 階段重點展示 §9.1 + §9.3 + §9.6。其他節給「精簡版 / 完整
 要不要跑一次完整 spec 的總 review?
 我會檢查跨文件的一致性(編號 reference、必填覆蓋、孤兒檢查、概念一致性)。
 
-
 要跑嗎?
 ```
 
-進入「完整 spec 總 review」流程(見 `0-skill-mode.md` 末段)。
+Then enter the flow in `references/full-spec-review.md`.

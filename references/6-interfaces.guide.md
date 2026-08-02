@@ -1,12 +1,13 @@
 # Reference Guide: 6-interfaces.md
 
-> 基於 `0-skill-mode.md` 的推導模式。配合 `templates/6-interfaces.template.md` 使用。
+> Runs on the `Derive → Show → Verify` model in `0-skill-mode.md`. Pairs with `templates/6-interfaces.template.md`.
+> Instructions here are English; the quoted blocks are scripts spoken to the user — use them as written.
 
-## 文件目的
+## Purpose
 
-定義系統的對外契約 — 對前端、整合方、其他服務暴露的介面。工程師翻最多的文件,必須精確。
+Define the system's outward contract — what it exposes to the frontend, to integrators, to other services. Engineers open this document more than any other, so it has to be exact.
 
-## 進入這份文件時的開場
+## Opening
 
 ```
 進入第六份:介面契約。
@@ -14,76 +15,63 @@
 這份定義對外暴露的 API、events、整合點 — 前後端對齊的關鍵。
 
 我會根據 §3 entity 跟 §4 SF 推導完整 API spec,你確認 / 修正。
-
 ```
 
-## Claude 推導指南
+## Derivation
 
-### Overview 推導
+### Overview
 
-掃描 §4.1 SF 跨界互動點,整理成總覽表。
+Scan §4.1 SFs for boundary-crossing points and collect them into the overview table.
 
-### REST API 推導
+### REST APIs
 
-| 推導對象 | 推導來源 |
+| Target | Source |
 |---|---|
-| Endpoint 清單 | 每個 §4.1 SF 的對外入口 |
-| Request schema | §3.2 entity 欄位 + FR 的輸入 |
-| Response schema | §3.2 entity 欄位 + 對外可揭露的部分 |
-| Auth 要求 | §2.2.2 NFR |
-| Errors | 每個 endpoint 涉及的 §4.2 EF |
+| Endpoint list | The outward entry point of each §4.1 SF |
+| Request schema | §3.2 entity fields plus the FR's inputs |
+| Response schema | §3.2 entity fields, limited to what's safe to expose |
+| Auth requirement | §2.2.2 NFR |
+| Errors | The §4.2 EFs each endpoint can hit |
 
-### Error Model 推導
+### Error model
 
-從 §4.2 所有 EF 反推 error code:
-- HTTP status 對應 EF 的失敗類型
-- Error code 用 UPPER_SNAKE_CASE
-- 同一個 code 在不同 endpoint 必須回同樣 status
+Reverse-engineer error codes from every §4.2 EF. HTTP status maps to the EF's failure type; codes are UPPER_SNAKE_CASE; the same code returns the same status on every endpoint.
 
-**所有 §6.2 endpoint 用到的 code 必須在 §6.5 catalog 註冊**。Claude 推導時自動建立 catalog。
+**Every code used by a §6.2 endpoint must be registered in the §6.5 catalog.** Build the catalog as you derive.
 
-### Webhooks / Inbound Events(若有)
+### Webhooks and inbound events, where they exist
 
-從 §4.1 SF 中「由外部觸發」的部分推,分兩種:
-- **Webhook**:外部系統主動 HTTP 呼叫我們(有 path / HMAC / HTTP response)
-- **Event Subscription**:我們訂閱 message queue / event bus 的事件(有 channel / 去重 / DLQ,沒有 HTTP response)
+Derive from the externally-triggered parts of §4.1 SFs. Two shapes:
 
-事件驅動的 FR(例:「收到來源事件就建立 X」)沒有 endpoint 是正常的,它的介面契約就寫在這節。兩種都沒有就跳過。
+- **Webhook** — an external system calls us over HTTP (has a path, HMAC, HTTP response)
+- **Event subscription** — we subscribe to a message queue or event bus (has a channel, dedup, DLQ; no HTTP response)
 
-### Outbound Events 推導
+An event-driven FR (「收到來源事件就建立 X」) legitimately has no endpoint — this section is where its contract lives. Skip the section when neither shape applies.
 
-§6.4.1 對應 §3.5 中「對外發布」的子集:
-- 純內部 event 不列(只列在 §3.5)
-- 對外 event 列出 channel / schema / consumers / retention
+### Outbound events
 
-### External Integrations 推導
+§6.4.1 is the externally-published subset of §3.5. Internal-only events stay in §3.5 and are not listed here. Published events carry channel, schema, consumers and retention.
 
-§6.4.2 列 §4.1 SF 中對外部 service 的呼叫,**timeout + retry + failure handling 三項必寫**。
+### External integrations
 
-## 必要決策點(要問使用者的)
+§6.4.2 lists the outbound service calls in §4.1 SFs. **Timeout, retry and failure handling are all mandatory** for each.
 
-### 必補問題
+## Questions you must ask
 
-1. **API 設計風格**:單階段 vs 兩階段(例:匯入是「上傳直接寫」還是「先預覽後確認」)
-2. **Schema 細節**:某些欄位是否暴露(內部用 vs 對外用)
-3. **Rate limiting**:是否需要(對外服務通常需要)
+1. **API shape** — single-stage or two-stage (is import 「上傳直接寫」 or preview-then-confirm)?
+2. **Schema exposure** — is this field internal or safe to expose?
+3. **Rate limiting** — needed? External-facing services usually are.
 
-### 不該問的
+## Open question candidates
 
-- ❌ 「API endpoint 有哪些?」(從 SF 推)
-- ❌ 「Error code 有哪些?」(從 EF 推)
-- ❌ 「Schema 結構?」(從 entity 推)
+- API style (REST resource-oriented vs RPC-style)
+- Single-stage vs two-stage import
+- Versioning mechanism (URL path vs header)
+- Large-file handling (stream vs single upload)
 
-## Open Question 候選
+## Display format
 
-- API 設計風格(REST resource-oriented vs RPC-style)
-- 匯入流程是單階段還是兩階段
-- 版本管理機制(URL path vs Header)
-- 大檔案處理(stream vs 一次上傳)
-
-## 展示給使用者的格式
-
-### 步驟 1:Overview
+### Step 1: overview
 
 ```
 我整理出對外介面總覽:
@@ -102,17 +90,15 @@ External integrations({N} 個):
 - ...
 ```
 
-### 步驟 2:逐個 endpoint 展開
+### Step 2: endpoint by endpoint
 
-對複雜 endpoint,一次展示 1 個。簡單的可批次。
+One at a time for complex endpoints; batch the simple ones. Each gets method + path + auth + request + response + errors.
 
-每個 endpoint 給:method + path + auth + request + response + errors。
+### Step 3: error catalog
 
-### 步驟 3:Error catalog
+Once every endpoint is covered, show the full catalog.
 
-整理完所有 endpoint 後,展示完整 error code catalog。
-
-### 步驟 4:問必要決策點
+### Step 4: the decisions
 
 ```
 有幾件事需要你拍板:
@@ -128,30 +114,30 @@ External integrations({N} 個):
 3. Rate limiting:POC 階段需要做嗎?還是先不做?
 ```
 
-## 容易卡住的點
+## Where you'll get stuck
 
-### 使用者不熟 API 設計
+### The user isn't familiar with API design
 
-主動 propose 兩種設計給使用者選,不要讓使用者從零想。
+Propose two designs and let them pick. Starting from a blank page is the hard part.
 
-### 使用者糾結 schema 細節
+### The user gets tangled in schema detail
 
-聚焦「對外契約」層級,提醒「實作層細節(例:DB column 是 varchar 還是 text)留給後端」。
+Hold the conversation at the contract level, and note that implementation detail — whether a DB column is varchar or text — belongs to the backend.
 
-### Error code 命名糾結
+### Error-code naming goes in circles
 
-提供命名原則:UPPER_SNAKE_CASE、HTTP status + 具體描述(例:404 TEMPLATE_NOT_FOUND 而非 404 NOT_FOUND)。
+Give the naming rule: UPPER_SNAKE_CASE, HTTP status plus a specific description — `404 TEMPLATE_NOT_FOUND`, not `404 NOT_FOUND`.
 
-## 反思檢查(進 §7 前)
+## Reflection check, before §7
 
-- [ ] 每條 §2.1 FR 都對應到至少 1 個 endpoint、inbound event / webhook(§6.3)、或 background job 觸發點
-- [ ] 每個 endpoint 都對應到至少 1 個 SF
-- [ ] 每個 endpoint 的 errors 都在 §6.5 catalog 註冊
-- [ ] 每個 published event 都在 §3.5 列出
-- [ ] 每個 external integration 都有 timeout + retry + failure handling
-- [ ] 標記使用得當
+- [ ] Every §2.1 FR maps to at least one endpoint, inbound event / webhook (§6.3), or background job trigger
+- [ ] Every endpoint maps to at least one SF
+- [ ] Every endpoint's errors are registered in the §6.5 catalog
+- [ ] Every published event is listed in §3.5
+- [ ] Every external integration has timeout + retry + failure handling
+- [ ] Marker lifecycle done: confirmed markers deleted, surviving `[待拍板]` carry options and a recommendation, deferred ones converted to a D-NNNN reference
 
-## 文件結束時的 summary
+## Closing summary
 
 ```
 §6 interfaces 完成!

@@ -1,152 +1,147 @@
 ---
 name: system-feature-design
-description: Use this skill when the user wants to design a new system feature and needs a complete, AI-development-ready specification. Triggers on requests like "幫我做 system feature design", "我想設計一個新功能", "做一份功能規格", "design a new feature spec", "write a feature design document", "create a PRD for X", as well as market-research requests that precede a feature ("幫我做市場調研", "競品分析", "market research", "competitive analysis", "市場規模 / TAM SAM SOM") — or any request involving feature planning that will be handed off for AI-assisted full-stack development (frontend + backend + UX). Produces a folder of up to 10 interlinked spec documents covering (optional) market research, problem framing, requirements, domain model, system flows, presentation spec, interface contracts, design decisions (ADRs), acceptance criteria, and rollout — designed so each artifact can be claimed by a different role (PM / backend / frontend / UX / QA / SRE) and consumed by AI coding agents downstream.
+description: Design a feature as an AI-development-ready spec, break a spec into buildable tickets, or scaffold a project's Claude Code conventions. Use when the user wants a spec / PRD / 功能規格 for a new feature to hand off to AI-assisted full-stack development ("設計一個新功能", "做一份功能規格", "create a PRD for X", "design a feature spec"); when they want the market research that precedes one ("市場調研", "競品分析", "market research", "competitive analysis", "TAM SAM SOM"); when they have a spec or plan and want it cut into tickets or tasks ("拆任務", "拆票", "break this into tickets", "split the spec into tasks"); or when they want to set up, initialize, or migrate a codebase onto Claude Code conventions — CLAUDE.md, rules, sub-agents ("初始化專案", "設定 CLAUDE.md", "scaffold a Claude Code project", "anatomy of .claude").
 ---
 
 # system-feature-design
 
-## What this skill does
+Three branches. Each runs alone, and each can start from what another produced.
 
-Guide the user through producing a complete, multi-document feature spec — designed for handoff to AI-assisted full-stack development. The output is a folder of up to 10 interlinked markdown documents (plus an ADR sub-folder), each with a single focus and explicit cross-references via a shared ID system. The first document — §0 market research — is **optional** and runs before §1: in it Claude does live web research + ingests any data the user provides, then feeds the findings (personas, differentiation opportunities, sizing) forward into problem framing and requirements.
+| Branch | Produces | Reach for it when |
+|---|---|---|
+| **Spec** | up to 10 interlinked documents (§0–§9) in a `{feature-name}/` folder | the user has a feature in mind and needs it specified |
+| **Tickets** | tracer-bullet tickets with blocking edges | a spec, plan or conversation is ready to become buildable work |
+| **Scaffold** | a repo's `CLAUDE.md` + `.claude/` — rules, skills, sub-agents | the user is starting a codebase, or moving an existing one onto Claude Code conventions |
 
-This skill is **not** a passive template. The core working model is:
+Each spec document is claimable by one role — PM / backend / frontend / UX / QA / SRE — and readable by an AI coding agent downstream. Exact IDs across documents are what make that split work. Implementation happens after this skill, not inside it.
 
-> User provides **focus + direction + desired outcome** in plain language. Claude **derives** all structured content (FR / entity / flow / API / AC / etc.), **shows** it to the user with clear markers for things needing confirmation or decision, and **iterates** based on feedback.
+**Entering mid-way is the point.** A spec the user wrote themselves, one a manager handed over, one another agent produced — all go straight into Tickets without the Spec branch ever running. Ask which branch fits rather than assuming the user starts at §0.
 
-## When to use
+**And say so when none of them fits.** A change that touches one module inside a repo the user already has doesn't earn ten documents: no market to research, no frontend checklist, no BDD coverage matrix. What it earns is being interrogated until the decision tree is settled, with the terms and the load-bearing decisions written down — which is the `grilling` skill in a scaffolded repo, alongside `domain-glossary`. Point there and stop; marching a two-hour change through §1–§8 is the failure mode this skill is most likely to produce.
 
-Use this skill when:
-- The user describes a new feature they want to design
-- The user mentions writing a spec, PRD, or design document for a feature
-- The user wants documents that can be split across roles (PM / backend / frontend / UX / QA)
-- Output will be consumed by AI coding agents (so cross-document consistency matters)
+The Spec branch earns its weight when the work spans several sessions, several roles, or several people who need the same picture.
 
-Do NOT use this skill for:
-- Coding a feature directly (this only produces specs, not code)
-- Architecture decisions at the system-of-systems level (this is feature-scoped)
-- Pure brainstorming / ideation (the user should have at least a rough direction)
+---
 
-## How SKILL.md and 0-skill-mode.md split responsibilities
+# Branch: Spec
 
-This SKILL.md is the **flow skeleton** — what to read, what order to produce documents in, where files go, when to write them, the ID system.
+## Before the first reply
 
-`references/0-skill-mode.md` is the **work philosophy** — derive vs ask, the marker system (`[需確認]` / `[待拍板]`), everyday-language questioning style, propagation rules, full-spec review checks.
+Read `references/0-skill-mode.md` in full. It is the working model every step below assumes: **derive vs ask**, the `[需確認]` / `[待拍板]` markers, everyday-language questioning, propagation, and the closing review.
 
-When this file says "follow the X pattern in 0-skill-mode.md", go read that section there. Don't try to do everything from this file alone.
+Read everything else on demand — 10 guides, 11 spec templates and a worked example ship here, and loading them upfront spends the context the work needs.
 
-## Step 1: Read the working model first
+| When | Read |
+|---|---|
+| starting document N | `references/{N}-*.guide.md` + `templates/{N}-*.template.md` |
+| checking how an ID resolves across documents | the matching file under `examples/automation-template-export/` — read it to verify the chain, not to source content |
 
-**Before responding to the user**, read `references/0-skill-mode.md` in full. Every behavioral guideline in this skill is grounded in that file — opening pattern, derive-vs-ask judgment, marker rules, propagation, full review checks.
+## Opening
 
-### Context budget: read on demand, not upfront
+Follow `Opening` in `0-skill-mode.md`: greet, take the user's one-sentence description, ask 1–3 everyday-language follow-ups.
 
-This skill ships with 11 reference guides (`0-skill-mode.md` + `0-market-research.guide.md` + 9 per-document guides) and a full example folder. **Do NOT read all of them at the start** — that will burn through context before you start producing.
+Then offer §0 market research, and take one of three routes:
 
-The correct pattern:
-- **At start**: read only `references/0-skill-mode.md`.
-- **Before each document N**: read only `references/{N}-{name}.guide.md` and `templates/{N}-{name}.template.md`.
-- **Examples folder (`examples/automation-template-export/`)**: reference only when stuck — for example, when the user has trouble visualizing what a finished document looks like. It is a "finished product reference", **not a step-by-step SOP to copy**. Do not preload it.
+- the user wants it, or already has research to fold in → run §0 first
+- an internal tool with no market dimension → start at §1 and mark §0 `⏭️ 跳過（原因）` in the README
+- the request *is* the research → §0 is the whole job; offer the rest of the spec once it lands
 
-## Step 2: Opening
+## Context hygiene
 
-Follow the opening pattern defined in `0-skill-mode.md` (the "開場" section): greet, accept the user's one-sentence description, ask at most 1–3 everyday-language follow-ups. Do not ask the user to fill out a structured form.
+**Keep the whole Spec branch — and Tickets, if it follows — in one unbroken context window.** Don't compact and don't clear between documents: §5 re-reads §4, §8 re-reads everything, and a summarized §3 is a §3 you will silently get wrong.
 
-Then **offer §0 market research before starting §1** (also defined in the "開場" section). If the user wants it (or already has research to fold in), do §0 first; if they decline or it's clearly a pure internal tool with no market dimension, skip straight to §1 and mark §0 as skipped in the README. If the user's request is *itself* a market-research / competitive-analysis ask, §0 is the main event — do it, then offer to continue into the full spec.
+The ceiling is the window in which the model still reasons sharply, roughly 120k tokens on current models. Approaching it before the spec is finished, don't push on degraded — write out what's confirmed, hand off to a fresh session, and resume from the README's 狀態 column.
 
-## Step 3: Per-document loop
+Implementation is the opposite: each ticket starts in a **fresh** window, working from the ticket alone.
 
-The spec has up to 10 documents — optional §0, then §1–§9 — produced in order. For each one:
+## Per-document loop
 
-### 3a. Read the document's reference guide
+Documents go in order, §0 through §9, because each one references the last. For each:
 
-Before starting document N, read `references/{N}-{name}.guide.md` and `templates/{N}-{name}.template.md`. The guide tells you the derivation table, required questions, OQ candidates（§7/§8 的 guide 屬彙整階段，原則上不產新 OQ）, display format, stuck points, reflection checklist, and closing summary template.
+**1. Read** `references/{N}-*.guide.md` and `templates/{N}-*.template.md`. The guide carries that document's derivation table, required questions, OQ candidates, display format, stuck points, reflection checklist and closing summary. (§7 and §8 are consolidation stages — they route open questions rather than raise new ones.)
 
-### 3b. Derive internally
+**2. Derive** from the user's description, the documents already on disk, and the guide's derivation table. Structure is yours to derive; business and context decisions are the user's to make.
 
-Use the user's initial description, previously completed documents on disk, and the guide's derivation table. Apply the **derive vs ask** judgment from `0-skill-mode.md` — derive structure, ask about business/context decisions.
+> **§0 inverts this.** It is research-driven: `WebSearch` / `WebFetch` the market and competitors, `Read` any data the user supplies. State the research plan in one line and take the single direction-confirm (`Direction check before the run`), then run to completion uninterrupted. Every figure and competitor fact carries a source and a confidence level. See `references/0-market-research.guide.md`.
 
-> **§0 is the exception**: it is *research-driven*, not derive-driven. Instead of inferring from the user's sentence, use `WebSearch` / `WebFetch` to research the market and competitors, and `Read` to ingest any data files the user provides. Before the expensive research run, state the research plan in **one line** and get a single direction-confirm (the "開跑前的方向確認" gate) — then run to completion without interrupting. Every market figure or competitor fact must carry a source and a confidence level — never fabricate numbers. See `references/0-market-research.guide.md` ("開跑前的方向確認" + "研究方法") for the full rules.
+If §1 established this is a **POC / side project**, apply `POC fast mode` from `0-skill-mode.md`: auto-apply low-risk recommendations in a one-line announcement, and hard-stop only on irreversible, money-direction, or data-model-shaping forks. Target ≤5–8 hard stops for the whole session.
 
-If §1 established this is a **POC / side project**, also apply the **POC 快速模式** rule from `0-skill-mode.md`: auto-apply recommendations for low-risk decisions (announce them in one line), hard-stop only on high-risk forks (irreversible / money-direction / data-model-shaping). Target ≤5–8 hard stops across the whole session.
+Mark what you inferred: `[需確認]` for anything the user should verify, `[待拍板]` for a live fork — and a `[待拍板]` always ships with options (a)(b)(c) plus your recommended direction. Where you can neither derive nor form options, ask for context.
 
-Mark every inference:
-- `[需確認]` — Claude inferred this; user verifies
-- `[待拍板]` — Two reasonable options exist; **must come with options (a)(b)(c) + recommended direction** (see the rule in `0-skill-mode.md`)
+**3. Show** using the 3-step display format in `0-skill-mode.md` — summary, then full content, then the decisions you need. Put decisions in everyday language with concrete options.
 
-Never fabricate. If you can't derive and can't form options, stop and ask the user for context.
+**4. Iterate** on the feedback: confirm / small fix / major change / back-edit / more detail, each patterned in `0-skill-mode.md`. A back-edit to an earlier document triggers a downstream propagation scan — surface what it touches and ask before syncing.
 
-### 3c. Show to user
+**5. Close out.** Run the guide's reflection checklist and fix what it catches, then ask the one question no per-document guide covers: **does anything here mean an earlier document needs amending?** Say so and offer the edit. Then run the marker lifecycle, and treat its outcome as an invariant: **a file on disk carries no bare `[需確認]` or `[待拍板]`.** Every marker leaves by one of exactly two doors — deleted, because the user confirmed the item; or converted into a §7.2 Open Question with a `D-NNNN` reference left in its place, because they deferred it. An item that is neither confirmed nor deferred is not ready to be written, so resolve it before writing rather than shipping the marker. Markers live in the conversation only; §7.2 is the one place an unresolved item persists, and nothing — the README included — becomes a second parking spot for them. (`Marker lifecycle` in `0-skill-mode.md`.)
 
-Use the 3-step display format (summary → full content → necessary decisions) defined in `0-skill-mode.md` and refined per-document in each guide. Ask decisions in everyday language with concrete options, not jargon.
+Write the file, note its path, give the closing summary, and confirm the user is ready for the next document.
 
-### 3d. Receive feedback and iterate
+## Documents
 
-Handle confirm / small fix / major change / back-edit / request-more-detail per the patterns in `0-skill-mode.md`. When the user back-edits a prior document, proactively scan downstream for propagation effects and ask before syncing.
+| § | File | Holds |
+|---|---|---|
+| 0 | `0-market-research.md` *(optional, runs first)* | market sizing, segments, competitors, research-backed personas, sentiment, differentiation — feeds §1 and §2 |
+| 1 | `1-problem-scope.md` | problem, users, success criteria, scope, assumptions |
+| 2 | `2-requirements.md` | FRs, NFRs, priority |
+| 3 | `3-domain-model.md` | entities, state machines, business rules, events |
+| 4 | `4-flows.md` | system flows, error flows, edge cases — system-side only |
+| 5 | `5-presentation-spec.md` | presentation type, user stories, user flows, journey (§5.4), components, pages, interaction decisions (§5.8), design handoff (§5.9) |
+| 6 | `6-interfaces.md` | REST APIs, events, integrations, error catalog |
+| 7 | `7-decisions.md` + `decisions/NNNN-*.md` | decision index + open questions; full ADR bodies live in `decisions/` |
+| 8 | `8-acceptance.md` | acceptance criteria, BDD format |
+| 9 | `9-rollout.md` *(optional)* | rollout, observability, runbook, rollback |
+|   | `README.md` | index, ID system, revision history |
 
-### 3e. Reflect, write to disk, and move on
+## Paths
 
-Run the guide's reflection checklist. Fix gaps. **Strip resolved markers before writing**: delete `[需確認]` / `[待拍板]` on items the user confirmed; convert deferred `[待拍板]` into §7.2 Open Questions and replace the inline marker with a reference (see the "標記的生命週期" rule in `0-skill-mode.md`). Write the document to disk (see Step 4). Give the closing summary. Confirm the user is ready before proceeding to the next document.
+§1's stage question — POC, MVP, or production — settles **which documents this run carries and how deep each goes**. Say which path you're on once it's answered; a path carrying documents it doesn't need is the most common way this gets heavy.
 
-## Step 4: Document order, output location, and write timing
+| Path | Carries | Depth |
+|---|---|---|
+| **POC / side project** | §1–§8. §0 and §9 skipped | POC fast mode. §4 takes the happy path plus the failures that will actually happen, not an exhaustive sweep. §6 covers what the frontend actually calls. §5.4–§5.9 only where there's a GUI |
+| **MVP** | §1–§8, plus §9 where it touches production traffic, plus §0 where the market shapes the requirements | §4 gets the full EF / EC sweep. §6 covers every consumer, not just the first one |
+| **Production / revenue-carrying** | §0–§9 | Exhaustive throughout, and §9 stops being optional — rollout, alerting and rollback all get written |
 
-Produce documents in this exact order (later docs reference earlier ones):
+Depth is the lever that matters more than presence. A POC's §4 is three flows and the two failures that bite; a production §4 is every error path enumerated. Same document, different weight.
 
-0. `0-market-research.md` (optional, runs first) — Market sizing, segments, competitors, research-backed personas, sentiment, differentiation; feeds §1 and §2
-1. `1-problem-scope.md` — Problem, users, success criteria, scope, assumptions
-2. `2-requirements.md` — FRs, NFRs, priority
-3. `3-domain-model.md` — Entities, state machines, business rules, events
-4. `4-flows.md` — System flows, error flows, edge cases (system-side only)
-5. `5-presentation-spec.md` — Presentation type, user stories, user flows, user journey（§5.4）, components, pages, interaction decisions（§5.8 前端體驗拍板結果）, design handoff（§5.9）
-6. `6-interfaces.md` — REST APIs, events, integrations, error catalog
-7. `7-decisions.md` + `decisions/NNNN-*.md` — ADRs, open questions（`7-decisions.md` 是索引：decision index + open questions；完整 ADR 內文在 `decisions/NNNN-*.md`）
-8. `8-acceptance.md` — Acceptance criteria (BDD format)
-9. `9-rollout.md` (optional) — Rollout, observability, runbook, rollback
+**Skipping §0** — leave the file uncreated and mark its README row `⏭️ 跳過（原因）`. §1.3 personas fall back to derive-plus-`[需確認]` with no PER-N references. Nothing downstream hard-depends on §0.
 
-If the user skips §0: do not create the file; mark its README row `⏭️ 跳過（原因）`. §1.3 personas then fall back to "derive from description + `[需確認]`" (no PER-N references). Nothing downstream hard-depends on §0, so no rewrite sweep is needed.
+**Skipping §9** — sweep §1–§8 for forward references into §9 (an NFR saying「詳見 §9.3」, an EF pointing at「§9.4 alert」), rewrite or remove each, and drop the §9 row from the README index.
 
-If the user skips §9: scan §1–§8 for forward references to §9 (e.g. an NFR saying「詳見 §9.3」, an EF pointing at「§9.4 alert」), rewrite or remove them, and drop the §9 row from README's index.
+## Where files land
 
-Plus:
-- `README.md` — Index, ID system reference, revision history
+A `{feature-name}/` folder in the user's current working directory — settle the kebab-case slug with them at the start, e.g. `template-export-import/`. `examples/automation-template-export/` shows the finished shape, and each document starts from its file in `templates/`.
 
-### Output location
+**Create the `{feature-name}/` folder up front** — every document lands inside it, and the README's index is only meaningful relative to it. Writing spec documents loose in the working directory is wrong even for a single-document run.
 
-Files go into **a `{feature-name}/` folder in the user's current working directory** (not a fixed sandbox path). At the start of the session, decide the folder name with the user — usually a kebab-case slug derived from the feature, e.g. `template-export-import/`. Create the folder structure mirroring `examples/automation-template-export/`.
+**Its subfolders grow as their contents arrive**, though: `decisions/` appears when the first ADR is written, `issues/` when the Tickets branch runs. An empty subdirectory named after a document that doesn't exist yet is noise the user has to interpret.
 
-If the user is in an existing project repo, ask whether to put the spec under `docs/specs/{feature-name}/` or at repo root — don't assume.
+Names are literal — the subfolder is `decisions/`, never `{decisions}/`. Braces in this file mark a slot for you to fill, never a character to type.
 
-Use the corresponding files in `templates/` as the structural starting point — copy and fill in, don't reinvent the structure.
+Inside an existing project repo, ask whether the spec belongs under `docs/specs/{feature-name}/` or at the repo root.
 
-### When to write each file
+**Write each document the moment the user confirms it** (end of step 5). The user gets to read the real file between documents, later documents re-read earlier ones by §X.Y instead of trusting memory, and an interrupted session keeps its work.
 
-**Write each document to disk as soon as the user confirms it** (end of step 3e for that document). Do NOT wait until all of them are done. Reasons:
-- The user can review the actual file between docs.
-- Later docs reference earlier docs by §X.Y — having them on disk lets you re-read instead of re-deriving from memory.
-- If the session is interrupted, work is preserved.
+Create `README.md` right after §1 confirms, with placeholder rows for §2–§9 and a `v0.1 — Initial draft` revision row. Its **狀態 column** (`✅ v0.1` / `⬜ 待產` / `⏭️ 跳過`) is the session's progress tracker — update it on every write. After the last document, sweep the links and the ID table.
 
-After writing, briefly note the path (`wrote 3-domain-model.md`) so the user knows where it landed.
+**Resuming a broken session**: read the README's 狀態 column to find where work stopped, re-read the documents already on disk — they are the source of truth — and re-enter the loop at the first `⬜ 待產`.
 
-### When to write README.md
+## Closing review
 
-Create `README.md` **immediately after §1 is confirmed** (so it exists as an index from the start), with placeholder rows for §2–§9. Update its Revision History row with `v0.1 — Initial draft` and the current date. After §9 (or §8 if §9 is skipped), do a final pass to make sure all document links and the ID system table are accurate.
+After the last document, offer the full-spec review: wording, the seven checks (0–6, opening with a mechanical grep pass), and result bucketing are all in `references/full-spec-review.md`. If the user passes on it, deliver the handoff guide instead — which role reads which sections.
 
-The README's document index has a **狀態 column** (`✅ v0.1` / `⬜ 待產` / `⏭️ 跳過`) — update it every time a document is written to disk. This is the session's progress tracker.
+Then offer the two branches the spec feeds:
 
-### Resuming an interrupted session
+- **Tickets** — cut it into buildable work. The natural next step.
+- **Scaffold** — set up the repo that will implement it. The spec already names the stack, the entry point and the commands, so that interview is mostly confirmation. A repo that already has `CLAUDE.md` skips it. §3's entity vocabulary and §7's ADRs carry over as the repo's `CONTEXT.md` and `docs/adr/`, where the `domain-glossary` skill keeps them alive.
 
-If the conversation restarts mid-spec: read `README.md`'s 狀態 column to find where work stopped, then **re-read the documents already on disk** (they are the source of truth — do not re-derive from memory), and continue the per-document loop from the first `⬜ 待產` document.
-
-## Step 5: Full-spec review
-
-After the last document is written, proactively offer the full-spec review. The wording, the 5 check categories, and the result-bucketing format are all defined in `0-skill-mode.md` (the "完整 spec 做完後的總 review" section). If the user declines, deliver the handoff guide (role-by-section reading recommendations).
-
-## ID system (used across all documents)
+## ID system
 
 | Prefix | Meaning | Defined in |
 |--------|---------|------------|
 | MS-N | Market Segment | §0.2 |
 | CMP-N | Competitor / Comparable | §0.3 |
-| PER-N | Persona (research-backed) | §0.4 |
+| PER-N | Persona | §0.4 |
 | OPP-N | Differentiation Opportunity | §0.6 |
 | FR-N | Functional Requirement | §2.1 |
 | NFR-N | Non-Functional Requirement | §2.2 |
@@ -155,44 +150,52 @@ After the last document is written, proactively offer the full-spec review. The 
 | EF-N | Error Flow | §4.2 |
 | EC-N | Edge Case | §4.3 |
 | UF-N | User Flow | §5.3 |
-| P-N | Page | §5.7 |
 | C-N | Component | §5.6 |
+| P-N | Page | §5.7 |
 | T-N | Page Section | §5.7 |
-| D-NNNN | Decision (ADR) | decisions/ |
+| D-NNNN | Decision (ADR) | `decisions/` |
 | AC-* | Acceptance Criteria | §8 |
 
-> 註：domain events（§3.5）以事件名稱（PascalCase，如 `TemplateImported`）引用，不另編 ID。
+Domain events (§3.5) are referenced by PascalCase name — `TemplateImported` — with no ID.
 
-When introducing new items in any section, automatically assign the next number in sequence and tell the user explicitly (e.g., "I'm adding this as FR-3").
+Cite by ID, always: `FR-3`, never "the third requirement". When a section gains an item, assign the next number in sequence and say so out loud — "adding this as FR-3".
 
-## Folder structure (this skill)
+---
 
+# Branch: Tickets
+
+Cuts a spec, a plan, or the current conversation into **tracer bullets** — vertical slices, each declaring the tickets that block it. Read `references/tickets.guide.md` before step 2; it carries the slicing rules, the expand–contract exception, and the spec-to-ticket mapping. Ticket bodies start from `templates/ticket.template.md`, and `examples/automation-template-export/issues/` is a worked set with its dependency graph.
+
+**1. Gather the source.** Work from what's in the conversation. Given a path, an issue number or a URL, fetch it and read the body and comments in full. A `{feature-name}/` spec folder means reading §2 (FR), §5.3 (UF), §7 (ADRs) and §8 (AC) at minimum.
+
+**2. Survey the codebase**, where there is one — greenfield, or a spec sitting outside any repo, skips this step. Ticket titles use the project's own vocabulary, and ADRs in the area you're touching still bind. Note any prefactoring that would make the slices land easier — *make the change easy, then make the easy change* — and give it its own ticket, first.
+
+**3. Draft the slices.** Each cuts a narrow but complete path through every layer, lands demoable on its own, and fits in one fresh context window. Give each its blocking edges. A wide refactor goes to expand–contract instead — see the guide.
+
+**4. Quiz the user** on granularity, on whether each blocking edge is real, and on what to merge or split. Iterate to approval.
+
+**5. Publish.** By default, local files inside the spec folder the tickets came from — `<spec-folder>/issues/NN-slug.md`, numbered blockers-first — plus an `issues/README.md` carrying the dependency graph, the blocker table and the **frontier**. Use a real tracker instead where the project has one, with its native blocking links. Either way, name the frontier out loud: the tickets whose blockers are all done, takeable now, in parallel if there's more than one.
+
+Each ticket cites the spec IDs it implements (`FR-3`, `UF-2`, `AC-3.1`) so the implementing agent can read back into the spec. Start each implementation in a fresh context window, working from the ticket.
+
+---
+
+# Branch: Scaffold
+
+Writes `CLAUDE.md`, `CLAUDE.local.md` and `.claude/{rules,skills,agents,references}` into a target repo. `scaffold/scripts/scaffold.py` does the substitution and verifies its own output; your job is the interview and the config.
+
+**1. Interview.** Required: project name, one-line description, stack, install / test / lint / dev commands, entry point, target directory (defaults to cwd). Optional: deploy target, which of the five agents (`planner`, `tester`, `implementer`, `reviewer`, `researcher`), and whether to gitignore `PLAN.md` / `FIX_PLAN.md`. Skip whatever the user already told you.
+
+**2. Write the config** to a JSON file in the scratchpad. Field-by-field schema, the multi-language form, and which stacks have specialised templates: `references/scaffold.guide.md`.
+
+**3. Run it.**
+
+```bash
+python3 scaffold/scripts/scaffold.py --config <config.json> --target <target-dir>
 ```
-system-feature-design/
-├── SKILL.md                          (this file — flow skeleton)
-├── templates/                        (structural skeletons to fill)
-│   ├── README.template.md
-│   ├── 0-market-research.template.md (optional doc, runs first)
-│   ├── 1-problem-scope.template.md
-│   ├── ... (2-9)
-│   └── decisions/
-│       └── NNNN-template.md
-├── references/                       (how-to guides for Claude)
-│   ├── 0-skill-mode.md               ← READ FIRST (work philosophy)
-│   ├── 0-market-research.guide.md    (research-driven; web search + data ingest)
-│   ├── 1-problem-scope.guide.md
-│   └── ... (2-9)
-└── examples/                         (filled-out example — reference only when stuck)
-    └── automation-template-export/
-```
 
-## Final reminder
+Add `--dry-run` first when the target is uncertain. The script refuses a target that already holds `CLAUDE.md`, `.claude/`, or `CLAUDE.local.md` — ask the user, then re-run with `--force` on their say-so.
 
-This skill produces specs that will be read by AI coding agents. Cross-document precision is the whole point. Always:
+**4. Report** in a few lines: point at the project-overview section CLAUDE.md leaves as a TODO, and name the two git steps — commit `CLAUDE.md .claude/ .gitignore` as team config; `CLAUDE.local.md` stays local and is already gitignored.
 
-- Use exact IDs (FR-3, not "the third requirement")
-- Mark inferences with `[需確認]`
-- Mark open decisions with `[待拍板]` **together with options + recommendation** — never standalone
-- Verify with the user before moving on
-
-If you're uncertain about scope or direction, stop and ask in everyday language with a concrete choice.
+When the script exits non-zero it names the problem — fix that and re-run. `references/scaffold.guide.md` maps each failure message to its fix, and explains what each piece of `.claude/` is for when the user asks.

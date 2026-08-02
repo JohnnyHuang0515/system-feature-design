@@ -1,84 +1,81 @@
 # Reference Guide: 0-market-research.md
 
-> 給 Claude 看的引導指南。基於 `0-skill-mode.md` 的「推導 → 展示 → 驗證」模式。
-> 配合 `templates/0-market-research.template.md` 使用。
+> Runs on the `Derive → Show → Verify` model in `0-skill-mode.md`. Pairs with `templates/0-market-research.template.md`.
+> Instructions here are English; the quoted blocks are scripts spoken to the user — use them as written.
 >
-> ⚠️ 這份文件跟其他 9 份最大的不同：**它主要靠「研究」而非「從使用者描述推導」**。
-> 其他文件是 Claude 從使用者那句話往下拆；§0 是 Claude **主動去外面找資料 + 吃使用者給的資料**，
-> 再回來綜整。所以這份的核心動作是 **web research + 資料消化 + 標來源 + 標信心度**，不是憑空生成。
+> ⚠️ This document differs from the other nine in one fundamental way: **it runs on research, not on derivation from the user's description.** The others unfold from that one sentence; §0 goes out and finds data, and eats whatever data the user supplies, before synthesizing. Its core actions are **web research, data digestion, sourcing and confidence levels** — never generation from thin air.
 
-## 文件目的
+## Purpose
 
-在動筆寫 §1 problem-scope **之前**，先回答「**這個市場長怎樣、誰在裡面、別人怎麼解、我們的切入點在哪**」。
+Before §1 problem-scope is written, answer: **what does this market look like, who is in it, how do others solve this, and where is our angle?**
 
-產出一份市場研究，餵給後面整份 spec：
-- §0.4 personas → §1.3 的目標 persona（不再是憑使用者一句話反推，而是有研究佐證）
-- §0.6 differentiation opportunities → §2 FR 的優先級、§1.4 success criteria 的對標
-- §0.1 sizing → §1.4 success criteria 的量化指標合理性
+The research feeds the rest of the spec:
 
-> 定位提醒：這是 **feature design 流程裡的市場研究**，不是創業計畫書。
-> 即使深度對齊完整 PM 市調（TAM/SAM/SOM + 分群 + 競品 + persona + 情感 + 差異化），
-> 重點仍是「**這些發現怎麼影響我們接下來要設計的功能**」。每一節做完都要回答「so what？對 §1/§2 的啟示是什麼」。
+- §0.4 personas → §1.3 target personas, now research-backed rather than reverse-engineered from one sentence
+- §0.6 differentiation opportunities → §2 FR priority, §1.4 success criteria benchmarks
+- §0.1 sizing → whether §1.4's quantitative targets are plausible
 
-## 這份文件是「選做」的
+> Positioning: this is **market research inside a feature-design flow**, not a business plan. Even at full PM depth (TAM/SAM/SOM + segments + competitors + personas + sentiment + differentiation), the point remains **how these findings change the feature we're about to design**. Every section closes by answering "so what — what does this imply for §1 and §2?"
 
-§0 預設**主動提供**，但可跳過。三種情況：
+## This document is optional
 
-1. **使用者要做** → 跑完整 §0（或 POC 壓縮版，見下）。
-2. **使用者已有研究**（「我們已經做過市場調研了」「我貼給你」）→ 不從頭跑，改成**吃他的資料 + 補洞 + 整理成 §0 格式**，把已知的競品 / persona / 數字結構化進來。
-3. **使用者明確說跳過**（「不用市調，我很清楚市場」「這是純內部工具」）→ 跳過 §0，README 該列標 `⏭️ 跳過（原因）`，**直接進 §1**。跳過時 §1.3 persona 退回原本「從描述推 + `[需確認]`」的做法。
+Offer §0 unprompted; it can still be skipped. Three cases:
 
-> 開場怎麼問見 `0-skill-mode.md` 的「開場」section（已加入 §0 的詢問）。
+1. **The user wants it** → run the full §0 (or the compressed POC version below).
+2. **The user already has research** (「我們已經做過市場調研了」, 「我貼給你」) → don't start from scratch. Eat their data, fill the gaps, structure the known competitors, personas and figures into §0 format.
+3. **The user explicitly skips** (「不用市調，我很清楚市場」, 「這是純內部工具」) → skip §0, mark the README row `⏭️ 跳過（原因）`, go straight to §1. §1.3 personas fall back to derive-plus-`[需確認]`.
 
-## 研究方法（這份文件專屬）
+> How to raise it in the opening: see `Opening` in `0-skill-mode.md`, which already includes the §0 question.
 
-### 兩個資料來源，能用就用
+## Research method
 
-| 來源 | 怎麼用 |
+### Two sources — use whichever exists
+
+| Source | How to use it |
 |---|---|
-| **使用者提供的資料** | CSV / 問卷 / 訪談逐字稿 / 客服單 / 競品定價表 / 既有市場報告 → 直接讀、直接分析（用 Read 等工具）。這是**第一手、信心度最高**的來源，優先用。 |
-| **Web research** | 用 `WebSearch` / `WebFetch` 找競品官網、定價頁、評論（G2 / Capterra / Reddit / 社群）、產業報告、市場數字。這是**第二手**，要標來源 + 信心度。 |
+| **Data the user provides** | CSV, surveys, interview transcripts, support tickets, competitor pricing tables, existing market reports → read and analyse directly (via `Read` and similar). This is **first-hand and highest-confidence**; use it first. |
+| **Web research** | `WebSearch` / `WebFetch` for competitor sites, pricing pages, reviews (G2 / Capterra / Reddit / communities), industry reports, market figures. **Second-hand** — needs a source and a confidence level. |
 
-> 環境若沒有 web 工具、或使用者在離線 / headless 情境 → 退化成「**基於既有知識生成假說 + 明確標 `[需確認]` + 建議使用者怎麼驗證**」，不要假裝查過。
+> With no web tools available, or the user offline / headless → degrade to **hypotheses from existing knowledge, marked `[需確認]`, with a note on how to verify them**. Never pretend to have looked something up.
 
-### 鐵則：研究類內容一定要標來源 + 信心度
+### Iron rule: research content carries a source and a confidence level
 
-§0 最大的風險是**編數字**。所以：
+§0's biggest risk is **inventing numbers**. So:
 
-- 每個市場數字 / 競品事實 → **附來源**（§0.8 列清單，內文標 `[來源: ...]`）
-- 查不到、用推估的 → 標 `[估算]` + 寫推估邏輯，**不要寫得像查證過的事實**
-- 信心度三級：`高`（多來源一致 / 第一手資料）/ `中`（單一來源 / 合理推估）/ `低`（憑經驗假說）
-- 沿用整份 spec 的標記：使用者該驗證的推測標 `[需確認]`；兩種解讀都合理的標 `[待拍板]`（必附選項 + 建議）
+- Every market figure and competitor fact **carries a source** (listed in §0.8, cited inline as `[來源: ...]`)
+- What can't be found and is estimated instead is marked `[估算]` with its reasoning shown, **never written as though verified**
+- Three confidence levels: `高` (multiple agreeing sources, or first-hand data) / `中` (single source, or a reasonable estimate) / `低` (hypothesis from experience)
+- The spec-wide markers still apply: inferences the user should verify take `[需確認]`; genuinely two-way readings take `[待拍板]` with options and a recommendation
 
-> 一句話：**寧可說「這條信心度低，建議你找 X 驗證」，也不要給一個看起來很確定其實是猜的數字。**
+> In one line: **better to say 「這條信心度低，建議你找 X 驗證」 than to hand over a confident-looking guess.**
 
-## Claude 研究 / 推導指南
+## Research and derivation guide
 
-| 節 | 產出 | 主要來源 | 備註 |
+| Section | Output | Main source | Notes |
 |---|---|---|---|
-| §0.1 Market Sizing | TAM / SAM / SOM（top-down + bottom-up 交叉驗證）| Web 產業報告 + bottom-up 單位經濟 | 功能**不能獨立變現**時（多數內部 feature），改做「**需求規模**」：我們有多少使用者 / 工作區會踩到這問題、頻率多高。見下方「sizing 的兩種模式」 |
-| §0.2 Market Segments | 3-5 個 segment（`MS-N`）：人口/firmographic、JTBD、痛點、product fit、規模 | Web + 使用者資料 | segment 要可區分、不重疊 |
-| §0.3 Competitive Scan | 5 個競品 / 類比解法（`CMP-N`）：定位、強項、弱項/缺口、定價模式、怎麼解這問題 | Web（官網/定價/評論）+ 使用者提供的競品資料 | 內部 feature 沒有「競品」時，找**類比功能**（別的產品怎麼做匯出匯入 / 怎麼做這類事） |
-| §0.4 Personas | 3 個 research-backed persona（`PER-N`）：JTBD、Top 3 痛點、Top 3 gains、一個意外洞察、佔比 | 使用者資料 > Web > 假說 | **這節直接餵 §1.3**。每個 persona 都要能影響某個產品決策，不要裝飾用 |
-| §0.5 Sentiment & Demand | 有 feedback 資料時：分 segment 的情感分數（-1~+1）+ 正負主題 + 引用；無資料時：web 需求訊號（評論抱怨、論壇、搜尋熱度） | 使用者 feedback 資料 / Web | 資料量小要誠實標「樣本少，是假說不是結論」 |
-| §0.6 Differentiation & Opportunity | 機會清單（`OPP-N`）：競品共同缺口、被忽略的 segment、沒被解好的 JTBD、我們能贏的點 | 綜整 §0.2-§0.5 | **這節直接餵 §2 優先級 + §1.4**。每條 OPP 要指向一個可行動的方向 |
-| §0.7 Implications for Spec | 明確 bullet：哪些 persona 進 §1.3、哪個 problem framing 進 §1.1、哪些 OPP 進 §2、哪些對標進 §1.4 | 綜整全文 | 這是 §0→§1 的交接橋（類比 §5.9 design handoff） |
-| §0.8 Sources & Confidence | 來源清單 + 各大主張的信心度 + 待驗證項 | — | 收尾節 |
+| §0.1 Market Sizing | TAM / SAM / SOM, top-down cross-checked against bottom-up | Web industry reports + bottom-up unit economics | Where the feature **can't be monetized independently** (most internal features), switch to **demand sizing**: how many of our users or workspaces hit this problem, and how often. See "Two sizing modes" below |
+| §0.2 Market Segments | 3–5 segments (`MS-N`): demographic/firmographic, JTBD, pain, product fit, size | Web + user data | Segments must be distinguishable and non-overlapping |
+| §0.3 Competitive Scan | 5 competitors or analogues (`CMP-N`): positioning, strengths, weaknesses/gaps, pricing model, how they solve this | Web (sites/pricing/reviews) + competitor data from the user | Where an internal feature has no "competitors", find **analogous features** — how other products handle import/export, or this class of problem |
+| §0.4 Personas | 3 research-backed personas (`PER-N`): JTBD, top 3 pains, top 3 gains, one surprising insight, share | User data > web > hypothesis | **Feeds §1.3 directly.** Every persona must be able to swing a product decision; decorative ones don't belong |
+| §0.5 Sentiment & Demand | With feedback data: per-segment sentiment score (−1 to +1), positive and negative themes, quotes. Without: web demand signals (review complaints, forums, search interest) | User feedback data / web | A small sample gets an honest 「樣本少，是假說不是結論」 |
+| §0.6 Differentiation & Opportunity | Opportunity list (`OPP-N`): shared competitor gaps, ignored segments, JTBDs nobody solves well, where we can win | Synthesis of §0.2–§0.5 | **Feeds §2 priority and §1.4 directly.** Every OPP points at something actionable |
+| §0.7 Implications for Spec | Explicit bullets: which personas go into §1.3, which problem framing into §1.1, which OPPs into §2, which benchmarks into §1.4 | Whole-document synthesis | The §0→§1 handoff bridge, analogous to §5.9 design handoff |
+| §0.8 Sources & Confidence | Source list, confidence per major claim, items still to verify | — | Closing section |
 
-### Sizing 的兩種模式（§0.1 容易做錯）
+### Two sizing modes — §0.1 is easy to get wrong
 
-判斷這個 feature 是哪一種，**用對的 sizing**：
+Decide which kind of feature this is and **size it the matching way**:
 
-- **獨立可變現**（這 feature 本身是個能賣錢的產品 / 模組，例如「模板市集」「付費 API」）→ 做標準 **TAM/SAM/SOM**（年營收機會），top-down（從產業總額切）+ bottom-up（客戶數 × 單價 × 頻率）交叉驗證。
-- **內部 / 支撐型 feature**（多數情況，例如「模板匯出匯入」這種讓既有產品更好用的功能）→ 不要硬湊營收 TAM，改做 **需求規模 (demand sizing)**：
-  - 我們現有多少使用者 / 工作區會用到這功能？
-  - 多少比例會踩到「現在沒有它」的痛？頻率多高？
-  - 做了之後預期影響哪個既有指標（留存 / 啟用 / 客訴量）？
-  - 仍可附一個「若未來獨立變現」的 TAM 假說，但標 `[估算]` 並說明前提。
+- **Independently monetizable** — the feature is itself a sellable product or module (a template marketplace, a paid API) → standard **TAM/SAM/SOM** (annual revenue opportunity), top-down (carved from the industry total) cross-checked against bottom-up (customers × price × frequency).
+- **Internal or supporting** — the common case, a feature that makes the existing product better → skip the forced revenue TAM and do **demand sizing**:
+  - How many of our current users or workspaces would use it?
+  - What share hit the pain of not having it, and how often?
+  - Which existing metric does shipping it move — retention, activation, support volume?
+  - A "if this were monetized separately" TAM hypothesis can still be attached, marked `[估算]` with its premises stated.
 
-> 選錯模式的代價：對一個內部小工具硬算 TAM/SAM/SOM，會產出一堆沒人信的大數字，反而讓整份 §0 失去說服力。
+> The cost of picking wrong: forcing TAM/SAM/SOM onto a small internal tool produces big numbers nobody believes, and takes the credibility of the whole of §0 with them.
 
-## 進入這份文件時的開場
+## Opening
 
 ```
 要不要先做一份市場研究再開始設計？
@@ -96,15 +93,15 @@ problem、persona、需求優先級。
 （如果你已經很清楚市場、想直接進設計，跟我說一聲就跳過這份。）
 ```
 
-POC 情境：補一句「這是 POC 的話，我會做精簡版 — 3 個競品、概略規模、重點放在差異化切入點，要更深再說」。
+For a POC, add: 「這是 POC 的話，我會做精簡版 — 3 個競品、概略規模、重點放在差異化切入點，要更深再說」.
 
-### 開跑前的方向確認（唯一一關，務必做）
+### Direction check before the run — the one gate, always do it
 
-問完開場問題後、**真正開始 web research 之前**，先用**一句話**講你打算怎麼查，讓使用者確認方向，再開跑。
+After the opening questions and **before any web research begins**, state your plan in **one sentence**, get it confirmed, then go.
 
-為什麼：§0 是整份 spec 裡唯一「往外抓新事實」的文件 —— 研究又貴（一堆搜尋）又容易查錯方向（錯一組競品、錯一個市場框架、錯一條分群軸）。這種錯如果到全文落盤才被看到，整段研究就白跑了。這一關用近乎零成本（還沒開始查）擋掉「整段白跑」。
+Why: §0 is the only document in the spec that reaches outward for new facts — research is both expensive (many searches) and easy to point the wrong way (wrong competitor set, wrong market frame, wrong segmentation axis). Discovering that after the full text is written wastes the entire run. This gate costs almost nothing — nothing has been searched yet — and prevents exactly that.
 
-像同事隨口講一句，不是表單：
+Say it like a colleague, not a form:
 
 ```
 我打算這樣查：競品先看 Fathom / Fireflies / Otter / Granola / Read AI 這幾家；
@@ -112,51 +109,42 @@ POC 情境：補一句「這是 POC 的話，我會做精簡版 — 3 個競品�
 主軸抓「行動項目最後沒變成被追蹤的任務」這個痛點。這樣對嗎？要加減競品或換角度都說。
 ```
 
-使用者回「Otter 拿掉、加 Fellow」或「直接跑」即可。**確認完就一口氣跑到底，中間不再逐節打斷**，跑完才用「展示給使用者的格式」給結果。
+「Otter 拿掉、加 Fellow」 or 「直接跑」 is all you need. **Confirmed means run to the end without interrupting**; results come afterwards, through the display format below.
 
-**這一關就是競品名單的唯一決定點**（開場已不另問競品）：把使用者在 feature 描述 / 開場回答中順口提到的競品先納入名單，再補你找到 / 知道的，湊成要 profile 的 shortlist 讓他增刪。別讓使用者講兩次。
+**This gate is also the only place the competitor list is settled** — the opening deliberately doesn't ask. Take whatever competitors the user mentioned in passing in their feature description or opening answers, add the ones you found or know, and offer the combined shortlist for them to edit. Don't make them say it twice.
 
-**依使用者帶的資料縮放這一關**：
-- 帶了完整市場報告 / 競品表 → 退化成輕量版：「我把你的資料結構化，再用搜尋補這幾個洞：{列洞}，OK？」
-- 什麼都沒有 → 用上面那種完整計畫句（競品名單 + sizing 模式 + 主軸）。
+**Scale the gate to the data they brought**:
 
-**紅線（絕對不要）**：
-- ❌ 變成「請確認以下 N 項研究參數」這種表單。
-- ❌ 做成多階段確認（競品確認 → 分群確認 → persona 確認…）。那是被禁的「逐節問使用者」，比乾等還煩。
-- ✅ 就是 **研究前一句話、確認一次方向，然後閉嘴跑完**。
+- Full market report or competitor table supplied → degrade to the light version: 「我把你的資料結構化，再用搜尋補這幾個洞：{列洞}，OK？」
+- Nothing supplied → use the full planning sentence above (competitor list + sizing mode + main thread).
 
-> 用 AskUserQuestion 時，這一關**最多 1 題**（「這個研究方向對嗎？」選項：直接跑 / 我要調整競品或角度）。保持輕量，別拆成多題；直接用一句話問也行。
-> POC 模式下，**這一關就是 §0 唯一的硬停** —— 不在落盤後再攔第二次。
+**The shape of this gate is one sentence, one confirmation, then silence until it's done.** State the whole research plan in a sentence, take one direction check, and don't interrupt again until it lands. Turning it into a form (「請確認以下 N 項研究參數」) or a multi-stage confirmation (competitors → segments → personas…) falls back into asking section by section, which is more annoying than making the user wait.
 
-## 必要決策點（要問使用者的）
+> Using AskUserQuestion, this gate is **one question at most** (「這個研究方向對嗎？」 with options: run it / adjust competitors or angle). Keep it light; a plain sentence works too.
+> In POC mode, **this gate is §0's only hard stop** — nothing interrupts again after the document is written.
 
-§0 大部分靠研究，但有幾個方向性的東西要問：
+## Questions you must ask
 
-- **市場 / 地理邊界**：全球？某地區？某產業 vertical？（影響 §0.1 sizing 的分母）
-- **sizing 模式**：這 feature 是要獨立變現，還是支撐既有產品？（影響 §0.1 用 TAM 還是 demand sizing — 通常 Claude 能從 feature 性質判斷並標 `[需確認]`，不確定才問）
-- **已知競品**：使用者心中的競品名單（補進 §0.3，再往外找）
+Most of §0 is research, but a few directional things need the user:
 
-問法用生活化方式，**一次最多 3 題**。其餘（segment 怎麼切、persona 長怎樣、機會在哪）都是 Claude 研究 + 綜整，做完讓使用者驗證，不要丟回去問。
+- **Market and geographic bounds** — global? A region? An industry vertical? (Sets §0.1's denominator)
+- **Sizing mode** — is this feature monetized independently, or supporting the existing product? (Decides TAM vs demand sizing. You can usually judge it from the feature's nature and mark `[需確認]`; ask only when unsure)
+- **Known competitors** — the list already in the user's head, folded into §0.3 before you search outward
 
-### 不該問的（Claude 應該研究 / 綜整）
+Ask in everyday language, **3 at a time, maximum**. Everything else — how to cut segments, what the personas look like, where the opportunity is — is research and synthesis, shown for verification rather than handed back as a question.
 
-- ❌「市場有多大？」（去查 + 推估，標來源/信心度）
-- ❌「有哪些競品？」（去查，列 5 個，使用者再增刪）
-- ❌「使用者的痛點是什麼？」（從資料 / 評論萃取，無資料則假說 + 標 `[需確認]`）
-- ❌「我們的差異化是什麼？」（綜整 §0.2-§0.5 推出 OPP-N，使用者拍板）
+## Open question candidates
 
-## Open Question 候選
+- Two reasonable segmentation axes (by role vs by company size) → `[待拍板]` with a recommendation
+- Sizing mode uncertain (internal feature or a monetizable one) → `[待拍板]`, or ask
+- A critical competitor fact that can't be found (a rival's real pricing) → `[需確認]` plus how to verify it
+- Data too thin to make the personas more than hypotheses → mark the whole section 低 confidence and list it in §0.8
 
-- 兩種 segment 切法都合理（按角色切 vs 按公司規模切）→ `[待拍板]` 附建議
-- sizing 模式不確定（這算內部 feature 還是要變現）→ `[待拍板]` 或問使用者
-- 競品某項資訊查不到又很關鍵（例如某對手真實定價）→ 標 `[需確認]` + 建議怎麼驗證
-- 資料太薄，persona 是假說不是結論 → 整節標信心度「低」，列進 §0.8 待驗證
+## Display format
 
-## 展示給使用者的格式
+§0 usually runs past ~150 lines (competitors, segments and personas all expanded) → apply the **large-document rule**: give **summary, open decisions and a confidence note** in conversation, write the full text to disk, have the user open the file.
 
-§0 通常會超過 ~150 行（競品 + segment + persona 都展開）→ 套**大文件硬規則**：對話中**只給摘要 + 待拍板項 + 信心度提醒**，全文落盤後請使用者開檔看。
-
-### 步驟 1：先給摘要
+### Step 1: summary
 
 ```
 市場研究做完了，重點如下：
@@ -174,11 +162,11 @@ POC 情境：補一句「這是 POC 的話，我會做精簡版 — 3 個競品�
 全文已落盤到 0-market-research.md，你可以開檔看細節。
 ```
 
-### 步驟 2：全文落盤
+### Step 2: write the full text
 
-按 template §0.1~§0.8 填好落盤。內文該標來源的標來源、該標信心度的標信心度。
+Fill §0.1–§0.8 against the template and write it out, with sources and confidence levels marked inline where they belong.
 
-### 步驟 3：問需要確認 / 拍板的事
+### Step 3: the decisions
 
 ```
 幾件事想跟你確認：
@@ -188,43 +176,44 @@ POC 情境：補一句「這是 POC 的話，我會做精簡版 — 3 個競品�
 3. 我推出的切入點是 [OPP-1]，你認同這是主打方向嗎？
 ```
 
-## 容易卡住的點 + 處理方式
+## Where you'll get stuck
 
-### 使用者沒有任何資料、也叫不出競品
+### The user has no data and can't name a competitor
 
-別卡住。用 web research 從「這功能解決的問題」反查：搜「<問題> software」「<類比功能> tool」找類比解法，從評論萃取痛點。整份標信心度，§0.8 列「建議補做的研究」。
+Don't stall. Work backwards from the problem the feature solves: search 「<問題> software」, 「<類比功能> tool」 for analogous solutions, and mine the reviews for pain points. Mark confidence throughout and list 「建議補做的研究」 in §0.8.
 
-### 查不到可靠的市場數字
+### No reliable market figure exists
 
-不要編。給 bottom-up 推估（單位經濟往上乘）+ 明確前提 + 標 `[估算]`，並在 §0.8 寫「這個數字信心度低，建議找 X 報告 / 訪談 Y 驗證」。
+Don't invent one. Give a bottom-up estimate (unit economics multiplied up) with explicit premises, marked `[估算]`, and write in §0.8 that confidence is low with a specific way to verify — a report to find, someone to interview.
 
-### 這是純內部工具，「市場」「競品」感覺不適用
+### It's a pure internal tool and "market" / "competitor" feel wrong
 
-轉成**類比 + 需求規模**：competitive scan 改成「別的產品 / 我們其他模組怎麼處理這類事」；sizing 改成 demand sizing（多少內部使用者會用、解決什麼既有痛）。不要因為「沒有外部市場」就整份留白。
+Convert to **analogues plus demand sizing**: the competitive scan becomes 「別的產品 / 我們其他模組怎麼處理這類事」; sizing becomes demand sizing (how many internal users, which existing pain it removes). No external market is not a reason to leave the section blank.
 
-### 使用者丟了一大包 feedback 資料
+### The user dumps a large pile of feedback data
 
-這是 §0.5 sentiment 的最佳燃料。分 segment、算情感分數、萃取正負主題、附代表性引用。樣本小就誠實標「N 筆，是訊號不是定論」。
+This is the best possible fuel for §0.5 sentiment. Split by segment, score sentiment, extract positive and negative themes, attach representative quotes. A small sample gets an honest 「N 筆，是訊號不是定論」.
 
-### 使用者改了 §0 想 propagate
+### The user amends §0 and it needs to propagate
 
-§0 是源頭文件，往下影響大。按 `0-skill-mode.md` 的「允許回頭修改 + Propagate」處理，重點掃：
-- §0.4 persona 改 → §1.3 目標 persona、§2.1 FR 的 Persona 欄、§5.2 user stories
-- §0.6 opportunity 改 → §2 FR 優先級、§1.4 success criteria
-- §0.1 sizing 改 → §1.4 量化指標
+§0 is the head of the chain, so the blast radius is large. Follow `Amending earlier documents` in `0-skill-mode.md`, sweeping in particular:
 
-## 反思檢查（進 §1 前自我確認）
+- §0.4 persona changed → §1.3 target personas, the Persona column of §2.1 FRs, §5.2 user stories
+- §0.6 opportunity changed → §2 FR priority, §1.4 success criteria
+- §0.1 sizing changed → §1.4 quantitative targets
 
-- [ ] 每個市場數字都有來源或標 `[估算]`，沒有裸數字
-- [ ] §0.1 用對 sizing 模式（變現 → TAM/SAM/SOM；內部 → demand sizing）
-- [ ] §0.3 競品有列強項**也有列弱項/缺口**（只列強項等於沒分析）
-- [ ] §0.4 每個 persona 都有 JTBD + 痛點 + 一個意外洞察，且能對應到後面某個產品決策
-- [ ] §0.6 每條 OPP 都指向可行動方向，不是空泛的「做得更好」
-- [ ] §0.7 明確寫出「哪些發現餵到 §1 / §2 的哪裡」
-- [ ] 信心度低的項目都進了 §0.8 待驗證清單
-- [ ] `[需確認]` / `[待拍板]` 標記使用得當
+## Reflection check, before §1
 
-## 文件結束時的 summary
+- [ ] Every market figure carries a source or is marked `[估算]` — no bare numbers
+- [ ] §0.1 uses the right sizing mode (monetizable → TAM/SAM/SOM; internal → demand sizing)
+- [ ] §0.3 competitors list weaknesses and gaps **as well as** strengths — strengths alone isn't analysis
+- [ ] Every §0.4 persona has a JTBD, pains and one surprising insight, and maps to a downstream product decision
+- [ ] Every §0.6 OPP points at something actionable, not a vague 「做得更好」
+- [ ] §0.7 explicitly states which findings feed which parts of §1 and §2
+- [ ] Every low-confidence item is in the §0.8 to-verify list
+- [ ] Marker lifecycle done: confirmed markers deleted, surviving `[待拍板]` carry options and a recommendation, deferred ones converted to a D-NNNN reference
+
+## Closing summary
 
 ```
 §0 market-research 完成！摘要：
@@ -242,5 +231,3 @@ problem statement 帶上你最痛的點，success criteria 對標競品。一樣
 
 要進嗎？
 ```
-
-確認後進 §1。

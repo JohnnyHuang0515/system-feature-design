@@ -1,12 +1,13 @@
 # Reference Guide: 4-flows.md
 
-> 基於 `0-skill-mode.md` 的推導模式。配合 `templates/4-flows.template.md` 使用。
+> Runs on the `Derive → Show → Verify` model in `0-skill-mode.md`. Pairs with `templates/4-flows.template.md`.
+> Instructions here are English; the quoted blocks are scripts spoken to the user — use them as written.
 
-## 文件目的
+## Purpose
 
-描述**系統內部的執行流程** — 給後端工程師看的。使用者視角的流程放 §5.3。
+Describe **what the system does internally** — for backend engineers. The user's-eye view of the same work lives in §5.3.
 
-## 進入這份文件時的開場
+## Opening
 
 ```
 進入第四份:系統流程。
@@ -16,69 +17,53 @@
 - 使用者操作流程放下一份(§5.3)
 
 我會根據前面文件推導系統流程、錯誤處理、邊界情境,你確認。
-
 ```
 
-## Claude 推導指南
+## Derivation
 
-### SF 推導來源
+### System flows
 
-| 推導對象 | 推導來源 |
+| Target | Source |
 |---|---|
-| §4.1 SF 清單 | 從 §2.1 每條 FR 推「系統內部怎麼跑」 |
-| SF Sequence diagram | 跨 service 互動時用 Mermaid |
-| SF Key steps | 結合 §3.3 state transition + §3.5 events |
+| §4.1 SF list | For each §2.1 FR, how the system runs it internally |
+| SF sequence diagram | Mermaid, where services interact |
+| SF key steps | §3.3 state transitions combined with §3.5 events |
 
-### EF 推導來源(主動推,使用者沒提到也要)
+### Error flows — derive these unprompted
 
-對每個 SF 推可能的失敗:
+For every SF, derive the ways it can fail:
 
-| 失敗類型 | 對應位置 |
+| Failure type | Where it lands |
 |---|---|
-| Validation errors | 輸入驗證階段 |
-| Business rule violations | 對應 §3.4 BR 的違反 |
-| External dependency failures | 跨 service 呼叫 |
-| Concurrency conflicts | 共享資源 |
-| Authorization failures | 跨 boundary 階段 |
+| Validation errors | Input validation stage |
+| Business rule violations | A §3.4 BR being broken |
+| External dependency failures | Cross-service calls |
+| Concurrency conflicts | Shared resources |
+| Authorization failures | Boundary crossings |
 
-### EC 推導來源(主動推)
+### Edge cases — derive these unprompted
 
-從常見模式推:
-- 空資料 / null / 極大值
-- 重複觸發(使用者連點、整合方 retry)
-- 時序問題(併發、過期資料)
-- 狀態邊界(剛好處於轉換中)
+From the usual patterns: empty data / null / extreme values; repeat triggers (a user double-clicking, an integrator retrying); timing problems (concurrency, stale data); state boundaries (caught mid-transition).
 
-### Concurrency 推導
+### Concurrency
 
-回答三個問題決定怎麼寫:
-1. 有共享資源嗎?
-2. 事件順序重要嗎?
-3. 會被重複觸發嗎?
+Three questions decide how much to write: is there a shared resource? Does event order matter? Can it be triggered twice?
 
-都是「否」→ 一行帶過。任一是「是」→ 列處理策略。
+All no → one line. Any yes → list the handling strategy.
 
-## 必要決策點(要問使用者的)
+## Questions you must ask
 
-### 必補問題
+Rarely any. Derive the errors and edge cases, then show them for the user to add to or cut.
 
-很少需要問。Error / edge case 推導後展示讓使用者增刪即可。
+## Open question candidates
 
-### 不該問的
+- Several reasonable strategies for one failure (rollback vs retry vs partial success)
+- Concurrency mechanism (optimistic vs pessimistic lock)
+- Async vs sync processing
 
-- ❌ 「SF 有哪些步驟?」(從 FR 推)
-- ❌ 「EF 有哪些?」(從常見失敗類型推)
-- ❌ 「EC 有哪些?」(從常見模式推)
+## Display format
 
-## Open Question 候選
-
-- 某個失敗情境的處理策略多種合理(rollback vs retry vs 部分成功)
-- 併發處理機制選擇(optimistic lock vs pessimistic lock)
-- 異步 vs 同步處理選擇
-
-## 展示給使用者的格式
-
-### 步驟 1:摘要
+### Step 1: summary
 
 ```
 我推導出 {N} 個 system flow + {M} 個 error flow + {K} 個 edge case:
@@ -97,11 +82,11 @@
 併發:[有風險並列處理 / 無風險]
 ```
 
-### 步驟 2:逐個 SF 展開
+### Step 2: one SF at a time
 
-對複雜 feature,一次展示 1-2 個 SF + 對應 EF/EC,讓使用者吸收。
+For a complex feature, show 1–2 SFs with their EFs and ECs per turn so the user can absorb them.
 
-### 步驟 3:問必要決策點
+### Step 3: the decisions
 
 ```
 有幾件事需要你拍板:
@@ -115,25 +100,25 @@
    你預期是 transaction rollback(整批回滾)還是部分保留?
 ```
 
-## 容易卡住的點
+## Where you'll get stuck
 
-### 使用者沒想過 Error / Edge case
+### The user has never thought about errors or edge cases
 
-主動推一份草稿給使用者:「這些是我推測可能發生的情境,看哪些需要處理、哪些可忽略」。
+Hand them a derived draft: 「這些是我推測可能發生的情境,看哪些需要處理、哪些可忽略」.
 
-### 使用者覺得 EC 推太多
+### The user thinks there are too many edge cases
 
-可以歸類:「常見類 vs 罕見類」。罕見類使用者覺得不重要可省。
+Group them into common vs rare. The rare ones can go if the user judges them unimportant.
 
-## 反思檢查(進 §5 前)
+## Reflection check, before §5
 
-- [ ] 每條 §2.1 FR 對應到至少 1 個 SF
-- [ ] 每個 SF 至少有 1-2 個 EF(沒失敗情境的 SF 很可疑)
-- [ ] SF 中提到的 state transition / event 都在 §3 定義
-- [ ] §4.4 三個觸發問題都回答了
-- [ ] 標記使用得當
+- [ ] Every §2.1 FR maps to at least one SF
+- [ ] Every SF has at least 1–2 EFs — an SF with no failure mode is suspicious
+- [ ] Every state transition and event named in an SF is defined in §3
+- [ ] All three §4.4 trigger questions are answered
+- [ ] Marker lifecycle done: confirmed markers deleted, surviving `[待拍板]` carry options and a recommendation, deferred ones converted to a D-NNNN reference
 
-## 文件結束時的 summary
+## Closing summary
 
 ```
 §4 flows 完成!

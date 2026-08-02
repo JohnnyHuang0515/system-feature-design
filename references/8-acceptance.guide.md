@@ -1,83 +1,69 @@
 # Reference Guide: 8-acceptance.md
 
-> 基於 `0-skill-mode.md` 的推導模式。配合 `templates/8-acceptance.template.md` 使用。
+> Runs on the `Derive → Show → Verify` model in `0-skill-mode.md`. Pairs with `templates/8-acceptance.template.md`.
+> Instructions here are English; the quoted blocks are scripts spoken to the user — use them as written.
 
-## 文件目的
+## Purpose
 
-定義「功能完成」的判定標準。給工程跟 QA 看的契約。所有 AC 使用 **Given-When-Then (BDD)** 格式。
+Define what "done" means. This is the contract engineering and QA work against. Every AC uses **Given-When-Then (BDD)** format.
 
-## 進入這份文件時的開場
+## Opening
 
 ```
 進入第八份:驗收標準。
 
-這份對應前面所有有「可驗證行為」的內容 — FR / state / BR / error / edge case / NFR — 
+這份對應前面所有有「可驗證行為」的內容 — FR / state / BR / error / edge case / NFR —
 寫成 BDD 格式的測試情境。
 
 由於 AC 數量會很多,我會分節推導,你逐節確認。
-
 ```
 
-## Claude 推導指南
+## Derivation
 
-### AC 推導來源
-
-| AC 類別 | 推導來源 |
+| AC group | Source |
 |---|---|
-| §8.1 AC for FR | 每條 §2.1 FR 推 1-N 個 AC(happy + failure) |
-| §8.2 AC for State Transitions | 每條 §3.3 transition 推合法 + 違規兩個 AC |
-| §8.3 AC for Business Rules | 每條 §3.4 BR 推驗證情境(或 reference 其他 AC) |
-| §8.4 AC for Error & Edge | 每條 §4.2 EF + §4.3 EC 推對應 AC |
-| §8.5 AC for NFR | 每條 §2.2 NFR 推怎麼測 + 達標標準 |
-| §8.6 Coverage Matrix | 自動產出對應表 |
+| §8.1 AC for FR | 1–N ACs per §2.1 FR (happy plus failure) |
+| §8.2 AC for State Transitions | Two per §3.3 transition — legal and violation |
+| §8.3 AC for Business Rules | A verification scenario per §3.4 BR (or a reference to another AC) |
+| §8.4 AC for Error & Edge | One per §4.2 EF and §4.3 EC |
+| §8.5 AC for NFR | How each §2.2 NFR is measured, and what passing looks like |
+| §8.6 Coverage Matrix | Generated automatically |
 
-### BDD 格式推導
+### Writing the BDD
 
-**Given**:
-- 從前置狀態推(已登入 / 某 entity 處於某 state / 某資料已存在)
+**Given** — the precondition: logged in, an entity in some state, some data already present.
 
-**When**:
-- 從觸發動作推(呼叫某 API / 點某按鈕 / state 轉換)
+**When** — the trigger: an API call, a button press, a state transition.
 
-**Then**:
-- 從 SF / EF / state machine 的 side effect 推
-- **每條結果必須可驗證**(回傳 X / DB 變化 / 發出事件 / 顯示 Toast)
+**Then** — the side effect, taken from the SF / EF / state machine. **Every outcome must be verifiable**: a return value, a DB change, an emitted event, a Toast shown.
 
-### 最低覆蓋規則
+### Minimum coverage
 
-- **寫入類 FR**(POST/PUT/DELETE/狀態變更):至少 1 happy + 1 failure
-- **純查詢類 FR**:至少 1 happy(failure 由 §6.5 error model 涵蓋)
-- **涉及 authorization 的 FR**:必須額外有「未授權」AC
-- **每條 state transition**:合法 + 違規兩個 AC + catch-all(無介面可觸發違規時,寫「不適用 + 原因」,不要發明 error code — 見 template AC-S.99 註記)
-- **每條 BR**:獨立 AC 或 reference
+- **Write-side FRs** (POST/PUT/DELETE/state change) — at least 1 happy + 1 failure
+- **Read-only FRs** — at least 1 happy; failures are covered by the §6.5 error model
+- **FRs involving authorization** — an extra unauthorized AC is mandatory
+- **Every state transition** — legal + violation + catch-all. Where no interface can trigger the violation, write 「不適用 + 原因」 rather than inventing an error code (see the template's AC-S.99 note)
+- **Every BR** — its own AC, or a reference
 
-### UI 行為的處理
+### UI behaviour
 
-UI 行為(跳轉、Toast、Modal)寫在 FR 的 Then 段落,**不寫視覺細節**(顏色、尺寸)— 那些歸 Design System。
+UI behaviour — navigation, Toast, Modal — belongs in the FR's Then clause. Visual detail (colour, size) belongs to the Design System, not here.
 
-## 必要決策點(要問使用者的)
+## Questions you must ask
 
-### 必補問題
+Usually none. Derive the ACs, then show them for the user to confirm, add to or cut.
 
-通常不需要問。AC 推導後展示讓使用者確認 / 增刪即可。
+The exception: NFR targets were confirmed in §2.2, but §8.5 describes *how* they're verified, which may need the user to confirm the test environment.
 
-例外:NFR 的目標值在 §2.2 已確認,§8.5 寫怎麼驗證,可能需要使用者確認測試環境設定。
+## Open question candidates
 
-### 不該問的
+§8 rarely raises new ones. A new one means an earlier section is ambiguous — go back and clarify it first.
 
-- ❌ 「FR-1 的 AC 是什麼?」(從 FR 推)
-- ❌ 「State transition 的 AC?」(從 §3.3 推)
-- ❌ 「Error 的 AC?」(從 EF 推)
+The plausible case: an uncertain NFR test environment (staging spec unknown) → `[待拍板]`.
 
-## Open Question 候選
+## Display format
 
-§8 階段很少產生新 Open Question。如果有,代表前面節有模糊處,先回頭釐清。
-
-可能的 OQ:NFR 測試環境設定(staging 規格不確定)→ 標 `[待拍板]`。
-
-## 展示給使用者的格式
-
-### 步驟 1:摘要
+### Step 1: summary
 
 ```
 我推導出整套 AC:
@@ -91,51 +77,51 @@ UI 行為(跳轉、Toast、Modal)寫在 FR 的 Then 段落,**不寫視覺細節*
 整體 {總計} 個 AC,涵蓋率 100%。
 ```
 
-### 步驟 2:分節展示
+### Step 2: section by section
 
-AC 數量大時不要一次倒出來,**分節展示**:
+With a large AC count, don't dump it all at once:
 
 ```
 先看 §8.1 AC for FR 部分。我列出 FR-1 的 AC,你看格式跟內容對嗎?
 若 OK,我就批次給你 FR-2 ~ FR-N 的 AC。
 ```
 
-使用者確認 §8.1 格式後,可以批次展示其他節。
+Once the user approves the §8.1 format, batch the remaining sections.
 
-### 步驟 3:問必要決策點(若有)
+### Step 3: the decisions, if any
 
-通常 §8 不需要問什麼。如果 §8.5 NFR 有 verification 環境不確定,問:
+§8 usually needs none. Where §8.5 NFR verification environment is uncertain:
 
 ```
 NFR-1 測試:我推測在 staging 跑 load test(50 concurrent users, 10 分鐘)。
 你們的 staging 規格大概是 prod 多少比例?需要調整測試設定嗎?
 ```
 
-## 容易卡住的點
+## Where you'll get stuck
 
-### 使用者覺得 AC 太多
+### The user thinks there are too many ACs
 
-正常 — BDD 格式比條列細,數量自然多。摘要強調「不是要使用者全部寫,是我推導完讓你確認」。
+Expected — BDD is finer-grained than a bullet list, so the count is naturally high. The summary should stress 「不是要使用者全部寫,是我推導完讓你確認」.
 
-### 使用者覺得 AC 重複
+### The user thinks ACs are duplicated
 
-舉例「AC-2.1 跟 AC-EF.1 看起來像」→ 解釋差別(2.1 是 happy path,EF.1 是 error path)。
+Take their example — 「AC-2.1 跟 AC-EF.1 看起來像」 — and name the difference: 2.1 is the happy path, EF.1 is the error path.
 
-### NFR 測試環境不確定
+### The NFR test environment is uncertain
 
-接受 [待拍板],或預設「staging 完整驗證」+ 補註「實際環境差異請補」。
+Accept `[待拍板]`, or default to 「staging 完整驗證」 with a note that real environment differences need filling in.
 
-## 反思檢查(進 §9 前)
+## Reflection check, before §9
 
-- [ ] 每條 §2.1 FR 都有對應 AC
-- [ ] 每條 state transition 都有合法 + 違規 AC + catch-all(或明確的「不適用 + 原因」說明)
-- [ ] 每條 §3.4 BR 都有對應 AC 或 reference
-- [ ] 每條 §4.2 EF + §4.3 EC 都有對應 AC
-- [ ] 每條 §2.2 NFR 都有對應 AC + verification level
-- [ ] §8.6 Coverage Matrix 完整
-- [ ] AC 用 BDD 格式 + Then 段落可驗證
+- [ ] Every §2.1 FR has an AC
+- [ ] Every state transition has legal + violation + catch-all ACs (or an explicit 「不適用 + 原因」)
+- [ ] Every §3.4 BR has an AC or a reference
+- [ ] Every §4.2 EF and §4.3 EC has an AC
+- [ ] Every §2.2 NFR has an AC plus a verification level
+- [ ] Every row of the §8.6 Coverage Matrix carries a specific AC number, with no blanks
+- [ ] ACs use BDD format, and every Then clause is verifiable
 
-## 文件結束時的 summary
+## Closing summary
 
 ```
 §8 acceptance 完成!

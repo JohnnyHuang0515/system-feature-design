@@ -1,12 +1,13 @@
 # Reference Guide: 5-presentation-spec.md
 
-> 基於 `0-skill-mode.md` 的推導模式。配合 `templates/5-presentation-spec.template.md` 使用。
+> Runs on the `Derive → Show → Verify` model in `0-skill-mode.md`. Pairs with `templates/5-presentation-spec.template.md`.
+> Instructions here are English; the quoted blocks are scripts spoken to the user — use them as written.
 
-## 文件目的
+## Purpose
 
-描述 feature 對外呈現方式 — 給前端 / UX 工程師看的「說明書」。視覺細節歸 Design System,這份只寫「**用什麼 component、在什麼 page、走什麼 flow**」。
+Describe how the feature presents itself — the manual for frontend and UX engineers. Visual detail belongs to the Design System; this document says **which component, on which page, along which flow**.
 
-## 進入這份文件時的開場
+## Opening
 
 ```
 進入第五份:呈現規格。
@@ -15,156 +16,130 @@
 也可能是 API only / Background Job / CLI / Notification。
 
 我會先推導,你確認 / 修正。
-
 ```
 
-## Claude 推導指南
+## Derivation
 
-### Presentation Type 推導
+### Presentation type
 
-從 §1 + §2 推測類型:
-- 使用者有「點按鈕、看畫面」的描述 → GUI
-- 純 API 整合 → API Only
-- 定時任務 / 系統行為 → Background Job
-- 命令列工具 → CLI
-- 通知 / email / push → Notification
+Infer it from §1 and §2:
 
-**判斷基準是「使用者怎麼接觸 feature」,不是 feature 的領域**:
-- Notification 類型指投遞通道本身(email / push 的觸發與內容),**不是**「功能跟通知有關」
-- 例:站內通知中心有鈴鐺、面板、設定頁 → 主類型是 GUI(Notification 可作次要類型)
-- 拿不準時:只要使用者會「看畫面、點東西」,就有 GUI 成分 → §5.4-5.9 要寫
+- The user describes 「點按鈕、看畫面」 → GUI
+- Pure API integration → API Only
+- Scheduled task or system behaviour → Background Job
+- Command-line tool → CLI
+- Notification, email, push → Notification
 
-**標 `[需確認]` 讓使用者確認**(可能有多種類型)
+**The test is how the user touches the feature, not what domain it's in.** Notification as a type means the delivery channel itself — the triggering and content of email or push — **not** "the feature is notification-related". An in-app notification centre with a bell, a panel and a settings page is primarily GUI, with Notification as a secondary type. When unsure: if the user will look at a screen and click things, there's a GUI component, and §5.4–5.9 get written.
 
-### 後續節推導(依 Presentation Type)
+Mark the inferred type `[需確認]` — a feature can have several.
 
-| Type | 5.2 | 5.3 | 5.4-5.9 |
+### What follows, by type
+
+| Type | 5.2 | 5.3 | 5.4–5.9 |
 |---|---|---|---|
-| GUI | User Story | User Flow | 寫 |
-| API Only | Consumer Story | Consumer Flow | 跳 |
-| Background Job | Trigger Story | Execution Flow | 跳 |
-| CLI | Command Story | Command Flow | 跳 |
-| Notification | Recipient Story | Trigger Flow | 跳 |
+| GUI | User Story | User Flow | write |
+| API Only | Consumer Story | Consumer Flow | skip |
+| Background Job | Trigger Story | Execution Flow | skip |
+| CLI | Command Story | Command Flow | skip |
+| Notification | Recipient Story | Trigger Flow | skip |
 
-> §5.4 User Journey 與 §5.9 Design Handoff 是 GUI 專屬。非 GUI 類型的「旅程」已由 §5.3 的
-> consumer / execution flow 承擔,不另寫;沒有視覺產物,也不需要 §5.9 交接。
+> §5.4 User Journey and §5.9 Design Handoff are GUI-only. For other types the "journey" is already carried by §5.3's consumer or execution flow, and with no visual artefact there is nothing for §5.9 to hand off.
 
-### User Story 推導
+### User stories
 
-從 §1.3 persona + §2.1 FR 推:
-- 每個 persona 配對自己會用的 FR
-- 用「作為 X,我想要 Y,以便 Z」格式
-- 一個 persona 通常 1-3 個 story
+From §1.3 personas plus §2.1 FRs: pair each persona with the FRs they'd use, in the 「作為 X,我想要 Y,以便 Z」 form. A persona usually gets 1–3 stories.
 
-### User Flow 推導
+### User flows
 
-從 §4.1 SF 反推「使用者視角」:
-- SF 寫「系統做什麼」,UF 寫「使用者看到 / 做什麼」
-- 每個 SF 對應 1-N 個 UF
-- 用 step by step 描述,不要寫系統內部細節
+Reverse the §4.1 SFs into the user's point of view. An SF says what the system does; a UF says what the user sees and does. Each SF maps to 1–N UFs, written step by step, with no system internals.
 
-### User Journey 推導(§5.4,僅 GUI)
+### User journey (§5.4, GUI only)
 
-UF 寫完後,把它們**抽高一層**成旅程 — 不是重寫 UF,是把散落的 UF 串成「使用者達成目標的完整歷程」:
+Once the UFs exist, **lift them one level** into a journey. This isn't rewriting the UFs — it's stringing the scattered UFs into the complete arc of the user reaching their goal.
 
-- **階段切分**:從 §1 persona 的目標 + UF 順序歸納出 3-6 個階段(例:認知/進入 → 操作 → 完成/後續)
-- **每階段填**:使用者想完成什麼、觸及哪些 UF / Page、可能卡點(對齊 §4 EF / EC)、體驗重點
-- **多 persona**:每個主要 persona 各一條;次要 / 一次性的可省略
-- 旅程**不另編 ID**,用階段名稱 + 引用既有 UF-N / P-N
+- **Stages**: 3–6, induced from the §1 persona's goal and the UF order — awareness/entry → operation → completion/follow-up
+- **Per stage**: what the user is trying to finish, which UFs and Pages it touches, where they might stall (aligned to §4 EF / EC), and what matters experientially
+- **Multiple personas**: one journey per major persona; secondary or one-off personas can be omitted
+- The journey **gets no IDs of its own** — use stage names plus references to existing UF-N / P-N
 
-為什麼要這層:UF 是「逐步操作」,旅程是「整體體驗的起伏」。前端 / UX 靠旅程看出「哪個階段最該順、哪裡最容易流失」,這是逐條 UF 看不出來的。
+Why the extra layer: a UF is step-by-step operation, a journey is the shape of the whole experience. Frontend and UX read the journey to see which stage most needs to be smooth and where users drop off — neither is visible reading UFs one at a time.
 
-### Component / Page 推導(§5.6 / §5.7,僅 GUI)
+### Components and pages (§5.6 / §5.7, GUI only)
 
-從 user flow 推:
-- 每個 step 涉及的 UI 元素 → component(C-N)
-- 每個 step 發生在哪個畫面 → page(P-N)
-- 每個 page 的版面結構 → 區塊(T-N)
+From the user flows: the UI elements a step touches → components (C-N); the screen a step happens on → pages (P-N); a page's layout blocks → sections (T-N).
 
-### Design Handoff 推導(§5.9,僅 GUI)
+### Design handoff (§5.9, GUI only)
 
-§5 寫的是結構 + 互動,**視覺(mockup / 色彩 / 字級)是下游產物,不在本 spec**。§5.9 是把這條邊界從「靜默開洞」變成「明確留白並指路」:
+§5 carries structure and interaction. **Visuals — mockups, colour, type scale — are downstream and out of this spec.** §5.9 turns that boundary from a silent hole into an explicit gap with directions:
 
-- **Design System 狀態**(對齊 §5.5 拍板):已有 → 填來源連結;**沒有 → 標為前端開工前置條件**,建議用哪個工具 / skill 產(ckm-design-system / ui-ux-pro-max / design-taste-frontend / Pencil MCP),並於 §7 記一條 OQ / ADR 補 Owner + Target Date
-- **Mockup 接法**:說明把 §5.6 component + §5.7 page(版面 ASCII)+ §5.8 互動決策餵給設計工具產 hi-fi;視覺以工具產出為準,衝突時回頭同步 spec
-- **前置清單**:Design System、mockup / 視覺參照、響應式斷點(對齊 §5.8)、文案 microcopy 來源 — 逐項打勾,缺的明確標出
+- **Design System status** (aligned with the §5.5 decision): exists → record the source link; **absent → flag it as a prerequisite for frontend work**, recommend a tool or skill to produce one (ckm-design-system / ui-ux-pro-max / design-taste-frontend / Pencil MCP), and log an OQ or ADR in §7 with Owner and Target Date
+- **How mockups get made**: feed §5.6 components + §5.7 pages (ASCII layout) + §5.8 interaction decisions to the design tool for hi-fi output. The tool's output is authoritative for visuals; on conflict, sync the spec back
+- **Prerequisite list**: Design System, mockups or visual references, responsive breakpoints (aligned to §5.8), microcopy source — tick each, and flag what's missing
 
-判斷線:不要讓這個 skill 自己變成設計工具去產 mockup(環境有專門的 design skill)。§5.9 的責任是**交接**,不是**產出**。
+The dividing line: this skill doesn't turn itself into a design tool and produce mockups — the environment has dedicated design skills. §5.9's job is **handoff**, not **output**.
 
-### 回填 §4
+### Backfill §4
 
-§5.3 寫完 UF 後,**主動回頭把 §4 各 SF 的 "Related UF" 欄位補上對應 UF-N**。
+After §5.3's UFs are written, **go back and fill each §4 SF's "Related UF" column** with the matching UF-N.
 
-## 前端體驗決策清單(僅 GUI,必跑)
+## Frontend experience checklist (GUI only, always run)
 
-> 這是 §5 的核心詢問清單。結構(有哪些 component / page)由 Claude 推導,
-> 但「長什麼樣、怎麼互動、出錯時怎麼辦」是體驗決策 — Claude 推得出建議值,拍板權在使用者。
-> 常見失誤:結構推完就走,前端體驗一句都沒問,使用者拿到 spec 才發現跟想像的不同。
+> This is §5's core set of questions. Structure — which components and pages exist — is yours to derive. What they look like, how they behave, and what happens on failure are experience decisions: you propose a value, the user decides.
+> The common failure: finish the structure and move on, never asking a single frontend question, so the user only discovers the mismatch when the spec lands.
 
-確認為 GUI 後,逐一檢視 8 個維度:
+Once GUI is confirmed, walk all 8 dimensions:
 
-| # | 維度 | 生活化問法 | 常見選項 |
+| # | Dimension | How to ask it | Common options |
 |---|---|---|---|
-| 1 | 進入點與導覽 | 「使用者要從哪裡進到這個功能?」 | 側欄新項目 / 既有頁面加按鈕 / 既有選單加項目 / 設定頁 |
-| 2 | 容器形式 | 「主要操作開獨立頁、彈窗,還是側邊抽屜?」 | 獨立頁 / Modal / Drawer / 就地展開 |
-| 3 | 操作模式 | 「資料一頁填完,還是分步驟引導?可以在列表上直接改嗎?」 | 單頁表單 / 分步精靈 / inline 編輯 |
-| 4 | 空狀態與首次使用 | 「第一次進來、一筆資料都沒有時,使用者看到什麼?」 | 引導文案 + CTA / 空表格 / 範例資料 |
-| 5 | 錯誤與部分成功 | 「操作失敗時使用者看到什麼?能在原地重試嗎?10 筆裡成功 8 筆要怎麼顯示?」 | 整批失敗 + 訊息 / 部分成功 + 結果清單 / 原地重試 |
-| 6 | 操作回饋與防呆 | 「成功後怎麼告訴使用者?危險操作(刪除 / 覆蓋)要不要再確認一次?要能反悔嗎?」 | Toast / Banner / 確認 Modal / Undo |
-| 7 | 資料量呈現 | 「列表長到幾百筆時怎麼辦?要搜尋、篩選嗎?預設怎麼排?」 | 分頁 / 無限捲動 / 搜尋 + 篩選 / 固定上限 |
-| 8 | 裝置與即時性 | 「手機要不要能用?同一筆資料會被別人同時改嗎 — 畫面要自動更新嗎?」 | 桌機 only / RWD;手動刷新 / 輪詢 / 即時推送 |
+| 1 | Entry point and navigation | 「使用者要從哪裡進到這個功能?」 | 側欄新項目 / 既有頁面加按鈕 / 既有選單加項目 / 設定頁 |
+| 2 | Container | 「主要操作開獨立頁、彈窗,還是側邊抽屜?」 | 獨立頁 / Modal / Drawer / 就地展開 |
+| 3 | Interaction mode | 「資料一頁填完,還是分步驟引導?可以在列表上直接改嗎?」 | 單頁表單 / 分步精靈 / inline 編輯 |
+| 4 | Empty state and first run | 「第一次進來、一筆資料都沒有時,使用者看到什麼?」 | 引導文案 + CTA / 空表格 / 範例資料 |
+| 5 | Errors and partial success | 「操作失敗時使用者看到什麼?能在原地重試嗎?10 筆裡成功 8 筆要怎麼顯示?」 | 整批失敗 + 訊息 / 部分成功 + 結果清單 / 原地重試 |
+| 6 | Feedback and safeguards | 「成功後怎麼告訴使用者?危險操作(刪除 / 覆蓋)要不要再確認一次?要能反悔嗎?」 | Toast / Banner / 確認 Modal / Undo |
+| 7 | Data volume | 「列表長到幾百筆時怎麼辦?要搜尋、篩選嗎?預設怎麼排?」 | 分頁 / 無限捲動 / 搜尋 + 篩選 / 固定上限 |
+| 8 | Device and liveness | 「手機要不要能用?同一筆資料會被別人同時改嗎 — 畫面要自動更新嗎?」 | 桌機 only / RWD;手動刷新 / 輪詢 / 即時推送 |
 
-### 使用方式
+### How to run it
 
-1. **先過濾**:判斷哪些維度跟本 feature 相關(例:純展示型功能沒有「操作模式」議題;單人工具沒有「即時性」議題)。不相關的跳過,展示時一句帶過:「維度 X 不適用,因為…」
-2. **逐維度推建議值**:從 §1 persona、§2 FR/NFR、§4 EF/EC 推,每個建議值附一句理由
-3. **打包拍板**:
-   - 非 POC:照 0-skill-mode 的 AskUserQuestion 規則,一輪 2-3 題分批問
-   - POC 快速模式:**不是默默套預設值**,而是「一輪確認包」 — 把相關維度的建議值列成清單一次展示:「前端體驗我建議這樣:(清單)。有要改的嗎?都 OK 我就照這個寫」。整包算 1 個硬停
-4. **落盤**:拍板結果寫進 §5.8 決策表(不適用的維度寫 N/A + 原因)。影響資料模型或不可逆的(例:部分成功策略牽動 API 設計)升級為 ADR
+1. **Filter first.** Decide which dimensions this feature actually has — a pure display feature has no "interaction mode" question; a single-user tool has no "liveness" question. Skip the rest with a one-line note: 「維度 X 不適用,因為…」
+2. **Derive a recommended value per dimension** from §1 personas, §2 FR/NFR and §4 EF/EC, each with a one-line reason.
+3. **Package the decisions**:
+   - Non-POC: follow `0-skill-mode.md`'s AskUserQuestion rule — 2–3 per round
+   - POC fast mode: **not silent defaults** — use a **one-shot confirmation pack**, listing every relevant dimension's recommended value at once: 「前端體驗我建議這樣:(清單)。有要改的嗎?都 OK 我就照這個寫」. The whole pack counts as one hard stop
+4. **Write it down.** Results go into the §5.8 decision table (N/A plus a reason for the dimensions that don't apply). Anything shaping the data model or irreversible — a partial-success strategy that drives API design, say — is escalated to an ADR.
 
-### 為什麼前端不適用「默默採建議值」
+### Why silent defaults don't work for the frontend
 
-前端是使用者唯一直接「看得到」的部分。後端結構選錯,要讀完文件才會發現;前端體驗選錯,做出來第一眼就會被推翻 — 而那時已經是實作階段。在 §5 多花一輪確認,比實作完重做便宜得多。
+The frontend is the only part the user sees directly. A wrong backend structure is only discovered by reading the document; a wrong frontend experience is rejected on sight — by which point it's already been built. One extra confirmation round in §5 is far cheaper than rebuilding after implementation.
 
-## 必要決策點(要問使用者的)
+## Questions you must ask
 
-### 必補問題
+1. **Confirm the presentation type** after inferring it
+2. **The frontend experience checklist** (GUI only) — see above: recommended value per relevant dimension, packaged for decision
+3. **Whether a Design System exists** (GUI only) — the pivotal §5.5 / §5.9 call: reuse an existing one (ask for the source) or none yet (flag the prerequisite). Phrasing below
+4. **Component visual detail** — ask where the user has a specific requirement (a node card that must be 160×140)
 
-1. **Presentation Type 確認**:推測類型後讓使用者確認
-2. **前端體驗決策清單**(僅 GUI):見上節 — 相關維度逐一給建議值,打包拍板
-3. **Design System 存不存在**(僅 GUI):這是 §5.5 / §5.9 的關鍵拍板 — 沿用既有(問來源)還是尚無(標前置條件)。問法見下方 Design System 那段
-4. **Component 視覺細節**:若使用者有特殊視覺要求(例:節點卡片必須是 160x140),補問
+## Open question candidates
 
-### 不該問的(結構推導,Claude 自己做)
+- Uncertain presentation type (several mixed)
+- Several reasonable component splits (one large vs several small)
+- Several reasonable page layouts (own page vs Modal vs Drawer)
+- Several reasonable renderings of empty state or partial success
+- Device support unstated (desktop only vs RWD)
+- No Design System yet, with who and what tool undecided (§5.9 prerequisite)
 
-- ❌ 「User stories 寫什麼?」(從 persona + FR 推)
-- ❌ 「有哪些 component?」(從 user flow 推)
-- ❌ 「Page 結構是?」(從 user flow 推)
+## Display format
 
-判斷線:「**有哪些**」是結構問題,Claude 自己推;「**長怎樣、怎麼互動、出錯怎麼辦**」是體驗決策,要拿建議值給使用者拍板。
-
-## Open Question 候選
-
-- Presentation Type 不確定(多種類型混合)
-- Component 拆法多種合理(一個大的 vs 多個小的)
-- Page 配置多種合理(獨立頁 vs Modal vs 抽屜)
-- 空狀態 / 部分成功的呈現方式多種合理
-- 裝置支援範圍使用者未明說(桌機 only vs RWD)
-- 尚無 Design System,由誰 / 用什麼工具產出未定(§5.9 前置條件)
-
-## 展示給使用者的格式
-
-### 步驟 1:確認 Presentation Type
-
-先快速問:
+### Step 1: confirm the presentation type
 
 ```
 我從前面文件推測這個 feature 主要透過 GUI 呈現給使用者。對嗎?
 還是有其他形式(例如後台 cron job)我漏了?
 ```
 
-### 步驟 2:摘要
+### Step 2: summary
 
 ```
 我推導出:
@@ -179,16 +154,11 @@ UF 寫完後,把它們**抽高一層**成旅程 — 不是重寫 UF,是把散落
 需要你拍板:[N 個]
 ```
 
-### 步驟 3:逐節展開
+### Step 3: section by section
 
-對 GUI 類:
-- 先確認 user stories(快)
-- 再 user flows(中等)
-- 再 user journey(把 UF 串成階段,快)
-- 再 components + pages(慢,需要視覺確認)
-- 最後 design handoff(確認 Design System 狀態 + 交接清單)
+For GUI: user stories first (fast), then user flows (medium), then the user journey (stringing UFs into stages, fast), then components and pages (slow — needs visual confirmation), and finally the design handoff (Design System status plus the prerequisite list).
 
-### 步驟 4:問必要決策點(以前端體驗決策清單為主軸)
+### Step 4: the decisions, led by the frontend checklist
 
 ```
 前端體驗有 5 個維度需要你拍板(另外 3 個維度不適用,我列在最後):
@@ -202,58 +172,58 @@ UF 寫完後,把它們**抽高一層**成旅程 — 不是重寫 UF,是把散落
 不適用維度:操作模式(無多步驟表單)、即時性(單人編輯)、…
 ```
 
-有 AskUserQuestion 工具時用它問,一輪 2-3 題。
+Use AskUserQuestion where available, 2–3 per round.
 
-## 容易卡住的點
+## Where you'll get stuck
 
-### 使用者沒寫過 UI spec
+### The user has never written a UI spec
 
-明確說:「我們不寫實作層(props、event handler 等),只寫:這個 component 角色是什麼、有哪些狀態、用在哪些 page。視覺細節歸 Design System。」
+Say it plainly: 「我們不寫實作層(props、event handler 等),只寫:這個 component 角色是什麼、有哪些狀態、用在哪些 page。視覺細節歸 Design System。」
 
-### 確認 Design System 存不存在(§5.5 / §5.9 必問)
+### Confirming whether a Design System exists (§5.5 / §5.9, mandatory)
 
-別假設一定有。用生活化問法:
+Never assume there is one. Ask in everyday language:
 
 ```
 ✅ 「你們現在有沒有一套共用的設計規範 / 元件庫?(例:Figma 上的 design system、
     或程式裡共用的 UI component 庫)還是這個功能要從零刻 UI?」
 ```
 
-- **有** → 問來源(Figma / Storybook / 程式庫),§5.5 填參照,§5.9 標「沿用既有」
-- **沒有** → 這不是小事:**前端開工前得先有一套基礎 design system**,否則每個畫面各刻一套。§5.9 標為前置條件,於 §7 記一條 OQ / ADR(Owner + Target Date),並建議用哪個工具 / skill 產
-- POC 也要問 — 可以決定「POC 先用最小 token 集,正式再補」,但這個決定本身要明講,不能默默跳過
+- **Yes** → ask for the source (Figma / Storybook / code library), record the reference in §5.5, mark §5.9 as reusing it
+- **No** → this is not a small thing. **A baseline design system has to exist before frontend work starts**, or every screen gets its own. Flag it as a prerequisite in §5.9, log an OQ or ADR in §7 with Owner and Target Date, and recommend a tool or skill to produce it
+- **Ask on a POC too** — deciding 「POC 先用最小 token 集,正式再補」 is fine, but the decision has to be said out loud rather than skipped
 
-### 使用者想直接給 Figma 連結
+### The user wants to hand over a Figma link
 
-接受。Reference 寫:「視覺以 Figma 為準([連結]),本 spec 只描述結構 + 互動」。§5.9 的 Design System 來源填該 Figma。
+Take it. Write the reference as 「視覺以 Figma 為準([連結]),本 spec 只描述結構 + 互動」, and record that Figma as §5.9's Design System source.
 
-### 使用者描述 UI 卡在抽象
+### The user's UI description stays abstract
 
-主動 propose:「我幫你列幾個可能的 component:[列舉]。看哪些符合你想的,哪些不在範圍。」
+Propose: 「我幫你列幾個可能的 component:[列舉]。看哪些符合你想的,哪些不在範圍。」
 
-### 使用者想用設計工具(Fable / Pencil MCP / ui-ux 類 skill)做視覺
+### The user wants to use a design tool (Fable / Pencil MCP / a ui-ux skill) for visuals
 
-§5 只寫結構(C-N / P-N / UF-N),視覺本來就歸實作階段 — 使用者提出要用設計工具是合理走向,不要卡住:
+§5 only carries structure (C-N / P-N / UF-N) and visuals belong to implementation anyway, so wanting a design tool is a reasonable move — don't stall on it:
 
-- **先確認分工**:spec 繼續寫結構,還是現在就停下來出 mockup?建議「先把文件寫完,視覺留到實作」 — 版面類決策選可逆的合理預設寫進 spec,並標注「視覺與版面由 {工具} 於實作階段定案」
-- 若現在就要 mockup:把 §5 已定的 C-N / P-N / 版面 ASCII 帶給工具當輸入,設計結果回填 §5,保持 spec 與設計一致
-- 工具暫時不可用(MCP 斷線等)→ 照常用預設寫完 spec,不要讓流程停在工具上
+- **Settle the split first**: keep writing structure, or stop now and produce mockups? Recommend finishing the document and leaving visuals to implementation — pick reversible, sensible defaults for layout-shaped decisions and note that 「視覺與版面由 {工具} 於實作階段定案」
+- If mockups are wanted now: feed the settled C-N / P-N / layout ASCII to the tool as input, and fold the design result back into §5 so spec and design stay aligned
+- If the tool is unavailable (MCP down, etc.) → finish the spec on defaults. The flow doesn't stop on a tool.
 
-## 反思檢查(進 §6 前)
+## Reflection check, before §6
 
-- [ ] Presentation type 已確認
-- [ ] 每個 user story 對應到至少 1 個 persona + FR
-- [ ] 每個 user flow 對應到 SF(GUI 類)
-- [ ] User journey 每個階段都引用到實際 UF / Page,卡點對齊 §4 EF / EC(GUI 類)
-- [ ] §4 各 SF 的 "Related UF" 欄位已回填
-- [ ] 每個 page 用到的 component 都在 §5.6 定義(GUI 類)
-- [ ] 每個 component 至少出現在 1 個 page(無孤兒)(GUI 類)
-- [ ] 前端體驗決策清單 8 個維度都檢視過:相關的已拍板、不相關的已註明 N/A(GUI 類)
-- [ ] 拍板結果已寫入 §5.8 決策表,重大決策已升級 ADR(GUI 類)
-- [ ] Design System 狀態已拍板(沿用既有 / 尚無→§5.9 前置條件 + §7 OQ)(GUI 類)
-- [ ] §5.9 交接清單已填,缺的前置條件已明確標出(GUI 類)
+- [ ] Presentation type is confirmed
+- [ ] Every user story maps to at least one persona and one FR
+- [ ] Every user flow maps to an SF (GUI)
+- [ ] Every user journey stage references real UFs and Pages, with stall points aligned to §4 EF / EC (GUI)
+- [ ] Every §4 SF's "Related UF" column is backfilled
+- [ ] Every component a page uses is defined in §5.6 (GUI)
+- [ ] Every component appears on at least one page — no orphans (GUI)
+- [ ] All 8 frontend dimensions were reviewed: the relevant ones decided, the rest marked N/A (GUI)
+- [ ] Decisions are written into the §5.8 table, with major ones escalated to ADRs (GUI)
+- [ ] Design System status is decided — reuse existing, or none yet → §5.9 prerequisite + §7 OQ (GUI)
+- [ ] The §5.9 handoff list is filled, with missing prerequisites explicitly flagged (GUI)
 
-## 文件結束時的 summary
+## Closing summary
 
 ```
 §5 presentation-spec 完成!

@@ -1,10 +1,12 @@
-# Skill Mode: 推導 → 展示 → 驗證
+# Skill Mode: Derive → Show → Verify
 
-> 給 Claude 看的整體工作模式定義。所有 reference guide 都基於此原則。
+> The working model. `SKILL.md` sequences the flow — order, write timing, which guide to read; this file holds **how**: derivation judgment, display format, questioning style, markers, propagation, the full-spec review. Every reference guide builds on it.
+>
+> **Language rule: instructions here are English; everything spoken to the user is Chinese.** The quoted blocks below are scripts — use them as written.
 
-## 核心精神
+## The working model
 
-使用者給「**重點 + 方向 + 結果**」，Claude 負責推導所有結構化內容。
+The user supplies **重點 + 方向 + 結果** — the gist, the direction, the outcome. You derive every piece of structure from it.
 
 ```
 使用者輸入：一段話（要做什麼、給誰、重點是什麼）
@@ -18,21 +20,16 @@ Claude 推導：FR / entity / flow / API / AC 等所有結構
 進入下一份文件
 ```
 
-**不要**做的事：
-- ❌ 逐節問使用者「§1.1 你想填什麼」
-- ❌ 把使用者最弱的部分（結構化分解）丟回給使用者
-- ❌ 用技術術語問問題（bounded context、idempotency、guard…）
-- ❌ 推導完悄悄填，沒給使用者確認機會
+Four rules run through the whole session:
 
-**要**做的事：
-- ✅ Claude 主動推導，使用者主要負責「驗證 / 修正 / 拍板」
-- ✅ 用生活化、實際情境的方式問問題
-- ✅ 推導完明確展示「我這樣理解，請確認」
-- ✅ 遇到「兩種都合理」時標記為 Open Question 讓使用者拍板
+- You derive; the user verifies, corrects and decides. Structural decomposition is where they are weakest, so it stays on your side.
+- Ask in everyday language, grounded in real situations.
+- Show your derivation and say "this is how I understood it" before filling anything in.
+- When two answers are both reasonable, mark it as an open question and let the user call it.
 
-## 開場：使用者最少要給什麼
+## Opening
 
-### 觸發後第一句話
+### First message
 
 ```
 要做新的 system feature design 嗎？跟我說說你想做什麼就好 —
@@ -43,16 +40,14 @@ Claude 推導：FR / entity / flow / API / AC 等所有結構
  也要支援 AI 生成的模板能寫入。」
 ```
 
-### 接收使用者輸入後
+### After their answer
 
-Claude 做兩件事：
+1. **Analyse internally** — pull problem / scope / persona / core capabilities out of the description.
+2. **Ask 1–3 key questions**, if needed: 「這是 POC 還是要直接上 prod？」「有時程限制嗎？」「有既有系統需要整合嗎？」「介面是長在既有產品裡，還是全新的？」
 
-1. **內部分析**：從使用者描述中拆出 problem / scope / persona / 主要功能
-2. **問 1-3 個關鍵問題**（如有必要）：例如「這是 POC 還是要直接上 prod？」「有時程限制嗎？」「有既有系統需要整合嗎？」「介面是長在既有產品裡，還是全新的？」
+### Offer §0 market research
 
-### 問完關鍵問題後：提供 §0 市場研究（選做）
-
-接著**主動提供**先做一份市場研究再進設計（§0 跑在 §1 之前，發現餵進 §1 persona / problem 與 §2 優先級）：
+**Offer it unprompted** before §1 — §0 feeds §1 personas and problem framing, and §2 priorities.
 
 ```
 要不要先做一份市場研究？我可以查市場規模、競品 / 類似做法、別人的強弱項、
@@ -60,16 +55,17 @@ Claude 做兩件事：
 （你已經很清楚市場、想直接設計的話，跟我說就跳過。）
 ```
 
-分支：
-- **要做 / 有現成資料給我** → 進 §0（詳細開場與研究方法見 `0-market-research.guide.md`）。
-- **明確跳過 / 純內部工具無市場面** → 跳過 §0，README 標 `⏭️ 跳過`，直接推導 §1。
-- **使用者一開始就是來做市場調研 / 競品分析的** → §0 就是主菜，做完再問要不要接著做完整 spec。
+Three routes:
 
-§0 跑完（或跳過）後，才開始推導 §1 problem-scope。
+- **Wants it, or has research to fold in** → run §0 (opening and method in `0-market-research.guide.md`)
+- **Declines, or it's a pure internal tool with no market dimension** → skip to §1, mark `⏭️ 跳過` in the README
+- **The request *is* market research / competitive analysis** → §0 is the main event; offer the rest of the spec once it lands
 
-### 使用者輸入太簡略時
+§1 problem-scope starts after §0 completes or is skipped.
 
-如果使用者只給「我想做 X 功能」這種一句話，Claude 不要立刻拒絕，而是用 1-2 個生活化問題補資訊：
+### When the description is too thin
+
+A bare 「我想做 X 功能」 gets caught, not returned. Fill the gap with 1–2 everyday questions:
 
 ```
 ✅ 「你說想做匯入匯出 — 主要解決什麼困擾？例如使用者現在沒這功能怎麼辦？」
@@ -78,34 +74,10 @@ Claude 做兩件事：
 ❌ 「請完整描述 problem statement、target users、success criteria 後再開始」
 ```
 
-## 推導迴圈：每份文件的流程
+## Display format
 
-### 步驟 1: 讀對應的 reference guide
+**Lead with the conclusion** (3–5 lines):
 
-進入每份新文件前，**先讀** `references/{N}-{name}.guide.md`，了解：
-- 這份文件要產出什麼
-- 可以從哪些已知資訊推導
-- 哪些是必須問使用者的「決策點」
-- 哪些是可能模糊的「Open Question 候選」
-
-### 步驟 2: 內部推導
-
-基於以下資訊推導：
-- 使用者最初的描述
-- 前面已完成的文件
-- Reference guide 的推導指南
-- Example 的範例（必要時參考 `examples/automation-template-export/`）
-
-**推導原則**：
-- 不確定的內容標 `[需確認]`；兩種都合理的標 `[待拍板]`（必附選項 + 建議方向）；連選項都生不出來就先回頭問使用者。不要編造
-- 推導時帶上 reasoning（為什麼推出這個 FR / entity / flow）
-- 涉及業務決策的不要自己決定
-
-### 步驟 3: 展示給使用者
-
-用容易理解的方式呈現推導結果。**展示風格**：
-
-**先給結論摘要**（3-5 行）：
 ```
 我推導出這份文件的核心內容如下：
 - [一句話總結]
@@ -114,15 +86,17 @@ Claude 做兩件事：
 有 [N] 個地方需要你拍板。
 ```
 
-**再給展開內容**（依文件規模調整詳細度）：
+**Then the content**, at a depth matched to the document's size:
 
-> **大文件硬規則**：預估會超過 ~150 行的文件（常見：§5 / §6 / §8），對話中**只給摘要 + 待拍板項**，全文直接落盤後請使用者開檔看。不要對話貼全文又落盤一次 — token 翻倍、使用者要讀兩遍。
+> **Large-document rule**: a document you expect to exceed ~150 lines (typically §5 / §6 / §8) gets **summary plus open decisions only** in conversation — write the full text to disk and have the user open the file. Pasting the full text *and* writing it doubles the tokens and makes the user read it twice.
+
 ```
 詳細內容（已套用 template 結構）：
 [展示填好的 template 內容]
 ```
 
-**最後問需要拍板的事**：
+**Close with the decisions you need**:
+
 ```
 需要你拍板的決策：
 
@@ -133,101 +107,62 @@ Claude 做兩件事：
    ...
 ```
 
-### 步驟 4: 接收使用者回饋
+## Five kinds of feedback
 
-使用者可能：
+| The user says | You do |
+|---|---|
+| 「OK 沒問題」 | Write to disk, move to the next document |
+| 「persona 改成 X」 (small fix) | Correct it, confirm again |
+| 「整個 scope 不對，應該是 Y」 (major change) | Re-derive that section |
+| 「§1.3 的 persona 我想改」 (back-edit) | Amend, then propagate downstream — see [Amending earlier documents](#amending-earlier-documents) |
+| 「§3.2 詳細展開給我看」 | Give the full content |
 
-- **直接確認**：「OK 沒問題」→ 進下一份
-- **小修正**：「persona 改成 X」→ 修正後再確認
-- **大修改**：「整個 scope 不對，應該是 Y」→ 重新推導該節
-- **回頭改前面**：「§1.3 的 persona 我想改」→ 改了之後 propagate 影響到後續節
-- **要看更多細節**：「§3.2 詳細展開給我看」→ 提供完整內容
+## Derive vs ask
 
-### 步驟 5: 反思 + 進下一份
+> The answer is **a business or context call** → ask the user.
+> The answer is **structural derivation** → do it yourself.
 
-進下一份文件前，做一次內部 reflection：
+### Derive these
 
-- 這份文件是否跟前面對齊？
-- 是否有 reference 不到的內容？
-- 是否有應該回頭補的前面文件？
+**Structure**: problem → scope; scope → FR; FR → entity; entity → state machine (where a status concept exists); entity → API endpoint; FR + state machine → acceptance criteria; FR → error and edge cases; user flow → page and component.
 
-確認 OK 才進下一份。
+**Inference** (derive, then have the user verify): persona pain points (reverse-engineered from the problem described), reasonable NFR ranges (mark `[需確認]`), latent edge cases the user never mentioned — concurrency, repeat triggers.
 
-## 推導 vs 詢問的判斷準則
+### Ask about these
 
-### Claude 應該自己推導的（不要問）
+**Business calls** — which same-name strategy? Accept repeat triggers or dedupe? Do failed runs follow the existing charge rule or a new one? What's in and out for the POC?
 
-✅ 結構推導類：
-- 從 problem 推 scope
-- 從 scope 推 FR
-- 從 FR 推 entity
-- 從 entity 推 state machine（如有 status 概念）
-- 從 entity 推 API endpoint
-- 從 FR + state machine 推 acceptance criteria
-- 從 FR 推可能的 error / edge case
-- 從 user flow 推 page / component
+**Context** — expected volume? Schedule pressure? Which existing systems does it integrate with? Any compliance requirements?
 
-✅ 推測類（推完讓使用者驗證）：
-- 推測 persona 的痛點（從使用者描述的問題反推）
-- 推測 NFR 的合理範圍（標 `[需確認]`，讓使用者調整）
-- 推測潛在的 edge case（使用者沒提到的併發、重複觸發等）
+**Cross-feature logic** — should this event notify other services? Which side owns the source of truth for this field?
 
-### Claude 應該問使用者的
+**Frontend experience** (the 前端體驗決策清單 in `5-presentation-spec.guide.md`) — where does the feature get entered from: a new sidebar item, or a button on an existing page? Its own page, a modal, or a drawer? What does the user see on an empty state or a failure? Mobile support? Does the view refresh itself?
 
-❌ 業務決策類：
-- 同名處理用哪種策略？
-- 重複觸發接受還是去重？
-- 失敗的扣點規則沿用既有還是另定？
-- POC 階段做 / 不做的取捨
+> The frontend dividing line: *which* components and pages exist is structural derivation, yours to do. What they look like, how they behave, what happens on failure is experience — you propose, the user decides. Filing all of the frontend under "structural" is how the discussion gets skipped.
 
-❌ 情境資訊類：
-- 預期使用量是多少？
-- 有時程壓力嗎？
-- 跟哪些既有系統整合？
-- 有特殊合規要求嗎？
+## POC fast mode
 
-❌ 跨 feature 邏輯類：
-- 「這個事件要不要通知其他 service？」
-- 「這個欄位的 source of truth 是哪邊？」
+Once §1 establishes the stage as POC or side project, later documents run fast:
 
-❌ 前端體驗決策類（§5 的「前端體驗決策清單」，見 5-presentation-spec.guide.md）：
-- 功能從哪裡進入？（側欄新項目 vs 既有頁面加按鈕）
-- 開獨立頁、Modal 還是抽屜？
-- 空狀態 / 操作失敗時使用者看到什麼？
-- 要不要支援手機？畫面要不要自動更新？
+- **Low-risk calls don't stop the user.** Where an industry convention or an obvious default exists and reversing later is cheap — naming, loose NFR numbers, reversible structural choices — take the recommendation and announce it in one line: 「以下 N 項我直接採建議值（列清單），要改再說」.
+- **§5 frontend is the exception.** It is the only part the user sees directly. Use a **one-shot confirmation pack** instead: list the recommended value for each relevant dimension of the frontend checklist and confirm the whole set at once, counting as a single hard stop.
+- **§0 runs compressed**: 3 competitors instead of 5, rough demand sizing instead of full TAM/SAM/SOM, weight on the differentiation angle (§0.6); with no feedback data, §0.5 gives web demand signals only. Sourcing discipline holds — a POC is no licence to invent numbers. §0's single hard stop is the **direction check before the research run** (see `0-market-research.guide.md`): confirm once, run to completion, then show results.
+- **Hard-stop only on high-risk forks.** Any one of these qualifies:
+  - (a) Irreversible — account locking, deletion, publishing outward
+  - (b) Money or directional rules — who pays more, who goes first
+  - (c) A root choice that shapes the data model — single ledger vs multiple
+  - (d) No mainstream convention, and getting it wrong is expensive to redo
+- Rule of thumb: **5–8 hard stops for an entire POC session.** Few and loud beats many and quiet.
 
-> 注意：「有哪些 component / page」是結構推導（Claude 自己做），
-> 但「長怎樣、怎麼互動、出錯怎麼辦」是體驗決策 — 推建議值，拍板權在使用者。
-> 別把整個前端歸到「結構推導」就跳過討論。
+Non-POC work (MVP, production launch) keeps decision-by-decision confirmation.
 
-### 判斷準則一句話
+## Everyday-language questioning
 
-> 答案是「**業務 / 情境決定**」→ 問使用者
-> 答案是「**結構推導**」→ Claude 自己做
+**The principle**: ask through real situations.
 
-## POC 快速模式（減少拍板中斷）
+### Jargon → plain Chinese
 
-§1 確認 stage 為 POC / side project 後，後續文件採快速模式：
-
-- **低風險決策不攔人**：有業界慣例或明顯建議值、未來改變成本低的決策（命名、寬鬆的 NFR 數值、可逆的結構選擇），直接採建議值，展示時一句帶過：「以下 N 項我直接採建議值（列清單），要改再說」。
-- **§5 前端體驗例外**：前端是使用者唯一直接看得到的部分，不適用「默默採建議值」。改用「一輪確認包」— 把前端體驗決策清單（見 5-presentation-spec.guide.md）相關維度的建議值列成清單一次確認，整包算 1 個硬停。
-- **§0 市場研究壓縮版**：POC 時 §0 做精簡版 — 3 個競品（非 5）、概略 demand sizing（非完整 TAM/SAM/SOM）、重點放在差異化切入點（§0.6）；無 feedback 資料時 §0.5 只給 web 需求訊號，不硬湊情感分數。研究的「來源 + 信心度」紀律不可省（POC 不是編數字的藉口）。§0 的硬停就是**研究前的方向確認那一關**（見 `0-market-research.guide.md`「開跑前的方向確認」）—— 確認完一口氣跑完，落盤後只展示結果、不再攔第二次。
-- **只硬停高風險 fork**，滿足任一才停下來問：
-  - (a) 不可逆（鎖帳、刪除、對外發布）
-  - (b) 金額 / 方向性規則（誰多誰少、誰先誰後）
-  - (c) 形塑資料模型的根本選擇（單帳本 vs 多帳本這種）
-  - (d) 沒有主流慣例、選錯重做成本高
-- 經驗法則：POC session 全程硬停拍板控制在 **5-8 個以內**。少而響的 gate 勝過多而輕的 gate。
-
-非 POC（MVP / 正式上線）維持原本逐項拍板。
-
-## 容易理解的提問風格
-
-**核心原則**：用實際情境問，避免技術術語。
-
-### 詞彙對照表
-
-| 技術術語（避免） | 生活化說法（建議） |
+| Jargon | Say instead |
 |---|---|
 | Bounded context | 責任區塊 / 子模組 |
 | Entity | 系統裡的核心東西 / 概念 |
@@ -240,39 +175,21 @@ Claude 做兩件事：
 | Versioning | 版本演進 / 升版 |
 | Atomicity | 全做或全不做 |
 
-### 問句範例對照
+### Sentence shape: swap the term for a concrete situation plus one example
 
-**問 entity**：
-- ❌ 「這個 feature 有哪些 entity？」
-- ✅ 「這個功能裡會涉及哪些『東西』？例如『訂單』、『使用者』、『支付方式』這種」
+```
+entity      →「這個功能裡會涉及哪些『東西』？例如『訂單』、『使用者』、『支付方式』這種」
+idempotency →「使用者如果連點兩次按鈕，你希望系統怎麼處理？是建兩筆？還是只算一筆？」
+NFR         →「你預期同時會有多少人用這個功能？反應時間希望多快？」
+empty state →「使用者第一次進來、一筆資料都沒有的時候，你想讓他看到什麼？
+              引導他建立第一筆？還是就一張空表？」
+```
 
-**問 state machine**：
-- ❌ 「Order entity 的 state machine 有哪些 state 跟 transition？」
-- ✅ 「訂單從建立到結束會經過哪些階段？例如『草稿 → 已送出 → 已付款 → 已出貨』這種」
+The same swap covers state machines (「訂單從建立到結束會經過哪些階段？」), business rules (「有沒有什麼規則是『絕對不可以違反』的？」) and entry points (「使用者要從哪裡進到這個功能？」).
 
-**問 business rule**：
-- ❌ 「有哪些 business invariant 需要 enforce？」
-- ✅ 「有沒有什麼規則是『絕對不可以違反』的？例如『金額不能是負的』、『一筆訂單至少要有一個商品才能送出』」
+### Giving options
 
-**問 idempotency**：
-- ❌ 「需要 idempotency 機制嗎？」
-- ✅ 「使用者如果連點兩次按鈕，你希望系統怎麼處理？是建兩筆？還是只算一筆？」
-
-**問 NFR**：
-- ❌ 「Performance NFR 的 p99 latency target 是？」
-- ✅ 「你預期同時會有多少人用這個功能？反應時間希望多快？」
-
-**問進入點（前端）**：
-- ❌ 「這個 feature 的 navigation entry point 是？」
-- ✅ 「使用者要從哪裡進到這個功能？側欄多一個項目？還是在現有頁面加按鈕？」
-
-**問空狀態（前端）**：
-- ❌ 「Empty state 的 fallback UI 是？」
-- ✅ 「使用者第一次進來、一筆資料都沒有的時候，你想讓他看到什麼？引導他建立第一筆？還是就一張空表？」
-
-### 給選項時的風格
-
-使用者一時答不出來時，給具體選項：
+When the user can't answer off the top of their head, give concrete options rather than handing the jargon back:
 
 ```
 ✅ 「同名模板要怎麼處理？常見的做法有三種：
@@ -283,42 +200,22 @@ Claude 做兩件事：
     你傾向哪個？或有別的想法？」
 ```
 
-**不要**只丟術語：
+### Using AskUserQuestion
 
-```
-❌ 「同名衝突處理策略是？」
-```
+Where the tool exists, every decision goes through it — clicking beats typing:
 
-### 用 AskUserQuestion 工具問拍板
+- **2–3 questions at a time, maximum.** More and the user tires and abandons mid-way.
+- Style each option as above: outcome-shaped label, pros and cons in the description, recommended option first and marked 「(推薦)」.
+- An interruption or a refusal to answer means the user has something to say → ask what they want to clarify before re-asking the same set.
 
-環境有 AskUserQuestion 工具時，拍板一律用它（使用者點選比打字省力）：
+## Open questions
 
-- **一次最多 2-3 題**，再多會讓人疲乏、容易中途放棄
-- 每題選項照上述風格：結果導向的標籤 + description 寫 pros/cons + 建議選項放第一個並標「(推薦)」
-- 使用者中斷或拒答 = 他有話要說 → 先問他想澄清什麼，不要直接重問同一組題
+Where two answers are both reasonable, mark `[待拍板]`.
 
-## Open Questions 的標記
+### Iron rule: `[待拍板]` always ships with options and a recommendation
 
-遇到「兩種都合理」的情況，**不要自己決定**，標記為 `[待拍板]`。
+**Writing `[待拍板]` obliges you to give the options and your recommendation in the same place**:
 
-### 鐵則：`[待拍板]` 永遠要附選項 + 建議方向
-
-`[待拍板]` 不能單獨出現。**只要寫了 `[待拍板]`，就必須在同一處同時給出選項跟建議**：
-
-```
-[待拍板]: {議題}
-- (a) {選項 A} (Pros: ..., Cons: ...)
-- (b) {選項 B} (Pros: ..., Cons: ...)
-- (c) {選項 C}（如有）
-建議方向：{Claude 的傾向 + 為什麼}，但需你拍板。
-```
-
-❌ **絕對不可以**只丟議題給使用者：
-```
-同名模板處理 [待拍板]
-```
-
-✅ **必須這樣**：
 ```
 同名模板處理 [待拍板]
 - (a) 直接拒絕，請使用者改名
@@ -327,66 +224,65 @@ Claude 做兩件事：
 建議：(c) — 平衡彈性跟誤操作風險
 ```
 
-如果你發現自己想標 `[待拍板]` 但生不出選項，代表這不是「兩種都合理」，是你資訊不夠。先回頭問使用者補資訊，不要丟空議題。
+Options carry pros and cons; the recommendation carries its reasoning.
 
-### 方向性 / 金額類決策的兩條加嚴規則
+Wanting to mark `[待拍板]` but being unable to produce options means this isn't "two reasonable answers" — it's missing information. Go back and ask.
 
-涉及「方向性」的決策（誰多付 / 少付、誰先 / 後、保留 / 覆蓋…）特別容易被反向理解 — 即使選項附了例子，使用者仍可能套著自己的預期快速掃過。兩條加嚴：
+### Directional and money decisions
 
-1. **選項標籤寫「結果」，不寫「機制」**：
-   - ❌ 「餘數都算給付款人」（機制 — 讀者無法立刻判斷付款人是多出還是少出）
+Decisions with a direction — who pays more or less, who goes first, keep or overwrite — are read backwards easily. Even with examples attached, a user skims them against their own expectation. Two extra rules:
+
+1. **Label options by outcome, not mechanism**:
+   - ❌ 「餘數都算給付款人」 (mechanism — the reader can't tell whether the payer ends up over or under)
    - ✅ 「付款人**少出**（100 元 3 人 → 付款人 33、其他人 33/34）」
    - ✅ 「付款人**多出**（100 元 3 人 → 付款人 34、其他人 33/33）」
 
-2. **拍板後大聲複述再落盤**：金額規則、狀態不可逆、資料刪除這三類，使用者選完後，回應的**第一句**必須用具體數字例子複述結果（「確認一下：100 元 3 人分 → 付款人付 33，其他兩人 33 與 34，對嗎？」）。不要只寫進文件深處的 BR — 使用者不會逐行讀 BR，錯了會晚好幾份文件才被發現。
+2. **Read the decision back out loud before writing it down.** For money rules, irreversible states and data deletion, the **first sentence** of your reply after the user chooses restates the outcome with concrete numbers: 「確認一下：100 元 3 人分 → 付款人付 33，其他兩人 33 與 34，對嗎？」. Users don't read business rules line by line, so an error buried in a BR surfaces several documents later.
 
-### 拍板後的後續處理
+### After the call is made
 
-- **使用者選了某個選項** → Open Question 變成正式 ADR（D-NNNN, Status: Accepted）
-- **使用者說「先放著」** → 保留為 Open Question（Status: Proposed），出現在 §7.2，**必須補 Owner + Target Date**（例：`Owner: 待補`, `Target Date: Post-POC`）。沒有 Owner / Target Date 的 OQ 等於沒有負責人，這條 OQ 會永遠浮著
+- **The user picks an option** → the open question becomes an ADR (D-NNNN, Status: Accepted)
+- **The user says 「先放著」** → it stays an open question (Status: Proposed) in §7.2, and **must carry Owner and Target Date** (e.g. `Owner: 待補`, `Target Date: Post-POC`). An OQ without them floats forever.
 
-## 標記符號（整份 spec 統一）
+## Markers
 
-Claude 推導後的內容用兩種標記區分使用者該做什麼：
-
-| 標記 | 意義 | 使用者該做的事 |
+| Marker | Meaning | What the user does |
 |---|---|---|
-| `[需確認]` | Claude 推測或主動補的內容 | **看一眼確認**，不對就改 |
-| `[待拍板]` | 兩種都合理 / 缺資訊待補 | **做選擇** 或補資訊 |
+| `[需確認]` | Something you inferred or filled in | **Glance and confirm**, or correct it |
+| `[待拍板]` | Two reasonable answers, or missing information | **Choose**, or supply the information |
 
-例如：
-- `成功率目標 95% [需確認]` — Claude 推測值，使用者確認或改
-- `同名處理策略 [待拍板]：(a) 拒絕 (b) Modal 選擇 (c) 自動覆蓋` — 使用者選一個
+For example:
 
-### 標記的生命週期（落盤前必做）
+- `成功率目標 95% [需確認]` — your inferred value; the user confirms or changes it
+- `同名處理策略 [待拍板]：(a) 拒絕 (b) Modal 選擇 (c) 自動覆蓋` — the user picks one
 
-標記是「展示給使用者期間」的工具，**已確認的文件裡不留標記**：
+### Marker lifecycle
 
-- 使用者確認（或修正後確認）某項內容 → **落盤前刪除該項的 `[需確認]` / `[待拍板]` 標記**
-- 使用者整份「直接 OK」沒逐項回應 → 視為全部確認，標記全部刪除
-- 使用者說「先放著」的 `[待拍板]` → **當下就指派下一個 D-NNNN**（建 `decisions/NNNN-*.md`，Status: Proposed，補 Owner + Target Date），原處改寫成 reference（例：`保留策略：待定，見 D-0011`），不留裸標記。§7 階段只是把這些 Proposed 收進 §7.2 索引，不重新編號
+Markers are a tool for the review conversation. **A file on disk carries none.**
 
-落盤的文件裡只允許指向 §7.2 OQ 的 reference。總 review Check 5 檢查的就是這條規則 — 留在檔案裡的裸標記一律算 Error。
+Every marker leaves by one of exactly two doors — deleted, or converted to a `D-NNNN` reference. An item that has been through neither door is not ready to be written; resolve it first. §7.2 is the single place an unresolved item persists, so no other file — the README included — becomes a second home for them.
 
-## 允許回頭修改
+- The user confirms an item, with or without corrections → **delete that item's `[需確認]` / `[待拍板]` before writing to disk**
+- The user says the whole document is fine without going item by item → treat everything as confirmed and delete all markers
+- A `[待拍板]` the user defers → **assign the next D-NNNN right then** (create `decisions/NNNN-*.md`, Status: Proposed, with Owner and Target Date) and rewrite the spot as a reference: 「保留策略：待定，見 D-0011」. §7 later collects those Proposed entries into the §7.2 index without renumbering.
 
-### 使用者隨時可以回頭
+A written document may only carry references pointing at §7.2 open questions. Check 5 of the full-spec review tests exactly this — a bare marker left in a file is an Error.
 
-任何時候使用者說「我想改 §X」，Claude 接受，並做兩件事：
+## Amending earlier documents
 
-1. **回到 §X 重新推導**
-2. **檢查影響範圍** — 哪些後續節需要 propagate 修改
+Whenever the user says they want to change §X, accept it and do two things: re-derive §X, then scan for what it affects.
 
-例如：
-- 改 §0.4 persona（若有做 §0）→ 影響 §1.3 目標 persona、§2.1 FR 的 Persona 欄位、§5.2 user stories
-- 改 §0.6 differentiation opportunity → 影響 §2 FR 優先級、§1.4 success criteria
-- 改 §1.3 persona → 影響 §2.1 FR 的 Persona 欄位、§5.2 user stories
-- 改 §3.2 entity 欄位 → 影響 §6.2 API request/response schema、§8 AC
-- 改 §3.3 state machine → 影響 §4.1 SF 的 state transition 描述、§8.2 AC for state
+Common propagation chains:
 
-### Propagate 的處理
+- §0.4 persona (where §0 ran) → §1.3 target personas, the Persona column of §2.1 FRs, §5.2 user stories
+- §0.6 differentiation opportunity → §2 FR priorities, §1.4 success criteria
+- §1.3 persona → the Persona column of §2.1 FRs, §5.2 user stories
+- §3.2 entity fields → §6.2 API request/response schemas, §8 AC
+- §3.3 state machine → the state transitions described in §4.1 SFs, §8.2 AC for state
 
-修改前面節之後，Claude 主動掃描後續節：
+### Propagation
+
+After amending an earlier section, scan forward and lay the impact out:
 
 ```
 我修改了 §1.3 的 persona「PM」為「PM / 流程設計者」。
@@ -397,221 +293,20 @@ Claude 推導後的內容用兩種標記區分使用者該做什麼：
 要我幫你同步更新嗎？
 ```
 
-使用者確認後一次性更新所有受影響的地方。
+Update everything affected in one pass once the user confirms.
 
-### 雙向 propagation：§1.5.1 POC 表格 ↔ §7 ADR
+### Two-way propagation: §1.5.1 POC table ↔ §7 ADR
 
-`§1.5.1` POC 取捨表格是**給人類掃一眼的速覽**；對應的 `§7` ADR 是**給 AI / 工程師看的完整決策檔**。兩邊是**同一件事的兩種寫法**，必須同步。
+The `§1.5.1` POC trade-off table is **a scannable view for humans**; the matching `§7` ADR is **the full decision record for AI and engineers**. Two renderings of one thing, kept in sync.
 
-規則：
+1. **§7 ADR is the source of truth** — rationale, alternatives and consequences all live there
+2. **§1.5.1 is the condensed view** — issue / current decision / future direction / related ADR only
+3. **Not every §1.5.1 row becomes an ADR** — apply the ADR threshold in the §7 guide
+4. **A change to a §7 ADR propagates back to §1.5.1 automatically**: title changes → the 議題 column; decision changes → the 當前決定 column; a new ADR → check whether §1.5.1 needs a row; a superseded ADR → strike the row and reference the replacement
+5. **A §1.5.1 row with no ADR** (too minor to expand) → leave `Related ADR` as `—`
 
-1. **§7 ADR 是 source of truth**（rationale、alternatives、consequences 都在這）
-2. **§1.5.1 是精簡視圖**（只有：議題 / 當前決定 / 未來方向 / Related ADR）
-3. **不是每條 §1.5.1 都要展開成 ADR**（用 ADR 門檻判斷，見 §7 guide）
-4. **§7 ADR 改了，Claude 自動 propagate 回 §1.5.1**：
-   - ADR 標題改 → §1.5.1「議題」欄改
-   - Decision 改 → §1.5.1「當前決定」欄改
-   - 新增 ADR → 檢查是否要新增 §1.5.1 條目
-   - ADR superseded → §1.5.1 對應條目劃線並 reference 新 ADR
-5. **§1.5.1 條目沒對應 ADR**（夠瑣碎不展開的）→ `Related ADR` 欄留 `—`
+## Full-spec review
 
-## 工作模式總結
+After the last document lands (§9, or §8 when §9 is skipped), **offer to run a full-spec review** — the cross-document pass that catches what per-document work cannot: numbered references that don't resolve, one concept described two ways, orphans, omissions.
 
-```
-┌────────────────────────────────────────────────────┐
-│  使用者：一段話 (重點 + 方向 + 結果)                │
-└─────────────────────┬──────────────────────────────┘
-                      ↓
-         ┌────────────────────────────┐
-         │  Claude: 必要時補問 1-3 題  │
-         │  （用生活化問法）           │
-         └────────────┬───────────────┘
-                      ↓
-              ┌───────────────┐
-              │  進入 §1      │
-              └───────┬───────┘
-                      ↓
-         ┌────────────────────────────┐
-         │  讀 reference guide        │
-         │  內部推導                  │
-         │  展示給使用者              │
-         │  問必要決策（生活化）       │
-         └────────────┬───────────────┘
-                      ↓
-         ┌────────────────────────────┐
-         │  使用者：確認 / 修正 / 拍板 │
-         └────────────┬───────────────┘
-                      ↓
-            ┌─────────┴─────────┐
-            ↓                   ↓
-       直接 OK            想改前面節
-            │                   │
-            ↓                   ↓
-       進 §2              propagate 影響
-                                │
-                                ↓
-                          重新確認後進下一節
-```
-
-每份文件都套用這個迴圈，直到所有文件完成（§1–§9 核心，§0 / §9 為選做）。
-
-## 完整 spec 做完後的總 review
-
-最後一份文件完成後（§9，或跳過 §9 時為 §8），**主動詢問使用者要不要跑一次完整 spec 的總 review**。
-
-### 為什麼需要總 review
-
-逐份做的時候每份文件只看當下，但跨文件的問題只有放在一起才看得出來：
-- 編號 reference 是否全部對得上（例：FR-7 在 §8.1 找得到對應 AC 嗎？）
-- 同一概念在不同文件描述是否一致（例：§3.3 state machine 跟 §4.1 SF 描述的狀態流轉一致嗎？）
-- 是否有「孤兒」（例：§5.6 列了 C-9 但 §5.7 沒有任何 page 用到）
-- 是否有遺漏（例：所有 SF 都有對應 UF 嗎？反之？）
-- 是否每份文件的 ID 編號正確 reference 前後文件
-
-### 詢問使用者的方式
-
-當最後一份完成、使用者確認後，Claude 說：
-
-```
-所有文件都完成了！
-
-要不要跑一次完整 spec 的總 review？
-我會檢查跨文件的一致性，例如：
-- 所有 FR 是否都有對應的驗收條件
-- 編號 reference 是否全部對得上
-- 同一個概念在不同文件描述是否一致
-- 有沒有遺漏或孤兒內容
-
-
-要跑嗎？
-```
-
-### 使用者選「要跑」時的流程
-
-Claude 執行以下檢查清單，把問題分類列出。前置條件：
-- §5 Presentation Type 非 GUI 時，跳過所有 §5.4-5.9 相關項目（user journey / component / page / T-N / 互動決策表 / design handoff）
-- 使用者跳過 §9 時，跳過 §9 相關項目，但要反向確認 §1-§8 沒有殘留對 §9 的引用
-- 使用者跳過 §0 時，跳過所有 §0 相關項目（MS / CMP / PER / OPP reference、persona 來源對照、sourcing 紀律），並反向確認 §1.3 沒有殘留指向不存在的 PER-N
-
-#### Check 0: 機械化檢查（先跑，再肉眼）
-
-Check 1 與 Check 5 的大部分項目用指令掃比肉眼可靠，先跑：
-
-```bash
-# Check 5：殘留標記（結果應為空）。用 bracket pattern，避免誤命中純中文敘述與 JTBD
-grep -rn "\[需確認\|\[待拍板\|\[TBD\]" --include="*.md" .
-
-# Check 1：§6.2 用到的 error code vs §6.5 catalog（兩份清單應一致）
-grep -oE "(4[0-9]{2}|500) [A-Z_]+" 6-interfaces.md | sort -u
-grep -oE "\| (4[0-9]{2}|500) \| [A-Z_]+" 6-interfaces.md | sort -u
-```
-
-⚠️ 陷阱：
-- 掃「殘留 §9 引用」時，`grep "§9"` 會誤命中 `FR-9`、`SF-9`、`AC-9.x` — 命中結果要逐筆判斷是否真的指向 rollout 文件，不能看到命中就當成有殘留。
-- 殘留標記**務必用 bracket pattern**（`\[需確認`）：裸字 `TBD` 會誤命中 §0 / persona 大量出現的 **JTBD**；裸字 `需確認` 會誤命中「…前需確認」這種純中文敘述。看到 `JTBD` 或敘述句不算殘留標記。
-- §0 的 `[估算]` / `[來源]` / 信心度是**永久註記**（sourcing 紀律），不在殘留標記之列，不要當錯誤刪掉。
-
-機械掃完，肉眼專注在機器做不到的部分（Check 4 概念一致性、Check 2 覆蓋語意）。
-
-#### Check 1: 跨文件 ID Reference 一致性
-
-掃描所有編號使用點，確認 reference 對得上：
-
-- §1.3 persona 引用的 PER-N（若有做 §0）→ 是否存在於 §0.4
-- §0.7 Implications 表引用的 PER-N / OPP-N / MS-N → 是否存在
-- §2 FR 優先級 / §1.4 若引用 OPP-N → 是否存在於 §0.6
-- §2.1 FR 的 Persona 欄位 → 是否都對應到 §1.3 列出的 persona
-- §3.2 entity 的 reference → 是否都存在
-- §3.4 BR 的 Scope 欄位 → 是否對應到實際 entity
-- §4.1 SF 的 Related FR → FR-N 是否存在
-- §4.1 SF 的 Related UF → UF-N 是否存在於 §5.3
-- §4.2 EF 的 Triggers in → SF step 是否存在
-- §5.4 user journey 各階段引用的 UF-N / P-N → 是否存在
-- §5.6 component 的 Used in → P-N 是否存在於 §5.7
-- §5.7 page 的 Entry from → UF-N 是否存在
-- §6.2 endpoint 的 Related FR → FR-N 是否存在
-- §6.2 endpoint 的 Errors → error code 是否在 §6.5 catalog 註冊
-- §6.4.1 published event → 是否在 §3.5 列出
-- §7 ADR 的 Affects 欄位 → 是否正確
-- §8 所有 AC 的對應 FR / state / BR / EF / EC / NFR → 是否存在
-- 各文件對 §9 的引用 → §9 存在（若 §9 被跳過，引用應已改寫或移除）
-
-#### Check 2: 必填覆蓋完整性
-
-- 每條 FR 是否有對應的 AC（§8.1）
-- 每個 state transition 是否有合法 + 違規兩個 AC（§8.2）；無介面可觸發違規時，是否有明確的「不適用 + 原因」說明
-- 每條 BR 是否有對應 AC 或 reference（§8.3）
-- 每條 EF / EC 是否有對應 AC（§8.4）
-- 每條 NFR 是否有對應 AC（§8.5）
-- 每個 page 用到的 component 是否都在 §5.6 定義
-- §5.8 互動決策表每個維度是否都有決定（或「N/A + 原因」），重大決策是否有對應 ADR
-- §5.9 Design System 若標「尚無」，§7 是否有對應 OQ / ADR（含 Owner + Target Date）
-- §6.2 每個 endpoint 至少有 1 個 happy path + 對應 error responses
-- §9.4 每個 alert 是否有對應 §9.5 runbook
-
-#### Check 3: 孤兒檢查
-
-反向掃描，找出「定義了但沒用到」的元素：
-
-- §0.4 PER-N（若有做 §0）是否每個都被 §1.3 採用，或明確說明「研究到但本 feature 不鎖定」
-- §0.6 OPP-N 是否每條都流向 §0.7 / §2（沒餵到任何地方的機會等於白做）
-- §3.2 entity 是否每個都至少被某個 FR / SF / API 用到
-- §5.6 component 是否每個都至少出現在某個 page
-- §6.5 error code 是否每個都至少被某個 endpoint 使用
-- §3.5 domain event 是否每個都有 producer 跟（潛在）consumer
-
-#### Check 4: 概念一致性
-
-跨文件描述同一概念的地方是否對齊：
-
-- §0.4 persona 的 JTBD / 痛點（若有做 §0）vs §1.3 persona 描述（§1.3 不該跟 §0.4 矛盾）
-- §0.7 Implications 宣稱的影響 vs 下游實際內容（例：§0.7 說 OPP-1 提高某 FR 優先級，§2 真的有反映嗎）
-- §3.3 state machine 的狀態 vs §4.1 SF 描述的狀態流轉
-- §3.4 BR 的規則 vs §6.5 error code 的 meaning
-- §1.3 persona 的痛點 vs §2.1 FR 的描述
-- §1.5 in scope vs §2.1 FR（FR 是否都在 scope 內）
-- §1.5.1 POC 表格 vs §7 ADR（是否都展開成 ADR）
-- §5.4 user journey 的階段 vs §5.3 UF（旅程是否確實由 UF 串成，無憑空階段）
-- §5.5 Design System 狀態 vs §5.9 交接內容（兩處對「有 / 沒有」的描述一致）
-
-#### Check 5: 未拍板事項
-
-- §7.2 Open Questions 是否都有 Owner + Target Date
-- 是否仍有未解決的 `[需確認]` / `[待拍板]` 標記（或殘留的 `[TBD]` / `[Open Question]` 等非標準標記）
-
-#### Check 6: §0 研究紀律（有做 §0 才查）
-
-- §0 內每個市場數字 / 競品事實是否有**來源**或標 `[估算]`（不允許看起來像查證過的裸數字）
-- 信心度低 / 待驗證的項目是否都收進 §0.8「建議補做的研究」
-- §0.1 是否用對 sizing 模式（獨立變現 → TAM/SAM/SOM；內部 feature → demand sizing，沒硬湊營收大數字）
-
-### 展示結果的格式
-
-```
-總 review 完成！結果如下：
-
-✅ Pass 項目（無需處理）：
-- 所有 FR 都有對應 AC（FR-1 ~ FR-9 → AC-1.1 ~ AC-9.3）
-- 編號 reference 全部對得上
-- ...
-
-⚠️ Warning 項目（建議處理）：
-- §3.5 列了 TemplateActivated 事件但沒有任何 consumer
-- §5.6 C-9 (Toast) 沒有明確被任何 page 引用（但實際使用上隱含）
-- ...
-
-❌ Error 項目（建議必修）：
-- §6.2 POST /api/templates/import 提到 401 UNAUTHORIZED，但 §6.5 catalog 沒列
-- §8.1 AC-3.2 沒寫，但 FR-3 有對應的 AC-3.1, AC-3.3
-- ...
-
-要我幫你修正 Error 項目嗎？Warning 項目要看哪些？
-```
-
-### 使用者選「不用跑」時
-
-直接交付完整 spec，提供：
-- 整個 spec 的 file tree
-- 每份文件的一行摘要
-- 建議的角色認領對照（PM / 後端 / 前端 / QA / SRE）
-- 鼓勵：「未來如果想跑總 review，隨時告訴我」
+The wording, the seven checks (0–6, opening with a mechanical grep pass) and the result bucketing all live in `references/full-spec-review.md`. Read it when you get there, not before — it is a third of this file's weight and it earns nothing until the spec is complete.
