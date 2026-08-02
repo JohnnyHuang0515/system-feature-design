@@ -25,8 +25,8 @@ A rule with a bar that can be checked, which stops the run until it is met. Dist
 _Avoid_: check, rule, guideline, principle
 
 **Fog**:
-A decision you can point at but cannot yet write options for, *and* which blocks documents downstream. Fog is what a Map exists to clear.
-_Avoid_: unknown, uncertainty, TBD, open question
+A decision you can point at but cannot yet write options for, *and* which blocks documents downstream. Fog is what a Map exists to clear. It is not a **Marker**: a marker says *the user should check this*, fog says *nobody can answer this yet*, and fog never reaches disk in either marker's clothing.
+_Avoid_: unknown, uncertainty, TBD, open question, 需確認, 待拍板
 
 **Open Question**:
 A decision that is phrasable as options but deliberately deferred. Lives in §7.2 with a `D-NNNN` reference, and does not block the spec.

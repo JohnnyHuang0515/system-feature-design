@@ -103,6 +103,8 @@ The same moment takes one more reading: **which decisions here can nobody answer
 
 Report the count as a number and name what each item blocks. Then say the thing the user can't see: those sections would be written from a guess and rewritten when the fact lands. **Planning to write a provisional version and reconcile later is what being blocked looks like, not a way around it.**
 
+§1's own lines are blocked the same way. A success criterion or a scope entry resting on a fog item **goes in the report, not onto disk behind a marker** — the marker invariant holds here, and fog is the one thing it has no §7.2 to park in yet.
+
 Then recommend the Map branch and hand back. Escalating into a heavier process is the user's call, and they can make it only once they can see it — so the reading is done when the count, the blocked sections and the cost are in front of them and they have answered. `references/1-problem-scope.guide.md` carries the detail; this paragraph is the whole rule.
 
 | Path | Carries | Depth |
