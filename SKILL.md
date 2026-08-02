@@ -45,8 +45,10 @@ Follow `Opening` in `0-skill-mode.md`: greet, take the user's one-sentence descr
 Then offer §0 market research, and take one of three routes:
 
 - the user wants it, or already has research to fold in → run §0 first
-- an internal tool with no market dimension → start at §1 and mark §0 `⏭️ 跳過（原因）` in the README
+- an internal tool with no market dimension, or the user simply declines → start at §1 and mark §0 `⏭️ 跳過（原因）` in the README
 - the request *is* the research → §0 is the whole job; offer the rest of the spec once it lands
+
+**The recorded reason is the one that was given.** A user who says only 「跳過」 has given 「使用者要求跳過」 — write that and stop. 「內部工具,無市場調研需求」 is a finding about their business, and putting one on the record that nobody made means the README is later read as though someone had. The same holds for every `⏭️ 跳過` row whose reason came from the user rather than from the Paths table.
 
 ## Context hygiene
 
