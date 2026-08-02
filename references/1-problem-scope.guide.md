@@ -198,6 +198,8 @@ Both conditions as written. One of them alone is something else and has a home a
 
 The user saying 「不用畫地圖,直接寫規格」 closes this — record the fog items as §7.2 Open Questions and carry on, noting that the documents downstream of them are provisional.
 
+**Entering from a cleared Map**, count what remains, never what the map already answered. Its Decisions so far are settled input — they arrive as answers, not as `[待拍板]`, and re-opening them is how a map→spec handoff turns into a loop. A cleared map normally counts zero; anything above zero is fog that surfaced *since* it cleared, which belongs on the map as a new ticket rather than restarting §1.
+
 ## Reflection check, before §2
 
 - [ ] Prior art checked where there's a codebase or sibling spec, and the paths and terms searched were reported
@@ -222,6 +224,8 @@ Anything unconfirmed gets finished before §2 starts.
 - 解決:[problem 簡述]
 - 不做:[out of scope 條列簡述]
 - 成功標準:[一句話判定 + 量化指標]
+- 既有實作:[查過哪些路徑跟關鍵詞,找到什麼;無 codebase 則省略此行]
+- 這次走:[POC / MVP / 正式上線],寫 [文件範圍];沒有卡住後面的未知,可以直接往下
 - POC 設計表格:[若有,N 條議題]
 - Open Questions:[若有,等 §7 拍板]
 
