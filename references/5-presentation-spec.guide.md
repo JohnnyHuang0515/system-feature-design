@@ -5,7 +5,11 @@
 
 ## Purpose
 
-Describe how the feature presents itself — the manual for frontend and UX engineers. Visual detail belongs to the Design System; this document says **which component, on which page, along which flow**.
+**§5 names the frontend's things and states what must hold true about them. It does not describe how they look.**
+
+That line decides every question below. A component's role, what it must carry, and the states that change its behaviour are spec. Its size, its hover, the page's column layout and its URL are not — they are a design or a routing decision, and writing them here does the designer's job badly and early.
+
+The test is what downstream actually consumes: ADRs, acceptance criteria and tickets cite `C-7` and `P-5` as **names with rules attached** — "跳出選擇 Modal (C-7) 三選一", "預覽頁 (P-5) 保持唯讀". None of them ever needs to know how wide it is.
 
 ## Opening
 
@@ -67,14 +71,18 @@ Why the extra layer: a UF is step-by-step operation, a journey is the shape of t
 
 ### Components and pages (§5.6 / §5.7, GUI only)
 
-From the user flows: the UI elements a step touches → components (C-N); the screen a step happens on → pages (P-N); a page's layout blocks → sections (T-N).
+From the user flows: the UI elements a step touches → components (C-N); the screen a step happens on → pages (P-N); a page's areas of responsibility → sections (T-N).
+
+**Name them; don't draw them.** A component gets a role, what it must carry, and its behavioural states. A page gets its entry points, its responsibility, and which section owns what.
+
+Where the arrangement genuinely matters, write it as a **constraint with its reason** rather than a picture — 「T-1 與 T-2 必須同時可見,因為改 T-1 會即時改變 T-2 的可選項」. That is spec: it holds however the page is drawn. A box diagram is one way of satisfying it, chosen before anyone has seen the real content.
 
 ### Design handoff (§5.9, GUI only)
 
 §5 carries structure and interaction. **Visuals — mockups, colour, type scale — are downstream and out of this spec.** §5.9 turns that boundary from a silent hole into an explicit gap with directions:
 
 - **Design System status** (aligned with the §5.5 decision): exists → record the source link; **absent → flag it as a prerequisite for frontend work**, recommend a tool or skill to produce one (ckm-design-system / ui-ux-pro-max / design-taste-frontend / Pencil MCP), and log an OQ or ADR in §7 with Owner and Target Date
-- **How mockups get made**: feed §5.6 components + §5.7 pages (ASCII layout) + §5.8 interaction decisions to the design tool for hi-fi output. The tool's output is authoritative for visuals; on conflict, sync the spec back
+- **How mockups get made**: feed §5.6 components + §5.7 pages (responsibilities and layout constraints) + §5.8 interaction decisions to the design tool for hi-fi output. The tool's output is authoritative for visuals; on conflict, sync the spec back
 - **Prerequisite list**: Design System, mockups or visual references, responsive breakpoints (aligned to §5.8), microcopy source — tick each, and flag what's missing
 
 The dividing line: this skill doesn't turn itself into a design tool and produce mockups — the environment has dedicated design skills. §5.9's job is **handoff**, not **output**.
@@ -125,7 +133,7 @@ The frontend is the only part the user sees directly. A wrong backend structure 
 
 - Uncertain presentation type (several mixed)
 - Several reasonable component splits (one large vs several small)
-- Several reasonable page layouts (own page vs Modal vs Drawer)
+- Several reasonable containers for one operation (own page vs Modal vs Drawer)
 - Several reasonable renderings of empty state or partial success
 - Device support unstated (desktop only vs RWD)
 - No Design System yet, with who and what tool undecided (§5.9 prerequisite)
@@ -206,7 +214,7 @@ Propose: 「我幫你列幾個可能的 component:[列舉]。看哪些符合你�
 §5 only carries structure (C-N / P-N / UF-N) and visuals belong to implementation anyway, so wanting a design tool is a reasonable move — don't stall on it:
 
 - **Settle the split first**: keep writing structure, or stop now and produce mockups? Recommend finishing the document and leaving visuals to implementation — pick reversible, sensible defaults for layout-shaped decisions and note that 「視覺與版面由 {工具} 於實作階段定案」
-- If mockups are wanted now: feed the settled C-N / P-N / layout ASCII to the tool as input, and fold the design result back into §5 so spec and design stay aligned
+- If mockups are wanted now: feed the settled C-N / P-N and their layout constraints to the tool as input. Fold **behavioural** corrections back into §5; the visuals stay with the tool, which is the whole point of the split
 - If the tool is unavailable (MCP down, etc.) → finish the spec on defaults. The flow doesn't stop on a tool.
 
 ## Reflection check, before §6
@@ -218,6 +226,7 @@ Propose: 「我幫你列幾個可能的 component:[列舉]。看哪些符合你�
 - [ ] Every §4 SF's "Related UF" column is backfilled
 - [ ] Every component a page uses is defined in §5.6 (GUI)
 - [ ] Every component appears on at least one page — no orphans (GUI)
+- [ ] §5.6 and §5.7 entries carry role, responsibility and behavioural states; every layout constraint gives its reason, and appearance is left to §5.9's handoff (GUI)
 - [ ] All 8 frontend dimensions were reviewed: the relevant ones decided, the rest marked N/A (GUI)
 - [ ] Decisions are written into the §5.8 table, with major ones escalated to ADRs (GUI)
 - [ ] Design System status is decided — reuse existing, or none yet → §5.9 prerequisite + §7 OQ (GUI)

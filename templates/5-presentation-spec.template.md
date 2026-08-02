@@ -99,20 +99,20 @@
 
 ## 5.6 Component Inventory
 
-> 列出 feature 用到的 UI component。
-> 層次 3：列 component + 角色 + 視覺尺寸 + 狀態。不寫 props / event handler。
+> 為 feature 用到的 UI component **命名**，讓 §6 / §7 / §8 有東西可以指涉。
+> 寫：角色、必須承載什麼、有哪些行為狀態。
+> 不寫：長什麼樣（尺寸、hover、色彩）、怎麼做（props / event handler）。
 
 ### C-1: {Component 名稱}
 
 **Used in**: P-{N}
 **Role**: {一句話描述這個 component 的角色}
 
-**Sub-content** / **Internal structure**:
-- {子區塊或內容描述}
+**Must carry**:
+- {它必須讓使用者看到或做到的事，一條一行}
 
-**States**: {idle / hover / selected / disabled / loading / error / ...}
-
-**Size**: {尺寸，如果固定}
+**States**: {對行為有意義的狀態，例如 empty / loading / error / disabled / selected。
+純視覺狀態（hover、focus ring 等）歸 Design System}
 
 ---
 
@@ -120,29 +120,21 @@
 
 ## 5.7 Page / Screen 結構
 
-> 每個 page 描述版面結構、區塊責任。
+> 為 page 命名，寫清楚它的職責與各區塊負責什麼。
+> 版面（誰左誰右、幾欄）是設計決定，不在這裡 —— 這裡只寫「不管怎麼排都要成立」的約束。
 
 ### P-1: {Page 名稱}
 
-**URL**: {URL pattern，如果適用}
 **Entry from**: UF-{N}, UF-{N} (從哪些 user flow 進入)
-
-**Layout**:
-
-```
-┌─────────────────────────────────┐
-│  {區塊 T-1}                     │
-├──────────────────┬──────────────┤
-│                  │              │
-│  {區塊 T-2}      │  {區塊 T-3}  │
-│                  │              │
-└──────────────────┴──────────────┘
-```
+**Responsibility**: {這個 page 讓使用者完成什麼}
 
 **區塊責任**:
 - **T-1 {區塊名稱}**: 使用 C-{N}。負責 {責任描述}
 - **T-2 {區塊名稱}**: 使用 C-{N}。負責 {責任描述}
-- **T-3 {區塊名稱}**: 使用 C-{N}。負責 {責任描述}
+
+**版面約束**（只寫有理由的；沒有就整段省略）:
+- {例：T-1 與 T-2 必須同時可見 —— 改 T-1 會即時改變 T-2 的可選項}
+- {例：T-3 在手機上可摺疊 —— 非主要決策資訊}
 
 **Key states**: {空狀態 / 載入中 / 錯誤時這個 page 顯示什麼；與 §5.8 對齊}
 
@@ -169,8 +161,8 @@
 
 ## 5.9 Design Handoff（前端設計交接）
 
-> 這份 spec 寫的是**結構 + 互動**（有哪些 page/component、怎麼互動、出錯怎麼辦）。
-> 視覺設計（hi-fi mockup、色彩、字級）**不在本 spec**，是下游產物。
+> 這份 spec **命名**前端的東西，並規定它們必須成立什麼（有哪些 page/component、怎麼互動、出錯怎麼辦）。
+> 長什麼樣 —— 版面、hi-fi mockup、色彩、字級 —— **不在本 spec**，是下游產物。
 > 本節是交接清單：說清楚前端開工前還缺什麼、從這份 spec 怎麼接出去，避免靜默開洞。
 
 **Design System 來源**（對齊 §5.5 的拍板）:
@@ -178,7 +170,7 @@
 
 **Mockup / 視覺稿**:
 - 產出方式：{Figma 連結 / 用設計工具從本 spec 生成 / 實作階段定案}
-- 餵給設計工具的輸入：§5.6 component（角色 + 狀態）、§5.7 page（版面 ASCII + Key states）、§5.8 互動決策
+- 餵給設計工具的輸入：§5.6 component（角色 + 必須承載什麼 + 狀態）、§5.7 page（職責 + 區塊責任 + 版面約束 + Key states）、§5.8 互動決策
 - 視覺以 {來源} 為準；本 spec 與之衝突時，回頭同步 §5.6/§5.7
 
 **前端開工前的前置清單**:
