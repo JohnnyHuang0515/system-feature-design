@@ -118,7 +118,7 @@ Once GUI is confirmed, walk all 8 dimensions:
 1. **Filter first.** Decide which dimensions this feature actually has — a pure display feature has no "interaction mode" question; a single-user tool has no "liveness" question. Skip the rest with a one-line note: 「維度 X 不適用,因為…」
 2. **Derive a recommended value per dimension** from §1 personas, §2 FR/NFR and §4 EF/EC, each with a one-line reason.
 3. **Package the decisions**:
-   - Non-POC: follow `0-skill-mode.md`'s AskUserQuestion rule — 2–3 per round
+   - Non-POC: one round per frontier, per `Which questions go together` in `0-skill-mode.md`. Most dimensions are independent, so most of them land in the first round
    - POC fast mode: **not silent defaults** — use a **one-shot confirmation pack**, listing every relevant dimension's recommended value at once: 「前端體驗我建議這樣:(清單)。有要改的嗎?都 OK 我就照這個寫」. The whole pack counts as one hard stop
 4. **Write it down.** Results go into the §5.8 decision table (N/A plus a reason for the dimensions that don't apply). Anything shaping the data model or irreversible — a partial-success strategy that drives API design, say — is escalated to an ADR.
 
@@ -173,18 +173,24 @@ For GUI: user stories first (fast), then user flows (medium), then the user jour
 ### Step 4: the decisions, led by the frontend checklist
 
 ```
-前端體驗有 5 個維度需要你拍板(另外 3 個維度不適用,我列在最後):
+前端體驗有 5 個維度需要你拍板,每個我都先給建議。
+不適用的 3 個列在最後。
 
-1. 進入點:我建議放在模板列表頁的「建立」選單裡,不另開側欄項目。OK 嗎?
-2. 容器形式:匯入預覽我建議獨立頁(P-5),不是 Modal。可以嗎?
-   (考量:預覽內容多,Modal 會擠;但獨立頁多一次跳轉)
-3. 失敗呈現:驗證失敗停在原頁 + 錯誤訊息,不做「部分匯入」。對嗎?
+1. 進入點:建議放在模板列表頁的「建立」選單裡,不另開側欄項目。
+2. 容器形式:匯入預覽建議獨立頁(P-5),不是 Modal。
+   (預覽內容多,Modal 會擠;代價是多一次跳轉)
+3. 失敗呈現:驗證失敗停在原頁 + 錯誤訊息,不做「部分匯入」。
+4. 操作回饋:成功後 Toast,刪除既有模板要二次確認,不做 Undo。
+5. 資料量:模板超過 50 筆才出現搜尋,預設照更新時間排。
 
-(下一輪再問:操作回饋方式、資料量呈現)
-不適用維度:操作模式(無多步驟表單)、即時性(單人編輯)、…
+都同意的話跟我說一聲就好,有要改的直接講第幾點。
+
+不適用:操作模式(無多步驟表單)、即時性(單人編輯)、裝置(僅桌機)
 ```
 
-Use AskUserQuestion where available, 2–3 per round.
+**The dimensions are mostly independent, so they are one frontier** — put every applicable one in the same round rather than holding some back. Only a dimension whose answer genuinely hangs on another waits: a container choice of Drawer can settle the device question with it, so ask the container first and the device one next round.
+
+Use AskUserQuestion where available; a frontier past four questions splits across calls without splitting the round.
 
 ## Where you'll get stuck
 

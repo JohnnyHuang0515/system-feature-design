@@ -200,11 +200,19 @@ When the user can't answer off the top of their head, give concrete options rath
     你傾向哪個？或有別的想法？」
 ```
 
+### Which questions go together
+
+**Ask the frontier** — every decision whose prerequisites are already settled, meaning you can put it without guessing at an answer you haven't heard yet. A question that depends on another one still open in this round belongs to the **next** round; asking it now means asking the user to decide something you don't yet have the context to have framed properly.
+
+Then the user's answers push the frontier outward. Recompute it and ask the next round.
+
+**Size is not the constraint; framing is.** Six questions each carrying options and your recommendation cost the user less than two bare ones — they skim, agree with most, and argue with the one that matters. What tires people is being made to generate answers, not being shown several at once. `Iron rule` below is what makes this hold.
+
 ### Using AskUserQuestion
 
 Where the tool exists, every decision goes through it — clicking beats typing:
 
-- **2–3 questions at a time, maximum.** More and the user tires and abandons mid-way.
+- **The tool takes at most 4 questions per call.** A frontier larger than that gets split across consecutive calls, or asked in numbered prose instead — either way the split is a **rendering** decision, so keep questions that belong to the same round in the same round rather than inventing an order to make them fit.
 - Style each option as above: outcome-shaped label, pros and cons in the description, recommended option first and marked 「(推薦)」.
 - An interruption or a refusal to answer means the user has something to say → ask what they want to clarify before re-asking the same set.
 

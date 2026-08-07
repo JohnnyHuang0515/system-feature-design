@@ -94,7 +94,7 @@ One paragraph usually derives most of the document. A few things need asking whe
 
 Expected volume and scale (small tool vs high traffic)? Compliance requirements (payments, medical, PII)? Multi-user collaboration or single-user?
 
-Ask in everyday language, **3 questions at a time, maximum**.
+Ask in everyday language. These are all answerable independently, so they are one frontier — put the ones that apply in a single round rather than dripping them out. `Which questions go together` in `0-skill-mode.md`.
 
 ## Open question candidates
 
@@ -126,7 +126,7 @@ Show §1.1–§1.6 filled in against the template structure, with inferences mar
 
 ### Step 3: the decisions
 
-Everyday language, **1–3 at a time**:
+Everyday language, the whole frontier in one round:
 
 ```
 有幾件事需要你拍板:
