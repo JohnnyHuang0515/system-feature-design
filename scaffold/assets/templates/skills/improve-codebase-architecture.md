@@ -65,7 +65,7 @@ End with a **Top recommendation**: which you'd tackle first, and why.
 
 ## 4. Work the chosen candidate
 
-Once the user picks one, walk the decision tree with them one question at a time — constraints, dependencies, the shape of the deepened module, what sits behind the seam, which tests survive.
+Once the user picks one, walk the decision tree with them the way **`grilling`** does — a round at a time, each round asking the whole frontier. Constraints and dependencies come first because the shape of the deepened module hangs off them; the shape then settles what sits behind the seam, and the seam settles which tests survive.
 
 Side effects happen inline as decisions crystallise:
 
