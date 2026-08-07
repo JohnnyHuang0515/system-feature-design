@@ -50,7 +50,7 @@ Stop and say so. List what you tried, and ask for one of: access to an environme
 
 ### Completion criterion
 
-Phase 1 is done when you can name **one command** that you have **already run at least once** — paste the invocation and its output — and that is:
+Phase 1 is done when you can name **one command** that you have **already run at least once** — paste the invocation and its output, **redacted** — and that is:
 
 - [ ] **Red-capable** — it drives the actual bug path and asserts the user's exact symptom, so it goes red on this bug and green once fixed. "Runs without erroring" is not red-capable.
 - [ ] **Deterministic** — same verdict every run (for flaky bugs, a pinned high reproduction rate).
@@ -58,6 +58,18 @@ Phase 1 is done when you can name **one command** that you have **already run at
 - [ ] **Agent-runnable** — runnable unattended.
 
 Catching yourself reading code to build a theory before this command exists means **stop**. No red-capable command, no Phase 2.
+
+### Redact first
+
+This skill works by **showing things** — the invocation, its output, the artifact you captured. Every one of those is a place a live credential leaves the machine, and the moment it lands in a transcript it is out of your hands.
+
+So redaction is the first move on each, not a tidy-up afterwards:
+
+- **A secret you have to name** → write `<REDACTED>` in its place.
+- **A loop that needs a credential** → build it against an env var, so the value stays in the environment rather than in what you show. `curl -H "Authorization: Bearer $API_TOKEN"` is showable; the token pasted inline is not.
+- **A captured artifact** — a HAR, a request log, a database dump → quote only the lines that carry the signal. Attaching the whole file to prove one header is wrong hands over everything else in it.
+
+This holds for what you show the user as much as what you write to a file. A redacted paste is still a complete Phase 1 exhibit — the reader needs the *shape* of the request, not its bearer token.
 
 ## Phase 2 — Reproduce and minimise
 

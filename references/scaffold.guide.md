@@ -73,7 +73,7 @@ Eight ship on every scaffold, plus `deploy` when a deploy target is configured:
 | `diagnosing-bugs` | Six-phase discipline for hard bugs. Its whole thesis is **Phase 1 is the skill** — no red-capable feedback loop, no hypothesis. Gives 10 ranked ways to build one and refuses to proceed without a command it has already run. |
 | `domain-glossary` | Builds and sharpens `CONTEXT.md`, the project's shared language, and records hard-to-reverse decisions as ADRs. The `_Avoid_` line under each term is what stops three names for one concept. |
 | `improve-codebase-architecture` | Periodic upkeep — scans for shallow modules worth deepening, presents them as a visual HTML report with before/after diagrams and a recommendation strength, then works the one the user picks. |
-| `prototype` | Throwaway code answering one design question — a pure logic module behind a one-screen TUI, or several radically different UI variants embedded in an existing page behind `?variant=`. |
+| `prototype` | Throwaway code answering one design question — a pure logic module behind one self-contained HTML file the decision-owner drives themselves, or several radically different UI variants embedded in an existing page behind `?variant=`. Kept afterwards as a primary source on a throwaway branch. |
 | `handoff` | Compacts a conversation into a document in the OS temp dir so a fresh session can continue. References other artifacts rather than duplicating them; redacts secrets. |
 | `resolving-merge-conflicts` | Hunk by hunk, resolved by intent traced to each side's primary source. Never `--abort`. |
 | `security-review` | Trust boundaries, classic vulnerabilities, auth and secrets. |

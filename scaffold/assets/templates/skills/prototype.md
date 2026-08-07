@@ -15,9 +15,17 @@ Identify the question — from the prompt, the surrounding code, or by asking if
 
 For questions about business logic, state transitions or data shape: the kind of thing that looks reasonable on paper and only feels wrong once real cases run through it. *"Does this handle X then Y?"* *"Can this model even represent the case where…?"*
 
-**Keep the logic pure and portable, with a throwaway shell around it.** Put the part that answers the question behind a small pure interface — a reducer `(state, action) => state`, an explicit state machine when "which actions are even legal right now" is part of the question, a set of pure functions when there's no current state, or a module with a clear method surface when it genuinely owns ongoing state. Pick the shape the *question* needs, not the one easiest to wire to a terminal. No I/O, no terminal code, no logging for control flow — the shell imports the logic, never the reverse. That split is what lets the validated logic lift into the real module afterwards while the shell is discarded.
+**Keep the logic pure and portable, with a throwaway shell around it.** Put the part that answers the question behind a small pure interface — a reducer `(state, action) => state`, an explicit state machine when "which actions are even legal right now" is part of the question, a set of pure functions when there's no current state, or a module with a clear method surface when it genuinely owns ongoing state. Pick the shape the *question* needs, not the one easiest to wire up. No I/O, no logging for control flow — the shell imports the logic, never the reverse. That split is what lets the validated logic lift into the real module afterwards while the shell is discarded.
 
-**The shell is a one-screen TUI.** Every tick, clear the screen and re-render the whole frame — one stable view, not growing scrollback. Two parts per frame: the current state pretty-printed one field per line (bold field names, dim for timestamps, IDs, derived values), then the keyboard shortcuts along the bottom — `[a] add user  [d] delete user  [t] tick clock  [q] quit`. Read one keystroke, dispatch, re-render, loop until quit.
+**The shell is one self-contained HTML file** — plain HTML, CSS and JS, no build, no server, no dependencies. The person who owns the decision opens it by double-clicking and drives it themselves, in their own vocabulary. That is the whole point: a prototype they have to watch you operate answers your question about the model, not theirs.
+
+Three parts in the file:
+
+- **A state panel** showing the full relevant state, re-rendered after every action so what changed is visible rather than inferred.
+- **Free-play buttons** for every action, always available, so they can wander into the case you didn't think to script.
+- **Guided walkthroughs** — tabs, one per scenario, each naming the situation in domain language with the buttons to press underneath in order. This is what lets a non-developer reach the edge case you actually need judged.
+
+Label everything the way *they* say it — 「員工請了半天,主管還沒批」, not `state: PENDING_HALF_DAY`. A panel written in the code's vocabulary tests whether they can read your naming, which is not the question.
 
 ### UI — "what should this look like?"
 
@@ -38,14 +46,14 @@ Generate **several radically different variations**, switchable in the browser, 
 5. **Surface the state.** After every action, or on every variant switch, show the full relevant state so the change is visible.
 6. **Capture it when done.** Fold the validated decision into the real code, then keep the prototype as a **primary source**: commit it to a throwaway branch off main and leave a pointer to that branch on the implementation issue. Record the verdict and the question it settled. Main keeps only the decision.
 
-   For logic, the validated reducer or state machine lifts into the real module and the TUI shell rides to the branch. For UI, the winner folds into the page and the losing variants plus the switcher come out of main — variant components left behind rot fast and confuse the next reader. Rewrite what you promote: it was written under prototype constraints, with no tests and minimal error handling.
+   For logic, the validated reducer or state machine lifts into the real module and the HTML shell rides to the branch. For UI, the winner folds into the page and the losing variants plus the switcher come out of main — variant components left behind rot fast and confuse the next reader. Rewrite what you promote: it was written under prototype constraints, with no tests and minimal error handling.
 
 ## Anti-patterns
 
 - **Adding tests.** A prototype that needs tests has stopped being one.
 - **Wiring to the real database, or to real mutations.** Point at an in-memory store or a stub — unless persistence *is* the question.
 - **Generalising.** No "what if we want X later". It answers one question.
-- **Blurring the logic into the shell.** A reducer that references terminal escape codes is no longer portable.
+- **Blurring the logic into the shell.** A reducer that reaches for `document` is no longer portable.
 - **Variants that differ only in colour or copy**, or that share a `<Layout>`. A shared `<Header>` is fine; sharing the layout defeats the point, since each variant should be free to throw it out.
 
 ## Feeding the answer back
