@@ -118,7 +118,7 @@ Once GUI is confirmed, walk all 8 dimensions:
 1. **Filter first.** Decide which dimensions this feature actually has — a pure display feature has no "interaction mode" question; a single-user tool has no "liveness" question. Skip the rest with a one-line note: 「維度 X 不適用,因為…」
 2. **Derive a recommended value per dimension** from §1 personas, §2 FR/NFR and §4 EF/EC, each with a one-line reason.
 3. **Package the decisions**:
-   - Non-POC: one round per frontier, per `Which questions go together` in `0-skill-mode.md`. Most dimensions are independent, so most of them land in the first round
+   - Non-POC: one round per frontier, per `Which questions go together` in `0-skill-mode.md`. Most dimensions are independent, so most land in the first round. The exception to watch: **a container answer of Drawer settles the device question with it**, so ask container first and device next round
    - POC fast mode: **not silent defaults** — use a **one-shot confirmation pack**, listing every relevant dimension's recommended value at once: 「前端體驗我建議這樣:(清單)。有要改的嗎?都 OK 我就照這個寫」. The whole pack counts as one hard stop
 4. **Write it down.** Results go into the §5.8 decision table (N/A plus a reason for the dimensions that don't apply). Anything shaping the data model or irreversible — a partial-success strategy that drives API design, say — is escalated to an ADR.
 
@@ -188,7 +188,7 @@ For GUI: user stories first (fast), then user flows (medium), then the user jour
 不適用:操作模式(無多步驟表單)、即時性(單人編輯)、裝置(僅桌機)
 ```
 
-**The dimensions are mostly independent, so they are one frontier** — put every applicable one in the same round rather than holding some back. Only a dimension whose answer genuinely hangs on another waits: a container choice of Drawer can settle the device question with it, so ask the container first and the device one next round.
+**The dimensions are mostly independent, so they are one frontier** — put every applicable one in the same round rather than holding some back.
 
 Use AskUserQuestion where available; a frontier past four questions splits across calls without splitting the round.
 

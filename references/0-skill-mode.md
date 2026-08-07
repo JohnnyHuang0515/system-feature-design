@@ -197,7 +197,7 @@ When the user can't answer off the top of their head, give concrete options rath
     (b) 自動覆蓋
     (c) 跳出選單讓使用者選『覆蓋 / 建立新的 / 取消』
 
-    你傾向哪個？或有別的想法？」
+    我建議 (c) — 平衡彈性跟誤操作風險。你覺得呢？或有別的想法？」
 ```
 
 ### Which questions go together
@@ -249,7 +249,7 @@ Decisions with a direction — who pays more or less, who goes first, keep or ov
 
 ### After the call is made
 
-- **The user picks an option** → the open question becomes an ADR (D-NNNN, Status: Accepted)
+- **The user picks an option** → it becomes an ADR (D-NNNN, Status: Accepted) **authored at §7's consolidation pass**. Until §7 runs, leave `Related ADR` as `—` rather than citing a number whose file does not exist yet
 - **The user says 「先放著」** → it stays an open question (Status: Proposed) in §7.2, and **must carry Owner and Target Date** (e.g. `Owner: 待補`, `Target Date: Post-POC`). An OQ without them floats forever.
 
 ## Markers

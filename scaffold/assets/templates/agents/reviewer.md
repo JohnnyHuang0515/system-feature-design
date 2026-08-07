@@ -39,6 +39,7 @@ If no plan exists, check the conversation or commit message. **Reviewing without
 
 - Relevant `.claude/rules/code-style*.md` file(s) — always.
 - Relevant `.claude/rules/testing*.md` file(s) — if tests changed.
+- `.claude/references/testing-tdd.md` — if tests changed. It is the standard for test quality here: tautological assertions, mock boundaries, determinism.
 - `.claude/rules/api-conventions.md` — if public API changed.
 - `.claude/rules/codebase-design.md` — if the diff adds or reshapes a module. Use its words exactly: **module**, **interface**, **depth**, **seam**, **adapter**, **leverage**, **locality**.
 

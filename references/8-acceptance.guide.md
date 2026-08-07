@@ -23,7 +23,7 @@ Define what "done" means. This is the contract engineering and QA work against. 
 | AC group | Source |
 |---|---|
 | §8.1 AC for FR | 1–N ACs per §2.1 FR (happy plus failure) |
-| §8.2 AC for State Transitions | Two per §3.3 transition — legal and violation |
+| §8.2 AC for State Transitions | Two per §3.3 transition — legal and violation — plus **one** shared catch-all (`AC-S.99`) for the whole state machine, not one per transition. Where no interface can trigger a violation, write 「不適用 + 原因」 instead of inventing an error code |
 | §8.3 AC for Business Rules | A verification scenario per §3.4 BR (or a reference to another AC) |
 | §8.4 AC for Error & Edge | One per §4.2 EF and §4.3 EC |
 | §8.5 AC for NFR | How each §2.2 NFR is measured, and what passing looks like |

@@ -34,6 +34,8 @@ Proceed once every one of these has an answer.
 
 ### 2. Survey the existing codebase
 
+Read `CONTEXT.md` if it exists and the ADRs in `docs/adr/` covering this area **before naming anything** — a term already settled is not yours to rename, and a decision already recorded is not yours to re-open.
+
 - `Grep` for call sites and related modules.
 - Read `.claude/rules/` — especially `code-style*.md`, `api-conventions.md`, and `codebase-design.md` when the plan adds or reshapes a module.
 - Identify existing patterns. Match them unless there's a real reason not to.
@@ -134,7 +136,7 @@ If self-review reveals issues, revise the plan before handing off.
 
 **Self-review:** <brief — what you flagged and fixed, or "clean">
 
-Ready for your review. Once approved, dispatch `implementer`.
+Ready for your review. Once approved, dispatch `tester` for the first slice.
 ```
 
 ## Principles

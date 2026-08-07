@@ -38,6 +38,8 @@ The singular `"language"` / `"test_framework"` string form still parses.
 
 The script exits non-zero with the reason. Fix the named cause and re-run it — hand-writing the files it would have written defeats the point of a deterministic scaffold.
 
+Two of the rows below offer a choice between registering a template as live and demoting it to `in-progress/`. **A run passing is what decides it** — live means tested, not finished. See `Three states` below.
+
 | Message | Cause and fix |
 |---|---|
 | Existing Claude files detected | The target already holds `CLAUDE.md`, `CLAUDE.local.md`, or `.claude/{agents,rules,skills,references}`. Ask the user, then re-run with `--force`. (`.claude/settings.local.json` belongs to Claude Code and never triggers this.) |

@@ -30,6 +30,7 @@ The ADRs are split: `7-decisions.md` is the index, and each decision gets its ow
 
 | Source | What usually becomes an ADR |
 |---|---|
+| §5.8 Interaction Decisions | A frontend decision that shapes the data model or is irreversible once shipped — a partial-success strategy driving API design, say. §5 escalates these; this table is where they land |
 | §1.5.1 POC table | **Every row is a candidate, not an automatic ADR.** Apply the threshold below row by row; expand only what clears it. Expanded rows propagate back into §1.5.1's `Related ADR` column; the rest keep `—` |
 | §3.1 Bounded Contexts | 「為什麼這樣切?」 |
 | §3.3 State Machine | The load-bearing choices in the transitions |
