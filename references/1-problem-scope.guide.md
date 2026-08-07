@@ -237,7 +237,7 @@ The user saying 「不用畫地圖,直接寫規格」 closes this — record the
 - [ ] §1.5 in scope is itemized, not a single line like 「做匯入匯出功能」
 - [ ] §1.5 out of scope has at least 2 entries — the section people new to specs most often skip
 - [ ] §1.5.1 POC table exists, where this is a POC
-- [ ] Marker lifecycle done
+- [ ] No marker reached disk — `grep -n "\[需確認\|\[待拍板" 1-problem-scope.md` returns nothing
 
 Anything unconfirmed gets finished before §2 starts.
 

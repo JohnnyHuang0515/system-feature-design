@@ -94,6 +94,8 @@ Key requirements:
 
 Before finalizing, read your own plan from four angles. Revise if any angle flags issues.
 
+**Write one line per angle into `PLAN.md`, naming the answer.** The handoff may report 「clean」 only when those four lines are in the file — a verdict asserted in the message and nowhere else is a self-review that did not happen.
+
 ### 🎯 Scope
 - Bigger than needed? Speculative features, premature abstractions → cut.
 - Smaller than needed? Missing migration, tests, docs → add.

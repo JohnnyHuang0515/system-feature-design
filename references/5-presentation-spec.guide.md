@@ -241,6 +241,7 @@ Propose: 「我幫你列幾個可能的 component:[列舉]。看哪些符合你�
 - [ ] Decisions are written into the §5.8 table, with major ones escalated to ADRs (GUI)
 - [ ] Design System status is decided — reuse existing, or none yet → §5.9 prerequisite + §7 OQ (GUI)
 - [ ] The §5.9 handoff list is filled, with missing prerequisites explicitly flagged (GUI)
+- [ ] No marker reached disk — `grep -n "\[需確認\|\[待拍板" 5-presentation-spec.md` returns nothing
 
 ## Closing summary
 

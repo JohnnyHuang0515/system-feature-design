@@ -152,12 +152,13 @@ Accept the skeleton-plus-placeholder form. Inventing operational steps is worse 
 
 ## Reflection check, before the full-spec review
 
-- [ ] §9.1 rollout stages have quantified success and abort criteria
-- [ ] §9.3 observability maps to §2.2.4 NFRs
+- [ ] Every §9.1 stage has its own quantified success and abort criteria
+- [ ] Every §9.3 metric traces to a specific §2.2.4 NFR ID
 - [ ] Every §9.4 alert has a §9.5 runbook
 - [ ] §9.6 rollback triggers are quantified, not subjective
 - [ ] §9.6 rehearsal has an explicit sign-off mechanism
 - [ ] Every 「由運維補」 placeholder in a runbook names what's missing and who fills it, rather than sitting blank
+- [ ] No marker reached disk — `grep -n "\[需確認\|\[待拍板" 9-rollout.md` returns nothing
 
 ## Closing summary
 

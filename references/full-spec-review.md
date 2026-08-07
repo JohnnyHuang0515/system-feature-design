@@ -40,7 +40,7 @@ Most of Check 1 and Check 5 scans more reliably by command than by reading. Run 
 python3 <skill-path>/scripts/check-example-ids.py .
 
 # Check 5：殘留標記（結果應為空）。用 bracket pattern，避免誤命中純中文敘述與 JTBD
-grep -rn "\[需確認\|\[待拍板\|\[TBD\]" --include="*.md" .
+grep -rn "\[需確認\|\[待拍板\|\[TBD\]\|\[Open Question\]" --include="*.md" .
 
 # Check 1 續：§6.2 用到的 error code vs §6.5 catalog（兩份清單應一致）
 grep -oE "(4[0-9]{2}|500) [A-Z_]+" 6-interfaces.md | sort -u

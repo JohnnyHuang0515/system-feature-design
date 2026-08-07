@@ -135,7 +135,7 @@ Give the naming rule: UPPER_SNAKE_CASE, HTTP status plus a specific description 
 - [ ] Every endpoint's errors are registered in the §6.5 catalog
 - [ ] Every published event is listed in §3.5
 - [ ] Every external integration has timeout + retry + failure handling
-- [ ] Marker lifecycle done
+- [ ] No marker reached disk — `grep -n "\[需確認\|\[待拍板" 6-interfaces.md` returns nothing
 
 ## Closing summary
 

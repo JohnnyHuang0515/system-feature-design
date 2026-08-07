@@ -202,12 +202,12 @@ This is the best possible fuel for §0.5 sentiment. Split by segment, score sent
 
 - [ ] Every market figure carries a source or is marked `[估算]` — no bare numbers
 - [ ] §0.1 uses the right sizing mode (monetizable → TAM/SAM/SOM; internal → demand sizing)
-- [ ] §0.3 competitors list weaknesses and gaps **as well as** strengths — strengths alone isn't analysis
+- [ ] **Every** §0.3 CMP-N lists at least one weakness or gap as well as strengths — strengths alone isn't analysis
 - [ ] Every §0.4 persona has a JTBD, pains and one surprising insight, and maps to a downstream product decision
 - [ ] Every §0.6 OPP points at something actionable, not a vague 「做得更好」
-- [ ] §0.7 explicitly states which findings feed which parts of §1 and §2
+- [ ] Every §0.4 PER-N and §0.6 OPP-N named in §0.7 says which part of §1 or §2 it feeds — a blanket 「餵給 §1/§2」 covers nothing
 - [ ] Every low-confidence item is in the §0.8 to-verify list
-- [ ] Marker lifecycle done
+- [ ] No marker reached disk — `grep -n "\[需確認\|\[待拍板" 0-market-research.md` returns nothing
 
 ## Closing summary
 

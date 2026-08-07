@@ -120,6 +120,7 @@ Accept `[待拍板]`, or default to 「staging 完整驗證」 with a note that 
 - [ ] Every §2.2 NFR has an AC plus a verification level
 - [ ] Every row of the §8.6 Coverage Matrix carries a specific AC number, with no blanks
 - [ ] ACs use BDD format, and every Then clause is verifiable
+- [ ] No marker reached disk — `grep -n "\[需確認\|\[待拍板" 8-acceptance.md` returns nothing
 
 ## Closing summary
 

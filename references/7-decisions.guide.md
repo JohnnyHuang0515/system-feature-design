@@ -167,6 +167,7 @@ Accept 「先放著」 and record it in §7.2 for later, with an Owner and a Tar
 - [ ] Every open question has Owner and Target Date
 - [ ] Every §1.5.1 POC row was judged against the ADR threshold — expanded rows carry `Related ADR`, the rest carry `—`
 - [ ] §1.5.1 is propagated in sync (new ADRs checked against the table; ADR title and Decision changes reflected)
+- [ ] No marker reached disk — `grep -n "\[需確認\|\[待拍板" 7-decisions.md` returns nothing
 
 ## Closing summary
 

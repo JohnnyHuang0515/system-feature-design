@@ -36,10 +36,12 @@ If **any** of these fail, stop and surface the issue. Don't deploy past a failur
 
 After the deploy completes:
 
-- [ ] Smoke test the main user flow (login, key endpoint, etc.).
-- [ ] Check error monitoring (Sentry/Datadog/etc.) for new errors.
-- [ ] Check the deployment platform's health indicators.
-- [ ] If you deployed a migration, verify the schema is as expected.
+- [ ] Smoke test — name the endpoints you hit and paste each status code. 「試過了」 with nothing beside it is not a smoke test.
+- [ ] Error monitoring — **zero new error signatures since the deploy timestamp**. Some errors is not a passing bar; state the count and the window you looked at.
+- [ ] Platform health indicators green, named one by one.
+- [ ] Where a migration shipped, the schema diff against expected is **empty** — show it.
+
+The pre-flight list above is nearly all runnable commands; this list guards a change that is already live, so it earns the same treatment. A deploy that reports success while broken is exactly what these four are for.
 
 If something's wrong, follow the rollback procedure:
 

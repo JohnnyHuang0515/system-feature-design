@@ -125,7 +125,7 @@ Give an industry-typical value plus a reason their situation might differ, so th
 - [ ] NFRs cover Security & Authorization at minimum
 - [ ] Every other NFR category present can point at the fact that fired it — and none contradicts something the user said
 - [ ] A Priority Summary exists where FR + NFR exceeds 10
-- [ ] Marker lifecycle done
+- [ ] No marker reached disk — `grep -n "\[需確認\|\[待拍板" 2-requirements.md` returns nothing
 
 ## Closing summary
 
