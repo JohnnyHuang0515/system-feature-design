@@ -60,7 +60,7 @@ Every ticket is **HITL** — worked live with a human who speaks for themselves 
 
 | Type | Mode | For |
 |---|---|---|
-| `grilling` | HITL | The default. A decision settled by interrogation, one question at a time |
+| `grilling` | HITL | The default. A decision settled by interrogation, a round of questions at a time |
 | `research` | AFK | A fact a decision waits on, living outside this working directory — docs, a third-party API, prior art |
 | `prototype` | HITL | 「長什麼樣」/「怎麼運作」 questions that words keep failing to settle. Cheap throwaway artifact to react to |
 | `task` | either | Manual work blocking a decision — provisioning access, signing up for a service so its API can be judged, moving data so its shape is visible |

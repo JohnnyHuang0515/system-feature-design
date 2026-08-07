@@ -69,7 +69,7 @@ Eight ship on every scaffold, plus `deploy` when a deploy target is configured:
 
 | Skill | What it's for |
 |---|---|
-| `grilling` | The relentless interview, before any non-trivial change. One question at a time, each with a recommended answer; facts get looked up, decisions go to the human; nothing gets built until the whole tree is settled. Drives `domain-glossary` so the session leaves a paper trail instead of evaporating. |
+| `grilling` | The relentless interview, before any non-trivial change. Works a design tree in **rounds** — each round asks the whole frontier, every question carrying a recommended answer; facts get looked up, decisions go to the human; nothing gets built until the tree is settled. Drives `domain-glossary` so the session leaves a paper trail instead of evaporating. |
 | `diagnosing-bugs` | Six-phase discipline for hard bugs. Its whole thesis is **Phase 1 is the skill** — no red-capable feedback loop, no hypothesis. Gives 10 ranked ways to build one and refuses to proceed without a command it has already run. |
 | `domain-glossary` | Builds and sharpens `CONTEXT.md`, the project's shared language, and records hard-to-reverse decisions as ADRs. The `_Avoid_` line under each term is what stops three names for one concept. |
 | `improve-codebase-architecture` | Periodic upkeep — scans for shallow modules worth deepening, presents them as a visual HTML report with before/after diagrams and a recommendation strength, then works the one the user picks. |

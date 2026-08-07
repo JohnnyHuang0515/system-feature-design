@@ -19,13 +19,23 @@ Read `CONTEXT.md` if it exists, and the ADRs covering this area — a decision a
 
 ## The loop
 
-Interview relentlessly about every aspect of this until you reach a shared understanding. Walk down each branch of the decision tree, resolving dependencies between decisions one at a time. **Every question carries your recommended answer** — a bare question makes the human do the generating too.
+Map the work as a **design tree**: every decision branches into the decisions hanging off it. Then work the tree in **rounds**.
 
-**One question at a time**, and wait for the answer before the next. Several at once is bewildering, and the human answers the easy ones and drops the rest.
+**The frontier is every decision whose prerequisites are already settled** — the questions you can ask *now* without guessing at an answer you haven't heard. **Ask the whole frontier in one round**, numbered, each carrying your recommended answer.
 
-**A fact you can look up, you look up.** Read the code, run the query, check the config. Only put *decisions* to the human — those are theirs, and burning their attention on things you could have found yourself is what makes them stop answering.
+```
+❓ **Q1** — **<標題>**:<問題本身,可以多段,可以帶選項>
 
-**Don't act on it until they confirm you have a shared understanding.** Not a partial one — the whole tree.
+➡️ <你建議的答案,以及一句為什麼>
+```
+
+**A question whose answer depends on another question still open this round belongs to a later round.** That constraint is what makes batching safe: the round is exactly the frontier, never a convenient handful. Get it wrong and you are asking the human to answer something you don't yet have the context to have asked properly.
+
+Each round's answers reshape the tree — settled decisions push the frontier outward and unblock what depended on them. Recompute and ask the next round. **Every question carries your recommended answer**; a bare question makes the human do the generating too.
+
+**A fact you can look up, you look up** — read the code, run the query, check the config. Where finding it is slow, send it off and **keep going**: only the questions downstream of that fact wait, so ask the rest of the frontier now rather than blocking the whole round on one lookup. Only *decisions* go to the human; burning their attention on what you could have found is what makes them stop answering.
+
+**Act only once they confirm you have a shared understanding** — the whole tree, not a partial one.
 
 Ask in whatever language the user is writing in.
 
@@ -40,7 +50,7 @@ Push on the places code usually rots:
 - **Irreversibility** — anything deleting, locking, publishing, or charging
 - **Naming** — the moment two words are used for one concept, stop and settle it
 
-Each answer opens the next branch. That is the point of the tree — a question you couldn't have asked before the last answer is the sign it's working.
+Each round opens the next layer. That is the point of the tree — a question you couldn't have asked before the last round is the sign it's working.
 
 ## Leaving a paper trail
 
@@ -57,7 +67,7 @@ The payoff compounds: the next session opens with the vocabulary and the settled
 
 ## When it's done
 
-The tree is settled when **no answer you have opens a branch you haven't put to the human**, and the human says the picture matches theirs. Running out of things to ask is not the same as running out of the human's patience — if you stop early, say which branches you left unexplored rather than presenting a partial tree as a complete one.
+The tree is settled when **the frontier is empty** — no answer you hold opens a branch you haven't put to the human — and the human says the picture matches theirs. Running out of things to ask is not the same as running out of the human's patience — if you stop early, say which branches you left unexplored rather than presenting a partial tree as a complete one.
 
 Then hand off:
 
