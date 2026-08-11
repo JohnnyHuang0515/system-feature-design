@@ -175,7 +175,7 @@ POC 階段單一 service 內 feature，無跨 service 追蹤需求。
 
 **Common Causes & Actions**:
 - **ValidationService 部署有 bug**: 對照 Service 的版本，必要時 rollback
-- **使用者集中上傳異常檔案**: 可能是某個第三方工具產生不合 schema 的檔案，shrug
+- **使用者集中上傳異常檔案**: 抽樣三筆失敗檔案比對來源工具；確認是第三方匯出格式問題就通知該工具維護者，並評估是否放寬對應欄位
 - **Schema 升版了但客戶端尚未跟上**: 評估是否需 backwards compat
 
 **Escalation**: {由運維補：升級條件與對象}

@@ -12,6 +12,8 @@
 
 本 POC 是後續多個 feature 的基礎：未來的「持續性同步匯入」、「跨工作區模板引用」、「模板市集」都會基於本 schema 擴充。
 
+## 1.3 Target Users / Personas
+
 > 目標 persona 取自 §0.4 market research（PER-1~PER-3），完整研究型側寫見該節。
 
 - **PER-1 PM / 流程設計者**：建立 Automation 模板的人。目標是設計可重複使用的流程；痛點是無法把已建好的模板搬到其他工作區或分享給同事（§0.4 洞察：更怕「匯入看似成功卻漏設定」勝過直接失敗）
@@ -57,18 +59,18 @@
 
 ### 1.5.1 POC 級設計決定
 
-| 議題 | POC 決定 | 未來可能調整 |
-|---|---|---|
-| 攜帶格式 | JSON | 增加 YAML、二進位格式 |
-| 匯入來源 | 檔案上傳（.json） | 增加貼上 JSON、分享連結匯入 |
-| 執行人處理 | Placeholder（角色 / 變數），不帶具體 user_id | 增加「匯入時自動 mapping」精靈 |
-| Task 結構引用 | 內嵌完整定義（self-contained） | 改為外部引用 + 版本鎖 |
-| 模板版本 | 只匯出最新版，不帶歷史 | 增加多版本匯出 |
-| 驗證 | 匯入時做 schema 驗證 | 增加語意驗證（連線是否合理等） |
-| 加密 / 簽章 | 不做（純 JSON） | 涉及交易或跨組織分享時再評估 |
-| 系統內建模板 | RD 放 seed 資料夾，啟動時載入 | 後台管理介面、版本管理、熱度排序 |
+| 議題 | POC 決定 | 未來可能調整 | Related ADR |
+|---|---|---|---|
+| 攜帶格式 | JSON | 增加 YAML、二進位格式 | — |
+| 匯入來源 | 檔案上傳（.json） | 增加貼上 JSON、分享連結匯入 | — |
+| 執行人處理 | Placeholder（角色 / 變數），不帶具體 user_id | 增加「匯入時自動 mapping」精靈 | [D-0002](./decisions/0002-placeholder-mapping-deferred-to-editor.md) |
+| Task 結構引用 | 內嵌完整定義（self-contained） | 改為外部引用 + 版本鎖 | [D-0001](./decisions/0001-task-fields-embedded-with-future-ref.md)、[D-0007](./decisions/0007-self-contained-templates.md) |
+| 模板版本 | 只匯出最新版，不帶歷史 | 增加多版本匯出 | [D-0009](./decisions/0009-export-latest-version-only.md) |
+| 驗證 | 匯入時做 schema 驗證 | 增加語意驗證（連線是否合理等） | [D-0005](./decisions/0005-structure-validation-strictness.md) |
+| 加密 / 簽章 | 不做（純 JSON） | 涉及交易或跨組織分享時再評估 | [D-0003](./decisions/0003-no-encryption-for-poc.md) |
+| 系統內建模板 | RD 放 seed 資料夾，啟動時載入 | 後台管理介面、版本管理、熱度排序 | [D-0006](./decisions/0006-seed-templates-via-folder.md) |
 
-> 上表將於 §7 展開成正式 ADR。
+> 每一列都是 ADR 候選，不是每列都會展開 —— 門檻見 §7。已展開的列在 Related ADR 欄指向檔案，其餘留 `—`。
 
 ## 1.6 Assumptions & Constraints
 

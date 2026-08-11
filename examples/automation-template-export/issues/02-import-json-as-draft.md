@@ -11,8 +11,8 @@
 
 - [ ] AC-2.1: 成功匯入合法檔案（無同名）
 - [ ] AC-2.3: 未授權匯入
-- [ ] AC-6.1: 匯入後狀態為 Draft
-- [ ] AC-6.2: 使用者手動啟用才轉為 Active
+- [ ] AC-6.1: 匯入後預設為 Draft
+- [ ] AC-6.2: 啟用前 placeholder 軟提示
 
 ## Spec references
 

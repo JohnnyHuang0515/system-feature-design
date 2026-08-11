@@ -9,7 +9,6 @@
 | REST API | `GET /api/templates/:id/export` | Inbound | 匯出模板為 JSON |
 | Event | `TemplateImported` | Outbound | 通知 audit log |
 | Event | `TemplateExported` | Outbound | 通知 audit log |
-| Event | `TemplateActivated` | Outbound | 通知（未來擴充） |
 | Event | `SeedTemplateLoadFailed` | Outbound | RD log monitoring |
 | Internal call | `ValidationService.validate()` | Outbound | 呼叫驗證服務 |
 

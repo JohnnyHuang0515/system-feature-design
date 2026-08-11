@@ -9,8 +9,8 @@
 
 ## Acceptance criteria
 
-- [ ] AC-7.1: AI 生成內容成功寫入並為 Draft
-- [ ] AC-7.2: AI 生成不合法內容時走既有失敗流程
+- [ ] AC-7.1: AI 生成走匯入機制
+- [ ] AC-7.2: AI 生成不合法應走 AI 失敗流程
 
 ## Spec references
 

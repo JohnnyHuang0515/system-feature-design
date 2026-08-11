@@ -8,18 +8,18 @@
 
 ## Documents
 
-| # | File | What's inside |
-|---|------|---------------|
-| 0 | [market-research.md](./0-market-research.md) | 需求規模、客群分群、競品（Make/n8n/Zapier…）、研究型 persona、差異化機會 |
-| 1 | [problem-scope.md](./1-problem-scope.md) | 要解決的問題、目標使用者、成功指標、scope 邊界（POC 設計決定） |
-| 2 | [requirements.md](./2-requirements.md) | 功能需求（FR）、非功能需求（NFR）、優先級 |
-| 3 | [domain-model.md](./3-domain-model.md) | Template / Node / Connection entities、狀態機、業務規則、JSON schema |
-| 4 | [flows.md](./4-flows.md) | 匯出 / 匯入 / AI 生成 / Seed 載入的系統流程、錯誤處理、邊界情境 |
-| 5 | [presentation-spec.md](./5-presentation-spec.md) | 使用者故事、使用者流程、使用者旅程、UI 元件、頁面結構、互動體驗決策、設計交接 |
-| 6 | [interfaces.md](./6-interfaces.md) | 匯出 / 匯入 API、錯誤碼 |
-| 7 | [decisions.md](./7-decisions.md) | POC 階段的關鍵設計決策（ADR）、待決議事項 |
-| 8 | [acceptance.md](./8-acceptance.md) | 對應 FR / state / BR / error / NFR 的驗收情境 |
-| 9 | [rollout.md](./9-rollout.md) | Seed 載入、Observability、Rollback Plan（POC 階段精簡版） |
+| # | File | What's inside | 狀態 |
+|---|------|---------------|--------|
+| 0 | [market-research.md](./0-market-research.md) | 需求規模、客群分群、競品（Make/n8n/Zapier…）、研究型 persona、差異化機會 | ✅ v0.1 |
+| 1 | [problem-scope.md](./1-problem-scope.md) | 要解決的問題、目標使用者、成功指標、scope 邊界（POC 設計決定） | ✅ v0.1 |
+| 2 | [requirements.md](./2-requirements.md) | 功能需求（FR）、非功能需求（NFR）、優先級 | ✅ v0.1 |
+| 3 | [domain-model.md](./3-domain-model.md) | Template / Node / Connection entities、狀態機、業務規則、JSON schema | ✅ v0.1 |
+| 4 | [flows.md](./4-flows.md) | 匯出 / 匯入 / AI 生成 / Seed 載入的系統流程、錯誤處理、邊界情境 | ✅ v0.1 |
+| 5 | [presentation-spec.md](./5-presentation-spec.md) | 使用者故事、使用者流程、使用者旅程、UI 元件、頁面結構、互動體驗決策、設計交接 | ✅ v0.1 |
+| 6 | [interfaces.md](./6-interfaces.md) | 匯出 / 匯入 API、錯誤碼 | ✅ v0.1 |
+| 7 | [decisions.md](./7-decisions.md) | POC 階段的關鍵設計決策（ADR）、待決議事項 | ✅ v0.1 |
+| 8 | [acceptance.md](./8-acceptance.md) | 對應 FR / state / BR / error / NFR 的驗收情境 | ✅ v0.1 |
+| 9 | [rollout.md](./9-rollout.md) | Seed 載入、Observability、Rollback Plan（POC 階段精簡版） | ✅ v0.1 |
 
 ### 規格之後
 
@@ -55,7 +55,7 @@
 | UF-N | User Flow | 5-presentation-spec.md §5.3 |
 | P-N | Page / Screen | 5-presentation-spec.md §5.7 |
 | C-N | Component | 5-presentation-spec.md §5.6 |
-| T-N | Page Section | 5-presentation-spec.md §5.7 |
+| T-N | Page Section | 5-presentation-spec.md §5.7，page-local：每個 P-N 底下從 T-1 重新編 |
 | D-NNNN | Decision (ADR) | decisions/ |
 | AC-* | Acceptance Criteria | 8-acceptance.md |
 

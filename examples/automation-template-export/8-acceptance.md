@@ -152,7 +152,7 @@
 
 #### AC-6.1: 匯入後預設為 Draft
 
-**Given** 任何匯入路徑（檔案 / AI / Seed 除外）
+**Given** 使用者觸發的匯入路徑（檔案匯入 / AI 生成；Seed 載入除外，見 D-0008）
 **When** 寫入完成
 **Then**
 - Template.status = Draft
@@ -281,6 +281,24 @@
 - Template.status = Archived
 - 已執行中的 task instance 繼續跑完
 - 發出 TemplateArchived 事件
+
+#### AC-S.4: Archived → Draft（合法）
+
+**Given** Template 處於 Archived 狀態，操作者具備 admin 權限
+**When** 呼叫 `revert()`
+**Then**
+- Template.status = Draft
+- 模板重新出現在 P-1 清單的可編輯範圍
+- 不自動恢復先前暫停的 task instance
+
+#### AC-S.5: 非 admin 嘗試 Archived → Draft（違規）
+
+**Given** Template 處於 Archived 狀態，操作者不具 admin 權限
+**When** 呼叫 `revert()`
+**Then**
+- 回傳 403
+- 狀態維持 Archived
+- 不觸發任何 side effect
 
 #### AC-S.99: 所有未列出的狀態轉換皆應被拒絕
 

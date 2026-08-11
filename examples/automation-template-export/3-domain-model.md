@@ -190,6 +190,7 @@ stateDiagram-v2
 | Event | Triggered When | Payload | Consumers |
 |-------|----------------|---------|-----------|
 | TemplateImported | Template 從匯入路徑寫入成功 | template_id, workspace_id, imported_by, source (file/ai/seed) | Audit log |
+| TemplateCreated | Template 由編輯器手動建立（既有路徑，非本 feature 觸發） | template_id, workspace_id, created_by | Audit log |
 | TemplateExported | 使用者觸發匯出 | template_id, exported_by | Audit log |
 | TemplateActivated | Template Draft → Active | template_id, activated_by | （未來通知 / 搜尋索引） |
 | TemplateArchived | Template Active → Archived | template_id, archived_by | （未來通知） |

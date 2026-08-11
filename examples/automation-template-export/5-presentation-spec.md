@@ -397,8 +397,8 @@
 - 沿用既有後台 Design System（status indicator / chip / graph component token 既有）。本 feature 僅新增 `--node-canvas-bg`、`--connection-line` 兩個 token，已列於 §5.5。無前置條件缺口。
 
 **Mockup / 視覺稿**:
-- 產出方式：實作階段由前端依既有 Design System 定案；節點卡片、連線等特殊視覺已於 §5.6 給尺寸與狀態規範
-- 餵給實作 / 設計工具的輸入：§5.6 component（角色 + 狀態 + 尺寸）、§5.7 page（版面 ASCII + Key states）、§5.8 互動決策
+- 產出方式：實作階段由前端依既有 Design System 定案。節點卡片、連線的尺寸與視覺不在 §5 —— §5.6 給的是責任與行為狀態
+- 餵給實作 / 設計工具的輸入：§5.6 component（Must carry + 行為狀態）、§5.7 page（區塊責任 + 版面約束 + Key states）、§5.8 互動決策
 - 視覺以既有 Design System 為準；新增 component（節點卡片 C-1、連線 C-2）的視覺於實作階段定案後，回頭同步 §5.6
 
 **前端開工前的前置清單**:

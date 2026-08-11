@@ -10,7 +10,7 @@
 ## Acceptance criteria
 
 - [ ] AC-2.2: 匯入觸發預覽頁
-- [ ] AC-4.1: 預覽頁顯示模板資訊、縮圖與警告
+- [ ] AC-4.1: 預覽頁顯示警告區塊
 
 ## Spec references
 

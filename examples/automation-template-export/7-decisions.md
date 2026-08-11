@@ -4,7 +4,7 @@
 
 ## 7.1 Decision Index
 
-### Active Decisions
+### Accepted Decisions
 
 | ID | Title | Status | Date | Affects |
 |----|-------|--------|------|---------|

@@ -25,9 +25,11 @@ sequenceDiagram
     else 驗證通過
         T->>D: Query for duplicate name
         alt 同名存在
-            T-->>C: 200 with conflict_modal_required
-            C->>T: POST /confirm (action: overwrite/create_new)
+            T-->>C: 200 preview + conflict_modal_required
+        else 無同名
+            T-->>C: 200 preview {preview_token, warnings}
         end
+        C->>T: POST /import/confirm {preview_token, action?}
         T->>D: Begin transaction
         T->>D: Generate new IDs, insert Template (status=Draft)
         T->>D: Insert Nodes, Connections

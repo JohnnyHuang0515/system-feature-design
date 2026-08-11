@@ -9,8 +9,8 @@
 
 ## Acceptance criteria
 
-- [ ] AC-8.1: 啟動時成功載入 seed 資料夾內的模板
-- [ ] AC-8.2: 重複啟動不重複建立
+- [ ] AC-8.1: Seed 載入成功
+- [ ] AC-8.2: Seed 載入失敗 skip
 
 ## Spec references
 
