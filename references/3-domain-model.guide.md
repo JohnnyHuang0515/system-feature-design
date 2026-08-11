@@ -1,7 +1,6 @@
 # Reference Guide: 3-domain-model.md
 
 > Runs on the `Derive → Show → Verify` model in `0-skill-mode.md`. Pairs with `templates/3-domain-model.template.md`.
-> Instructions here are English; the quoted blocks are scripts spoken to the user — use them as written.
 
 ## Purpose
 
@@ -107,7 +106,7 @@ Ask 「哪些是『絕對不能違反』、哪些是『一般情況才這樣』?
 
 §3 is where the project's **ubiquitous language** is settled — entity names, the words for each state, what a business rule calls the thing it constrains. That language is worth more alive in the repo than frozen in a spec: an agent that has it names variables, functions and files consistently, navigates faster, and spends fewer tokens re-explaining the domain each session.
 
-So when the Scaffold branch runs, §3.2 entity names and §3.4 rule vocabulary seed the repo's `CONTEXT.md`, and §7's `decisions/NNNN-*.md` seed `docs/adr/`. The `domain-glossary` skill maintains them from then on.
+The Scaffold branch carries it into the repo — `references/scaffold.guide.md` says how, and from then on the repo's copies are the living ones.
 
 Two things follow for how you write §3:
 

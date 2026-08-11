@@ -1,7 +1,6 @@
 # Reference Guide: 9-rollout.md
 
 > Runs on the `Derive → Show → Verify` model in `0-skill-mode.md`. Pairs with `templates/9-rollout.template.md`.
-> Instructions here are English; the quoted blocks are scripts spoken to the user — use them as written.
 
 ## Purpose
 
@@ -47,7 +46,7 @@ A 「不做」 goes straight to the flow in `references/full-spec-review.md`.
 每一節都會留著標題,不適用的寫一行「不適用:為什麼」。
 ```
 
-> The script above says **depth**, never omission. §9.2 and §9.7 are the only two the template marks 選填; §9.1, §9.3.1–§9.3.3, §9.4, §9.5 and §9.6 all keep their heading, and a section that does not apply says so in one line. An earlier version of this script offered 「或省略」, which made a POC §9 written exactly as instructed fail its own closing bar on §9.3.1, §9.4 and §9.5.
+> The script above says **depth**. §9.2 and §9.7 are the only two the template marks 選填 — §9.1, §9.3.1–§9.3.3, §9.4, §9.5 and §9.6 keep their heading, and one that does not apply says so in a line.
 
 ## Derivation
 

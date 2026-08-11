@@ -22,17 +22,19 @@ Each spec document is claimable by one role — PM / backend / frontend / UX / Q
 
 The Spec branch earns its weight when the work spans several sessions, several roles, or several people who need the same picture.
 
----
+## Before the first reply, whichever branch
 
-# Branch: Spec
-
-## Before the first reply
-
-Read `references/0-skill-mode.md` in full. It is the working model every step below assumes: **derive vs ask**, the `[需確認]` / `[待拍板]` markers, everyday-language questioning, propagation, and the closing review.
+Read `references/0-skill-mode.md` in full. It is the working model all four branches assume: **derive vs ask**, the `[需確認]` / `[待拍板]` markers, everyday-language questioning, propagation, and the closing review. A Map derives, shows and verifies exactly as a document does.
 
 Read everything else on demand — 10 guides, 11 spec templates and a worked example ship here, and loading them upfront spends the context the work needs.
 
 **`<skill-path>` below is the directory holding this SKILL.md.** Substitute the real absolute path when you run a command; a command left with the placeholder in it runs nowhere, and every checklist that cites one then passes by default.
+
+**Create the `{feature-name}/` folder before writing anything**, kebab-case slug settled with the user. Spec documents, `map.md`, `issues/` — all of them land inside it, and whichever branch runs first is the one that creates it.
+
+---
+
+# Branch: Spec
 
 | When | Read |
 |---|---|
@@ -103,7 +105,7 @@ Then note the path and give the closing summary, and confirm the user is ready f
   {✓ 或 ✗ 那行}
 ```
 
-**The counting line is the one that cannot be written without running the script** — its numbers come from parsing this document and its template. A lone `✓`, or a Chinese sentence saying the check passed, is what a run that never happened looks like, and two of them have shipped exactly that.
+**The counting line is the one that cannot be written without running the script** — its numbers come from parsing this document against its template, and they are what makes the verdict beside them mean something.
 
 ## Documents
 
@@ -141,9 +143,7 @@ The same moment takes one more reading: **which decisions here can nobody answer
 
 ## Where files land
 
-A `{feature-name}/` folder in the user's current working directory — settle the kebab-case slug with them at the start, e.g. `template-export-import/`. `examples/automation-template-export/` shows the finished shape, and each document starts from its file in `templates/`.
-
-**Create the `{feature-name}/` folder up front** — every document lands inside it, and the README's index is only meaningful relative to it. Writing spec documents loose in the working directory is wrong even for a single-document run.
+The `{feature-name}/` folder from `Before the first reply`, in the user's current working directory — e.g. `template-export-import/`. `examples/automation-template-export/` shows the finished shape, and each document starts from its file in `templates/`.
 
 **Its subfolders grow as their contents arrive**, though: `decisions/` appears when the first ADR is written, `map/` when the Map branch charts one, `issues/` when the Tickets branch runs. An empty subdirectory named after a document that doesn't exist yet is noise the user has to interpret.
 
@@ -188,9 +188,7 @@ Cite by ID, always: `FR-3`, never "the third requirement". When a section gains 
 
 For work that **does not fit one context window** — charted as decision tickets and resolved one per session, until the way to the destination is clear and the Spec branch can run normally.
 
-**Read `references/0-skill-mode.md` and `references/map.guide.md` before either mode below.** `0-skill-mode.md` is not Spec-only: charting a map derives, shows and verifies exactly as a document does, and it needs the same markers, the same everyday-language questioning and the same decision format. Templates are `templates/map.template.md` and `templates/map-ticket.template.md`.
-
-**Create the `{feature-name}/` folder before writing anything**, the same way the Spec branch does — settle the kebab-case slug with the user first. A Map usually runs *before* any spec exists, so it is the branch that creates that folder; `map.md` sits in it and `map/` grows beneath it.
+Read `references/map.guide.md` before either mode below; templates are `templates/map.template.md` and `templates/map-ticket.template.md`. A Map usually runs before any spec exists, so it is the branch that creates `{feature-name}/` — `map.md` sits in it and `map/` grows beneath it.
 
 **The user brings you here.** 「這件事很大」、「先幫我理清楚」, or §1's fog count showing them what nobody can answer yet and what it blocks. Escalating into a heavier process is their call — §1 makes the cost visible and recommends; it doesn't switch branches on its own. `references/1-problem-scope.guide.md` carries the count.
 

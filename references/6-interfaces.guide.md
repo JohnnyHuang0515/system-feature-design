@@ -1,7 +1,6 @@
 # Reference Guide: 6-interfaces.md
 
 > Runs on the `Derive → Show → Verify` model in `0-skill-mode.md`. Pairs with `templates/6-interfaces.template.md`.
-> Instructions here are English; the quoted blocks are scripts spoken to the user — use them as written.
 
 ## Purpose
 

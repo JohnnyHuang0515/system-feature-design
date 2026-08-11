@@ -1,7 +1,6 @@
 # Full-spec review
 
 > Disclosed reference, reached only when the spec is finished. `0-skill-mode.md` points here from its closing step.
-> Instructions are English; the quoted blocks are scripts spoken to the user — use them as written.
 
 After the last document lands (§9, or §8 when §9 is skipped), **offer to run a full-spec review**.
 

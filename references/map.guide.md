@@ -1,11 +1,10 @@
 # Reference Guide: the Map branch
 
-> Instructions here are English; the quoted blocks are scripts spoken to the user — use them as written.
 > Pairs with `templates/map.template.md` and `templates/map-ticket.template.md`.
 
 ## Purpose
 
-Chart work that **does not fit one context window** as a map of decision tickets, then resolve them one per session until the way to the destination is clear.
+The branch table in `SKILL.md` says when to be here. This says how.
 
 A Map holds **questions**. It is not a plan of what to build — that is the Tickets branch, and confusing the two is the main way this goes wrong. See `Not the Tickets branch` at the bottom.
 

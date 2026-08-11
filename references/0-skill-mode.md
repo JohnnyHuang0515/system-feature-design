@@ -120,7 +120,6 @@ A bare 「我想做 X 功能」 gets caught, not returned. Fill the gap with 1�
 
 **Frontend experience** — the 前端體驗決策清單 in `5-presentation-spec.guide.md`, always run where there is a GUI.
 
-> The frontend dividing line: *which* components and pages exist is structural derivation, yours to do. What they look like, how they behave, what happens on failure is experience — you propose, the user decides. Filing all of the frontend under "structural" is how the discussion gets skipped.
 
 ## POC fast mode
 

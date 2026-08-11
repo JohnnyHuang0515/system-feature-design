@@ -1,7 +1,6 @@
 # Reference Guide: 0-market-research.md
 
 > Runs on the `Derive → Show → Verify` model in `0-skill-mode.md`. Pairs with `templates/0-market-research.template.md`.
-> Instructions here are English; the quoted blocks are scripts spoken to the user — use them as written.
 >
 > ⚠️ This document differs from the other nine in one fundamental way: **it runs on research, not on derivation from the user's description.** The others unfold from that one sentence; §0 goes out and finds data, and eats whatever data the user supplies, before synthesizing. Its core actions are **web research, data digestion, sourcing and confidence levels** — never generation from thin air.
 
@@ -138,7 +137,7 @@ Ask in everyday language, and ask them as one round — they have no prerequisit
 
 ## Display format
 
-§0 usually runs past ~150 lines (competitors, segments and personas all expanded) → apply the **large-document rule**: give **summary, open decisions and a confidence note** in conversation, write the full text to disk, have the user open the file.
+§0 usually runs past ~150 lines (competitors, segments and personas all expanded) → apply the **large-document rule** from `0-skill-mode.md`, with a confidence note alongside the summary.
 
 ### Step 1: summary
 

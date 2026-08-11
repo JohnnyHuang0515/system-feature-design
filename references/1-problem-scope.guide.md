@@ -1,7 +1,6 @@
 # Reference Guide: 1-problem-scope.md
 
 > Runs on the `Derive → Show → Verify` model in `0-skill-mode.md`. Pairs with `templates/1-problem-scope.template.md`.
-> Instructions here are English; the quoted blocks are scripts spoken to the user — use them as written.
 
 ## Purpose
 
