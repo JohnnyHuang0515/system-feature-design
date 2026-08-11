@@ -91,13 +91,19 @@ Mark what you inferred: `[需確認]` for anything the user should verify, `[待
 
 **5. Close out.** Run the guide's reflection checklist and fix what it catches, then ask the one question no per-document guide covers: **does anything here mean an earlier document needs amending?** Say so and offer the edit. Then run `Marker lifecycle` in `0-skill-mode.md` — the file you write carries no bare marker.
 
-Then note the path and give the closing summary — **its last lines are the final line of each script's output, quoted verbatim** — and confirm the user is ready for the next document.
+Then note the path and give the closing summary, and confirm the user is ready for the next document. Its last lines are **each script's counting line and its verdict line, pasted**:
 
 ```
 檢查:
-- check-sections.py:{腳本輸出的最後一行,原文貼上}
-- check-example-ids.py:{腳本輸出的最後一行,原文貼上}
+- check-sections.py
+  {N}-{name}.md: {X} numbered sections, template has {Y}
+  {✓ 或 ✗ 那行}
+- check-example-ids.py
+  defined {A}  referenced {B}  retired {C}
+  {✓ 或 ✗ 那行}
 ```
+
+**The counting line is the one that cannot be written without running the script** — its numbers come from parsing this document and its template. A lone `✓`, or a Chinese sentence saying the check passed, is what a run that never happened looks like, and two of them have shipped exactly that.
 
 ## Documents
 
@@ -180,11 +186,15 @@ Cite by ID, always: `FR-3`, never "the third requirement". When a section gains 
 
 # Branch: Map
 
-For work that **does not fit one context window** — charted as decision tickets and resolved one per session, until the way to the destination is clear and the Spec branch can run normally. Read `references/map.guide.md` before either mode below; templates are `templates/map.template.md` and `templates/map-ticket.template.md`.
+For work that **does not fit one context window** — charted as decision tickets and resolved one per session, until the way to the destination is clear and the Spec branch can run normally.
+
+**Read `references/0-skill-mode.md` and `references/map.guide.md` before either mode below.** `0-skill-mode.md` is not Spec-only: charting a map derives, shows and verifies exactly as a document does, and it needs the same markers, the same everyday-language questioning and the same decision format. Templates are `templates/map.template.md` and `templates/map-ticket.template.md`.
+
+**Create the `{feature-name}/` folder before writing anything**, the same way the Spec branch does — settle the kebab-case slug with the user first. A Map usually runs *before* any spec exists, so it is the branch that creates that folder; `map.md` sits in it and `map/` grows beneath it.
 
 **The user brings you here.** 「這件事很大」、「先幫我理清楚」, or §1's fog count showing them what nobody can answer yet and what it blocks. Escalating into a heavier process is their call — §1 makes the cost visible and recommends; it doesn't switch branches on its own. `references/1-problem-scope.guide.md` carries the count.
 
-**Two modes — `chart` and `work through`.** The guide carries both, and the rules that keep them honest: every ticket resolves a decision rather than delivering one, one ticket per session, and a HITL ticket only resolves through live exchange with the human.
+**Two modes — `chart` and `work through`.** The guide carries both, and the rules that keep them honest: every ticket resolves a decision rather than delivering one, one ticket per session (research tickets excepted — they return facts, not decisions), and a HITL ticket only resolves through live exchange with the human.
 
 Map items are **questions** and land in `map/`; Tickets items are **slices** and land in `issues/`. Both have blocking edges and a frontier, which is why they get confused — the Map's frontier is what can be **decided** now, the Tickets frontier is what can be **built** now. A Map never writes into `issues/`.
 

@@ -72,8 +72,8 @@ stateDiagram-v2
 
 ## 3.5 Domain Events
 
-> 選填。純 CRUD 的小 feature 可省。
-> 有跨 context 互動或未來預期擴充通知 / 整合的 feature 必填。
+> 有跨 context 互動、或未來預期擴充通知 / 整合的 feature 必填。
+> 純 CRUD 的小 feature 寫一行「不適用：{為什麼}」，不要整節刪掉。
 >
 > **本節列出 context 內所有有意義的事件**（含對內、對外）。
 > 對外發布的事件契約細節另見 6.4.1。

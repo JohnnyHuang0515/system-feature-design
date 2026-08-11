@@ -249,7 +249,7 @@ A written document may only carry references pointing at §7.2 open questions. C
 
 ## The closing bar
 
-Every guide ends on the same three commands, run from inside the spec folder, **printed as they printed**. Each `✗` names its own fix. One you are leaving in place is the user's call — put it in front of them rather than filing it away in a report.
+Every guide ends on the same three commands, run from inside the spec folder. Paste each script's **counting line** along with its verdict, in the shape `SKILL.md` step 5 gives — the counts are what a run produces and a paraphrase cannot. Each `✗` names its own fix. One you are leaving in place is the user's call — put it in front of them rather than filing it away in a report.
 
 ## Amending earlier documents
 

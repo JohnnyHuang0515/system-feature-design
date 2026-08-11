@@ -131,7 +131,7 @@ Both carry blocking edges and a frontier, which is exactly why they get confused
 | Its frontier is | what can be **decided** now | what can be **built** now |
 | Resolving it produces | a decision | working software |
 | Lands in | `map/` | `issues/` |
-| Per session | one ticket | one slice, fresh window |
+| Per session | one ticket, research excepted | one slice, fresh window |
 
 **A Map never writes into `issues/`.** A resuming session that finds questions in the slice graph reads the wrong picture of what's buildable.
 

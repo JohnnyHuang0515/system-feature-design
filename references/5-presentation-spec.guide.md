@@ -167,8 +167,8 @@ For GUI: user stories first (fast), then user flows (medium), then the user jour
 ### Step 4: the decisions, led by the frontend checklist
 
 ```
-前端體驗有 5 個維度需要你拍板,每個我都先給建議。
-不適用的 3 個列在最後。
+前端體驗有 {N} 個維度需要你拍板,每個我都先給建議。
+不適用的 {M} 個列在最後。
 
 1. 進入點:建議放在模板列表頁的「建立」選單裡,不另開側欄項目。
 2. 容器形式:匯入預覽建議獨立頁(P-5),不是 Modal。

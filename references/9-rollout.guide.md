@@ -33,19 +33,21 @@ A 「不做」 goes straight to the flow in `references/full-spec-review.md`.
 ```
 進入第九份(最後一份):上線與運維。
 
-最小必寫集合(POC 可以只寫這三節,而且只寫 §9.3.2 logs + §9.6 Level 1):
+寫得最深的三節(POC 可以只到 §9.3.2 logs + §9.6 Level 1 的深度):
 - §9.1 Rollout Strategy
 - §9.3 Observability
 - §9.6 Rollback Plan
 
-其餘節依需求填:
+其餘節看你的情況決定寫多細:
 - §9.2 Migration / Seed - 有資料遷移時必寫
 - §9.4 Alerting - 寫了 observability 通常一起寫
 - §9.5 Runbook - 有 alert 時必寫(本 spec 階段提供骨架 + 「由運維補」佔位)
 - §9.7 Post-Launch Review - 有 success metrics 時建議
 
-我會推導所有節,沒適用的標 「[不適用]」 或省略。
+每一節都會留著標題,不適用的寫一行「不適用:為什麼」。
 ```
+
+> The script above says **depth**, never omission. §9.2 and §9.7 are the only two the template marks 選填; §9.1, §9.3.1–§9.3.3, §9.4, §9.5 and §9.6 all keep their heading, and a section that does not apply says so in one line. An earlier version of this script offered 「或省略」, which made a POC §9 written exactly as instructed fail its own closing bar on §9.3.1, §9.4 and §9.5.
 
 ## Derivation
 

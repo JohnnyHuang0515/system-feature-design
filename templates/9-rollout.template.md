@@ -93,7 +93,7 @@
 
 ### 9.3.3 Tracing
 
-> 選填。單一 service 內 feature 可省。跨 3+ service 必寫。
+> 跨 3+ service 必寫。單一 service 內的 feature 寫一行「不適用：單一 service」。
 
 - **追蹤鏈**: {Service A → Service B → ...}
 - **Trace propagation**: {方式，例：W3C Trace Context}

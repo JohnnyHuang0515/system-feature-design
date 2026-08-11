@@ -178,7 +178,7 @@
 
 ## 6.6 Versioning & Compatibility
 
-> 選填：純內部 API、或 feature 是現有 API 的小增量，可寫一行「沿用既有 versioning 策略」。
+> 純內部 API、或現有 API 的小增量，寫一行「沿用既有 versioning 策略」即可——留著這一節，不要刪。
 
 - **Version scheme**: {URL path versioning / Header versioning}
 - **Backwards compatibility rules**:
