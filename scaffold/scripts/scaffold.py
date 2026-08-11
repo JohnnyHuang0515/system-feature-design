@@ -308,10 +308,20 @@ def update_gitignore(
 
     # Per entry, not per block. A repo that already ignores CLAUDE.local.md on its
     # own would otherwise skip the whole block and never ignore settings.local.json.
+    #
+    # Compare against *rule lines*, not `existing.split()`. Splitting on whitespace
+    # turns every word of every comment into a token, so a repo whose .gitignore says
+    # `# CLAUDE.local.md stays local` was read as already ignoring it — the file then
+    # shipped un-ignored while the run reported it ignored.
+    already = {
+        l.strip() for l in existing.splitlines()
+        if l.strip() and not l.lstrip().startswith("#")
+    }
+
     def missing(block: str) -> str:
         wanted = [
             l for l in block.splitlines()
-            if l.strip() and not l.startswith("#") and l.strip() not in existing.split()
+            if l.strip() and not l.startswith("#") and l.strip() not in already
         ]
         if not wanted:
             return ""
@@ -491,6 +501,28 @@ def scaffold(
         log("", "info")
         log("The files were still written, but you should review and fix these.", "warn")
         raise SystemExit(1)
+
+    # 10. Name what an earlier run left behind.
+    #
+    # `--force` overwrites; it never deletes. Re-scaffolding a Rust project over an
+    # earlier Python + Go + TypeScript one leaves those style rules sitting beside a
+    # CLAUDE.md that no longer mentions them, and re-scaffolding without the pipeline
+    # leaves all five agent files next to a CLAUDE.md saying there is no pipeline.
+    # Deleting is not this script's call — a repo's `.claude/` also holds work the
+    # user put there. Naming it is.
+    if not dry_run:
+        wrote = {dst.resolve() for _, dst in jobs}
+        stale = sorted(
+            p for d in ("rules", "skills", "agents", "references")
+            for p in (target / ".claude" / d).rglob("*.md")
+            if p.resolve() not in wrote
+        )
+        if stale:
+            log("", "info")
+            log(f"{len(stale)} file(s) here are from an earlier run, not this one:", "warn")
+            for p in stale:
+                log(f"  {p.relative_to(target)}", "warn")
+            log("This config did not ask for them. Delete what no longer applies.", "warn")
 
     log("", "info")
     log(f"Scaffolding complete. Files written under: {target}", "ok")

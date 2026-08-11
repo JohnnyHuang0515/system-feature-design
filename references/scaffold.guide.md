@@ -53,6 +53,7 @@ Two of the rows below offer a choice between registering a template as live and 
 | Config missing required fields | A required key is absent from the JSON. Add it and re-run. |
 | Skill templates nothing ships | A `.md` sits at the top of `templates/skills/` that no config path emits. Add it to the shipped list, or move it to `in-progress/`. |
 | `X` is in skills/in-progress/ but the scaffold still ships it | The folder and the shipped list disagree. Pick one. |
+| `X` is in skills/deprecated/ but the scaffold still ships it | Same disagreement, retired end. `RETIRED_DIRS` covers both folders, so this message has the same two exits as the row above. |
 
 ## Anatomy of the output
 
