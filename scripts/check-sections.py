@@ -53,6 +53,39 @@ OPTIONAL_NOTE = re.compile(r"^>?\s*(?:選填|Optional)\b|^>?\s*選填[。，：:
 
 DOC = re.compile(r"^(\d+)-")
 
+# Two sections are marked 選填 with a condition attached — 「FR + NFR 合計 > 10 條」.
+# The optional regexes read only the 選填 half, so the condition was unenforceable and
+# a 20-FR spec could drop both summary views and exit 0. This counts the gate.
+#
+# Every other conditional section (§1.5.1 POC, §3.5 events, §6.6 versioning, §9.3.3
+# tracing) turns on a judgment no script can make, so those keep their heading and
+# say 「不適用 + 原因」 instead of being droppable — the convention SKILL.md already sets.
+GATED_ON_ITEM_COUNT = {"2.4", "8.6"}
+ITEM_COUNT_GATE = 10
+ITEM_DEF = re.compile(r"^[#|*\-> ]*\**((?:FR|NFR)-\d+)\b")
+
+
+def item_count(folder: pathlib.Path) -> int | None:
+    """FR + NFR defined in this spec, or None when §2 is not on disk to count.
+
+    None means the gate cannot be evaluated — checking a single file rather than the
+    folder. The closing bar runs `check-sections.py .`, so the folder is the norm.
+    """
+    reqs = folder / "2-requirements.md"
+    if not reqs.is_file():
+        return None
+    found = set()
+    fenced = False
+    for line in reqs.read_text(encoding="utf-8").split("\n"):
+        if FENCE.match(line):
+            fenced = not fenced
+            continue
+        m = ITEM_DEF.match(line)
+        if m and not fenced:
+            found.add(m.group(1))
+    return len(found)
+
+
 # §5.4–5.9 describe a graphical interface. Where §5.1 selected something else,
 # they are not omissions — full-spec-review skips them for the same reason.
 GUI_ONLY = {"5.4", "5.5", "5.6", "5.7", "5.8", "5.9"}
@@ -110,6 +143,44 @@ def spine(text: str, doc: str) -> tuple[list[str], dict[str, str], dict[str, str
     return order, titles, notes, dupes
 
 
+# A `{...}` slot the template ships for the author to replace. Surviving into a
+# written document, it is the loudest possible sign the section was never filled —
+# and the quietest to every other check: an `8-acceptance.md` that was a byte-for-byte
+# copy of its template, twelve literal `...` bodies and not one real criterion,
+# satisfied every FR / BR / EF / EC / NFR → AC chain and exited 0, because the
+# template ships those chains' own `### FR-1:` headings prefilled.
+PLACEHOLDER = re.compile(r"\{[^{}\n]{1,60}\}")
+
+# `{由運維補：…}` is the one slot instructed to survive — §9.5 runbooks ship as a
+# skeleton whose escalation steps need real operational knowledge, and leaving the
+# gap visible beats inventing it. 9-rollout.guide.md says so explicitly.
+PLACEHOLDER_BY_DESIGN = re.compile(r"由運維補|由維運補")
+
+# `{N}` inside `已有 {N} 個未指派` is a runtime interpolation slot in UI copy, not an
+# unfilled field. Code spans and fences are where that copy lives, so read neither.
+CODE_SPAN = re.compile(r"`[^`\n]*`")
+
+
+def unfilled(text: str, template_text: str) -> list[tuple[int, str]]:
+    """Placeholders this document inherited from its template and never replaced."""
+    slots = set(PLACEHOLDER.findall(template_text))
+    if not slots:
+        return []
+    out = []
+    fenced = False
+    for i, line in enumerate(text.split("\n"), 1):
+        if FENCE.match(line):
+            fenced = not fenced
+            continue
+        if fenced:
+            continue
+        for m in PLACEHOLDER.finditer(CODE_SPAN.sub("", line)):
+            tok = m.group(0)
+            if tok in slots and not PLACEHOLDER_BY_DESIGN.search(tok):
+                out.append((i, tok))
+    return out
+
+
 def template_for(path: pathlib.Path, templates: pathlib.Path) -> pathlib.Path | None:
     m = DOC.match(path.name)
     if not m:
@@ -150,6 +221,10 @@ def check(path: pathlib.Path, templates: pathlib.Path) -> tuple[bool, list[str]]
         """
         if not gui and number in GUI_ONLY:
             return True
+        if number in GATED_ON_ITEM_COUNT:
+            n = item_count(path.parent)
+            if n is not None and n > ITEM_COUNT_GATE:
+                return False
         parts = number.split(".")
         return any(
             OPTIONAL_HEADING.search(want_titles.get(anc, ""))
@@ -178,9 +253,14 @@ def check(path: pathlib.Path, templates: pathlib.Path) -> tuple[bool, list[str]]
         out.append(
             f"  ✗ §{n} {title} — §{n} already has a heading. One number, one section"
         )
-    if not extra and not missing and not got_dupes:
+    left = unfilled(text, tpl.read_text(encoding="utf-8"))
+    for line_no, tok in left[:8]:
+        out.append(f"  ✗ line {line_no}: {tok} — still the template's placeholder")
+    if len(left) > 8:
+        out.append(f"  ✗ … and {len(left) - 8} more placeholders never filled in")
+    if not extra and not missing and not got_dupes and not left:
         out.append("  ✓ matches the template")
-    return bool(extra or missing or got_dupes), out
+    return bool(extra or missing or got_dupes or left), out
 
 
 def version(number: str) -> tuple[int, ...]:

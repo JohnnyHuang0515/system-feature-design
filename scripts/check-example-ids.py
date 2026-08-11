@@ -221,6 +221,10 @@ def chain_gaps(files: dict[str, str], defined: set[str], retired: set[str]) -> l
             target = section(target, target_section)
             if not target:
                 continue
+        # Deliberately NOT exclude_definitions: in §8 a `### FR-3:` heading is how an
+        # FR legitimately gets picked up — it groups that FR's ACs. The template-copy
+        # hole this appears to leave is closed in check-sections.py instead, by
+        # failing any document still carrying its template's placeholders.
         picked_up = {i for i in references(target) if i.startswith(prefix + "-")}
         mine = {
             i
