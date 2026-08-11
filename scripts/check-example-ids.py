@@ -37,10 +37,21 @@ OWNER = {
     "UF": "5-presentation-spec.md",
     "C": "5-presentation-spec.md",
     "P": "5-presentation-spec.md",
-    "T": "5-presentation-spec.md",
 }
 
-REF = re.compile(r"\b(MS|CMP|PER|OPP|FR|NFR|BR|SF|EF|EC|UF|C|P|T)-(\d+)\b|\b(D)-(\d{4})\b")
+# §5.7's T-N is **page-local** — every page starts again at T-1, so there is no
+# global T-3 to resolve. Owning it here only appeared to work because the
+# template's bullet layout (`- **T-1 …**`) reads as a definition; write the same
+# page in a table and every T-N dangles against a document that is perfectly fine.
+REF = re.compile(r"\b(MS|CMP|PER|OPP|FR|NFR|BR|SF|EF|EC|UF|C|P)-(\d+)\b|\b(D)-(\d{4})\b")
+
+# `AC-N.M` is dotted, so it needs its own pattern — and it needs one, because a
+# ticket's cited ACs are its entire verification surface. Left out, a ticket could
+# cite `AC-99.9` and the checker would call the spec clean.
+AC_OWNER = "8-acceptance.md"
+# §8.2 numbers state ACs `AC-S.N`, so the segment is alphanumeric, not just digits.
+AC_REF = re.compile(r"\bAC-([A-Z0-9]+\.\d+)\b")
+AC_DEF = re.compile(r"^[#|*\-> ]*\**AC-([A-Z0-9]+\.\d+)\b")
 
 # An ID is defined where it opens a heading, a table row, or a bold label —
 # the conventions the templates use.
@@ -49,6 +60,22 @@ DEF_AT_LINE_START = r"^[#|*\-> ]*\**{pfx}-0*{num}\b"
 # A retired ID is declared, not defined: the number stays reserved so it is
 # never reused, and references to the declaration are legitimate.
 RETIRED_HINT = re.compile(r"保留不重用|retired|not reused", re.I)
+
+# A fenced block is example text, not the document speaking. Reading it let a line
+# inside a ```block``` stand in as a definition — §4 could cite `UF-3` that exists
+# nowhere but a display-format example, and every reference still "resolved".
+FENCE = re.compile(r"^\s*(?:```|~~~)")
+
+
+def unfenced(text: str):
+    """The document's own lines, with fenced blocks dropped."""
+    fenced = False
+    for line in text.split("\n"):
+        if FENCE.match(line):
+            fenced = not fenced
+            continue
+        if not fenced:
+            yield line
 
 # Prose that explains the notation cites IDs illustratively — 「後面的文件會引用
 # 前面的 ID（如 FR-3、SF-1）」 names no real FR-3. Treat such a line as notation,
@@ -91,16 +118,38 @@ def collect(root: pathlib.Path) -> tuple[dict[str, str], set[str]]:
     return files, adrs
 
 
-def references(text: str) -> set[str]:
+def is_definition_line(line: str, prefix: str, num: str) -> bool:
+    if prefix == "AC":
+        return bool(AC_DEF.match(line))
+    return bool(re.match(DEF_AT_LINE_START.format(pfx=prefix, num=num), line))
+
+
+def references(text: str, exclude_definitions: bool = False) -> set[str]:
+    """IDs this text cites.
+
+    `exclude_definitions` drops the ID's own defining line — `### UF-2: 匯出模板`
+    cites nothing, it declares. Counting it as a citation is what made the orphan
+    pass unfireable: every defined ID appeared in `referenced` by construction, so
+    `defined - referenced` was empty no matter how orphaned the ID really was.
+    """
     out = set()
-    for line in text.split("\n"):
+    for line in unfenced(text):
         if ILLUSTRATIVE.search(line):
             continue
+        if exclude_definitions:
+            defines = AC_DEF.match(line) or any(
+                m.group(1) and is_definition_line(line, m.group(1), m.group(2))
+                for m in REF.finditer(line)
+            )
+            if defines:
+                continue
         for m in REF.finditer(line):
             if m.group(1):
                 out.add(f"{m.group(1)}-{int(m.group(2))}")
             else:
                 out.add(f"D-{m.group(4)}")
+        for m in AC_REF.finditer(line):
+            out.add(f"AC-{m.group(1)}")
         for m in RANGE.finditer(line):
             prefix, lo, hi = m.group(1), int(m.group(2)), int(m.group(3))
             if prefix in OWNER and lo < hi <= lo + 50:
@@ -110,18 +159,29 @@ def references(text: str) -> set[str]:
 
 def definitions(files: dict[str, str], adrs: set[str]) -> tuple[set[str], set[str]]:
     defined = set(adrs)
-    retired = set()
+    mentioned_as_retired = set()
     for prefix, owner in OWNER.items():
         text = files.get(owner)
         if not text:
             continue
-        for line in text.split("\n"):
+        for line in unfenced(text):
             for m in re.finditer(rf"\b{prefix}-(\d+)\b", line):
                 ident = f"{prefix}-{int(m.group(1))}"
-                if re.match(DEF_AT_LINE_START.format(pfx=prefix, num=m.group(1)), line):
+                if is_definition_line(line, prefix, m.group(1)):
                     defined.add(ident)
                 elif RETIRED_HINT.search(line):
-                    retired.add(ident)
+                    mentioned_as_retired.add(ident)
+
+    for line in unfenced(files.get(AC_OWNER, "")):
+        m = AC_DEF.match(line)
+        if m:
+            defined.add(f"AC-{m.group(1)}")
+
+    # A retirement note names two IDs — the one withdrawn and the one it merged
+    # into: 「P-4 已於設計過程中併入 P-3，編號保留不重用」. Only P-4 is retired.
+    # Sweeping both in excused the live one from every coverage chain, silently,
+    # for as long as the note existed. An ID with a definition line is alive.
+    retired = mentioned_as_retired - defined
     return defined, retired
 
 
@@ -195,14 +255,23 @@ def main() -> int:
 
     defined, retired = definitions(files, adrs)
     referenced: dict[str, set[str]] = collections.defaultdict(set)
+    cited: set[str] = set()
     for name, text in files.items():
         for ident in references(text):
             referenced[ident].add(name)
+        cited |= references(text, exclude_definitions=True)
 
     dangling = {
         i: s for i, s in referenced.items() if i not in defined and i not in retired
     }
-    orphans = sorted(defined - set(referenced) - adrs)
+    # Two prefixes are terminal by design. `CMP-N` is research context shaping §0.6,
+    # not something later documents cite. `AC-*` is the end of every chain — the
+    # coverage that matters (FR/NFR/BR/EF/EC → AC) is already enforced above, from
+    # the other direction, and an AC no ticket happens to cite is normal.
+    orphans = sorted(
+        i for i in defined - cited - adrs
+        if not i.startswith(("CMP-", "AC-"))
+    )
 
     lines = sum(len(t.splitlines()) for t in files.values())
     print(f"{root}: {len(files)} files, {lines} lines, {len(adrs)} ADRs")
