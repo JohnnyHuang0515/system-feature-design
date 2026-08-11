@@ -34,6 +34,10 @@ Preconditions:
 
 Most of Check 1 and Check 5 scans more reliably by command than by reading. Run these first:
 
+> The same three run at every document's close, so a spec written straight through arrives with them green. Re-run them anyway — a late back-edit can break what an earlier close proved. This review's own weight is in Checks 2 and 4, the cross-document reading no script does.
+
+Run all of these **from inside the spec folder** — every one of them takes `.` or a bare filename.
+
 ```bash
 # Check 1：跨文件 ID 解析。掃完整份 spec（含 issues/ 與 decisions/），
 # 列出「被引用但沒定義」的 ID。乾淨時 exit 0。
@@ -42,12 +46,15 @@ python3 <skill-path>/scripts/check-example-ids.py .
 # Check 5：殘留標記（結果應為空）。用 bracket pattern，避免誤命中純中文敘述與 JTBD
 grep -rn "\[需確認\|\[待拍板\|\[TBD\]\|\[Open Question\]" --include="*.md" .
 
+# 章節結構 vs 模板。✗ = 多長的、少掉的、或兩個標題搶同一個編號
+python3 <skill-path>/scripts/check-sections.py .
+
 # Check 1 續：§6.2 用到的 error code vs §6.5 catalog（兩份清單應一致）
 grep -oE "(4[0-9]{2}|500) [A-Z_]+" 6-interfaces.md | sort -u
 grep -oE "\| (4[0-9]{2}|500) \| [A-Z_]+" 6-interfaces.md | sort -u
 ```
 
-The ID script does the bulk of Check 1 better than reading can — it knows which document owns each prefix, treats a retired ID (`編號保留不重用`) as declared rather than missing, and skips IDs cited illustratively in prose about the notation. It also reports IDs **defined but never referenced**, which is Check 3's orphan pass. Read its output before starting Check 1 by eye; whatever it clears, you don't re-check.
+The ID script does the bulk of Checks 1–3 better than reading can — it knows which document owns each prefix, treats a retired ID (`編號保留不重用`) as declared rather than missing, skips IDs cited illustratively in prose about the notation, reports IDs **defined but never referenced**, and walks the FR / NFR / BR / EF / EC → AC chains. Read its output first; what remains by eye is the short list below.
 
 ⚠️ Traps:
 
@@ -55,54 +62,30 @@ The ID script does the bulk of Check 1 better than reading can — it knows whic
 - Leftover markers **must be matched with the bracket pattern** (`\[需確認`). Bare `TBD` collides with **JTBD**, which appears throughout §0 and personas; bare `需確認` collides with ordinary prose like 「…前需確認」. A `JTBD` hit or a prose hit is not a leftover marker.
 - §0's `[估算]` / `[來源]` / confidence levels are **permanent annotations** (sourcing discipline), not leftover markers.
 
-With the mechanical pass done, spend your attention on what a machine can't do — Check 4 conceptual consistency and Check 2 coverage semantics.
+With the mechanical pass done, spend your attention on what a machine can't do — Check 4 conceptual consistency above all.
 
-#### Check 1: cross-document ID references
+#### Checks 1–3: what the script cannot see
 
-Scan every numbered usage and confirm it resolves:
+Every prefixed ID — PER / OPP / MS / FR / NFR / BR / SF / EF / EC / UF / C / P / D / AC — resolved, chained and orphan-checked in Check 0. These are the references it has no prefix to grip:
 
-- PER-N cited by §1.3 personas (where §0 ran) → exists in §0.4
-- PER-N / OPP-N / MS-N cited by the §0.7 Implications table → exists
-- OPP-N cited by §2 FR priorities or §1.4 → exists in §0.6
-- The Persona column of §2.1 FRs → maps to a persona listed in §1.3
-- §3.2 entity references → all exist
-- The Scope column of §3.4 BRs → maps to a real entity
-- Related FR of §4.1 SFs → FR-N exists
-- Related UF of §4.1 SFs → UF-N exists in §5.3
-- "Triggers in" of §4.2 EFs → the SF step exists
-- UF-N / P-N cited by §5.4 user journey stages → exist
-- "Used in" of §5.6 components → P-N exists in §5.7
-- "Entry from" of §5.7 pages → UF-N exists
-- Related FR of §6.2 endpoints → FR-N exists
-- Errors of §6.2 endpoints → the error code is registered in the §6.5 catalog
-- §6.4.1 published events → listed in §3.5
-- The Affects column of §7 ADRs → correct
-- Every §8 AC's FR / state / BR / EF / EC / NFR → exists
+- §3.2 entity references, and the Scope column of §3.4 BRs → a real entity
+- The Persona column of §2.1 FRs → a persona listed in §1.3. Where §0 ran these are `PER-N` and Check 0 has them; where it didn't, they are bare names with no prefix to resolve, and this is the only pass that sees them
+- "Triggers in" of §4.2 EFs → the SF **step** exists
+- Errors of §6.2 endpoints → registered in the §6.5 catalog, and every §6.5 code is used by at least one endpoint
+- §6.4.1 published events → listed in §3.5, and every §3.5 event has a producer and a (potential) consumer
+- The Affects column of §7 ADRs → every §X.Y exists, **and that section's text is consistent with the decision**
 - Every reference to §9 → §9 exists (rewritten or removed if §9 was skipped)
+- Every §3.2 entity is used by at least one FR / SF / API
 
-#### Check 2: required coverage
+And the coverage the chains don't express:
 
-- Every FR has an AC (§8.1)
 - Every state transition has both a legal and a violation AC (§8.2); where no interface can trigger the violation, an explicit 「不適用 + 原因」 note
-- Every BR has an AC or a reference (§8.3)
-- Every EF and EC has an AC (§8.4)
-- Every NFR has an AC (§8.5)
-- Every component a page uses is defined in §5.6
 - Every dimension of the §5.8 interaction decision table has a decision (or 「N/A + 原因」), and major decisions have an ADR
 - Where §5.9 Design System reads 「尚無」, §7 carries a matching OQ or ADR with Owner and Target Date
 - Every §6.2 endpoint has at least one happy path plus its error responses
 - Every §9.4 alert has a §9.5 runbook
-
-#### Check 3: orphans
-
-Scan in reverse for anything defined but never used:
-
 - Every §0.4 PER-N (where §0 ran) is adopted by §1.3, or explicitly noted as researched but out of this feature's target
 - Every §0.6 OPP-N flows into §0.7 or §2 — an opportunity that feeds nothing was wasted work
-- Every §3.2 entity is used by at least one FR / SF / API
-- Every §5.6 component appears on at least one page
-- Every §6.5 error code is used by at least one endpoint
-- Every §3.5 domain event has a producer and a (potential) consumer
 
 #### Check 4: conceptual consistency
 
@@ -156,5 +139,5 @@ Deliver the finished spec with:
 
 - The spec's file tree
 - A one-line summary per document
-- A suggested role-to-section map (PM / backend / frontend / QA / SRE)
+- A suggested role-to-section map (PM / backend / frontend / UX / QA / SRE) — UX takes §5.4 journey and §5.9 handoff, which no other role reads
 - An invitation: 「未來如果想跑總 review，隨時告訴我」

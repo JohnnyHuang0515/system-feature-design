@@ -32,10 +32,13 @@ Read `references/0-skill-mode.md` in full. It is the working model every step be
 
 Read everything else on demand — 10 guides, 11 spec templates and a worked example ship here, and loading them upfront spends the context the work needs.
 
+**`<skill-path>` below is the directory holding this SKILL.md.** Substitute the real absolute path when you run a command; a command left with the placeholder in it runs nowhere, and every checklist that cites one then passes by default.
+
 | When | Read |
 |---|---|
-| starting document N — **before writing a word of it** | `references/{N}-*.guide.md` + `templates/{N}-*.template.md`. The guide holds that document's **gates**, not only its shape: what has to be counted, what closes a row, what the close checks. A document written without opening its guide reads finished and is missing the checks that would have caught it |
+| starting document N — **before writing a word of it** | `references/{N}-*.guide.md` + `templates/{N}-*.template.md`. The guide holds that document's derivation table, required questions, display format, stuck points, reflection checklist and closing summary — and its **gates**, not only its shape: what has to be counted, what closes a row, what the close checks. A document written without opening its guide reads finished and is missing the checks that would have caught it |
 | checking your own spec's IDs resolve | run `python3 <skill-path>/scripts/check-example-ids.py <spec-folder>` — it reports dangling IDs and broken coverage chains |
+| checking a document kept the template's shape | run `python3 <skill-path>/scripts/check-sections.py <file-or-spec-folder>` — it fails on a section the template lacks, a non-optional one dropped, or two headings at one number. |
 | wanting to see what a finished chain looks like | the matching file under `examples/automation-template-export/` — read it for shape, never to source content |
 
 ## Opening
@@ -64,13 +67,21 @@ Implementation is the opposite: each ticket starts in a **fresh** window, workin
 
 Documents go in order, §0 through §9, because each one references the last. For each:
 
-**1. Read** `references/{N}-*.guide.md` and `templates/{N}-*.template.md`. The guide carries that document's derivation table, required questions, OQ candidates, display format, stuck points, reflection checklist and closing summary. (§7 and §8 are consolidation stages — they route open questions rather than raise new ones.)
+**1. Read** the guide and the template, per the table above. (§7 and §8 are consolidation stages — they route open questions rather than raise new ones.)
 
-**2. Derive** from the user's description, the documents already on disk, and the guide's derivation table. Structure is yours to derive; business and context decisions are the user's to make.
+**2. Copy the template in, then fill it.** Before deriving a word:
+
+```bash
+cp <skill-path>/templates/{N}-{name}.template.md {feature-name}/{N}-{name}.md
+```
+
+Fill each numbered section where it already sits — the numbering is what every `§X.Y` reference and both scripts resolve against. The items you author — endpoints, `SF-N`, ADR rows, ACs — get **unnumbered** headings underneath the section that owns them (`### POST /api/templates/import`, `#### AC-1.1:`), exactly as the copy already shows you. A section that genuinely does not apply keeps its heading with 「不適用 + 原因」 beneath it.
+
+Then **derive** from the user's description, the documents already on disk, and the guide's derivation table. Structure is yours to derive; business and context decisions are the user's to make.
 
 > **§0 inverts this.** It is research-driven: `WebSearch` / `WebFetch` the market and competitors, `Read` any data the user supplies. State the research plan in one line and take the single direction-confirm (`Direction check before the run`), then run to completion uninterrupted. Every figure and competitor fact carries a source and a confidence level. See `references/0-market-research.guide.md`.
 
-If §1 established this is a **POC / side project**, apply `POC fast mode` from `0-skill-mode.md`: auto-apply low-risk recommendations in a one-line announcement, and hard-stop only on irreversible, money-direction, or data-model-shaping forks. Target ≤5–8 hard stops for the whole session.
+If §1 established this is a **POC / side project**, apply `POC fast mode` from `0-skill-mode.md` — it holds the four classes of fork that still stop the user, and the budget.
 
 Mark what you inferred: `[需確認]` for anything the user should verify, `[待拍板]` for a live fork — and a `[待拍板]` always ships with options (a)(b)(c) plus your recommended direction. Where you can neither derive nor form options, ask for context.
 
@@ -78,9 +89,15 @@ Mark what you inferred: `[需確認]` for anything the user should verify, `[待
 
 **4. Iterate** on the feedback: confirm / small fix / major change / back-edit / more detail, each patterned in `0-skill-mode.md`. A back-edit to an earlier document triggers a downstream propagation scan — surface what it touches and ask before syncing.
 
-**5. Close out.** Run the guide's reflection checklist and fix what it catches, then ask the one question no per-document guide covers: **does anything here mean an earlier document needs amending?** Say so and offer the edit. Then run the marker lifecycle, and treat its outcome as an invariant: **a file on disk carries no bare `[需確認]` or `[待拍板]`.** Every marker leaves by one of exactly two doors — deleted, because the user confirmed the item; or converted into a §7.2 Open Question with a `D-NNNN` reference left in its place, because they deferred it. An item that is neither confirmed nor deferred is not ready to be written, so resolve it before writing rather than shipping the marker. Markers live in the conversation only; §7.2 is the one place an unresolved item persists, and nothing — the README included — becomes a second parking spot for them. (`Marker lifecycle` in `0-skill-mode.md`.)
+**5. Close out.** Run the guide's reflection checklist and fix what it catches, then ask the one question no per-document guide covers: **does anything here mean an earlier document needs amending?** Say so and offer the edit. Then run `Marker lifecycle` in `0-skill-mode.md` — the file you write carries no bare marker.
 
-Write the file, note its path, give the closing summary, and confirm the user is ready for the next document.
+Then note the path and give the closing summary — **its last lines are the final line of each script's output, quoted verbatim** — and confirm the user is ready for the next document.
+
+```
+檢查:
+- check-sections.py:{腳本輸出的最後一行,原文貼上}
+- check-example-ids.py:{腳本輸出的最後一行,原文貼上}
+```
 
 ## Documents
 
@@ -102,21 +119,15 @@ Write the file, note its path, give the closing summary, and confirm the user is
 
 §1's stage question — POC, MVP, or production — settles **which documents this run carries and how deep each goes**. Say which path you're on once it's answered; a path carrying documents it doesn't need is the most common way this gets heavy.
 
-The same moment takes one more reading: **which decisions here can nobody answer yet?** One that you can name but **cannot write options for**, and which **also blocks §2 onward**, is **fog** — a fact someone has to go and find, not a choice the user can make. 「不知道,要查了才知道」 is fog; 「沒想過,你建議呢」 is a `[待拍板]`.
+The same moment takes one more reading: **which decisions here can nobody answer yet?** One you can name but **cannot write options for**, and which **also blocks §2 onward**, is **fog** — a fact someone has to go and find, not a choice the user can make. Report the count as a number, name what each item blocks, and recommend the Map branch: escalating into a heavier process is the user's call, and they can make it only once the cost is in front of them. `references/1-problem-scope.guide.md` runs the count, tells fog from a `[待拍板]`, and carries both of the user's answers.
 
-Report the count as a number and name what each item blocks. Then say the thing the user can't see: those sections would be written from a guess and rewritten when the fact lands. **Planning to write a provisional version and reconcile later is what being blocked looks like, not a way around it.**
-
-§1's own lines are blocked the same way. A success criterion or a scope entry resting on a fog item **goes in the report, not onto disk behind a marker** — the marker invariant holds here, and fog is the one thing it has no §7.2 to park in yet.
-
-Then recommend the Map branch and hand back. Escalating into a heavier process is the user's call, and they can make it only once they can see it — so the reading is done when the count, the blocked sections and the cost are in front of them and they have answered. `references/1-problem-scope.guide.md` carries the detail; this paragraph is the whole rule.
+§1's own lines are blocked the same way. A success criterion or a scope entry resting on a fog item **goes in the report, not onto disk behind a marker** — fog is the one thing the marker invariant has no §7.2 to park in yet.
 
 | Path | Carries | Depth |
 |---|---|---|
-| **POC / side project** | §1–§8. §0 and §9 skipped | POC fast mode. §4 takes the happy path plus the failures that will actually happen, not an exhaustive sweep. §6 covers what the frontend actually calls. §5.4–§5.9 only where there's a GUI |
+| **POC / side project** | §1–§8. §0 and §9 are the ones to question, not the ones to drop by default — take §0 where the user is entering a market they don't already know, and §9 where the POC will be running somewhere real | POC fast mode. §4 takes the happy path plus the failures that will actually happen, not an exhaustive sweep. §6 covers what the frontend actually calls. §5.4–§5.9 only where there's a GUI. Where §0 or §9 runs on this path, `POC fast mode` says how far to compress it |
 | **MVP** | §1–§8, plus §9 where it touches production traffic, plus §0 where the market shapes the requirements | §4 gets the full EF / EC sweep. §6 covers every consumer, not just the first one |
 | **Production / revenue-carrying** | §0–§9 | Exhaustive throughout, and §9 stops being optional — rollout, alerting and rollback all get written |
-
-Depth is the lever that matters more than presence. A POC's §4 is three flows and the two failures that bite; a production §4 is every error path enumerated. Same document, different weight.
 
 **Skipping §0** — leave the file uncreated and mark its README row `⏭️ 跳過（原因）`. §1.3 personas fall back to derive-plus-`[需確認]` with no PER-N references. Nothing downstream hard-depends on §0.
 
@@ -134,9 +145,11 @@ Names are literal — the subfolder is `decisions/`, never `{decisions}/`. Brace
 
 Inside an existing project repo, ask whether the spec belongs under `docs/specs/{feature-name}/` or at the repo root.
 
-**Write each document the moment the user confirms it** (end of step 5). The user gets to read the real file between documents, later documents re-read earlier ones by §X.Y instead of trusting memory, and an interrupted session keeps its work.
+**The draft is on disk from step 2**; what the user's confirmation at the end of step 5 changes is its README 狀態 — `⬜ 待產` until they confirm, `✅ vN` after. The user gets to read the real file between documents, later documents re-read earlier ones by §X.Y instead of trusting memory, and an interrupted session keeps its work.
 
-Create `README.md` right after §1 confirms, with placeholder rows for §2–§9 and a `v0.1 — Initial draft` revision row. Its **狀態 column** (`✅ v0.1` / `⬜ 待產` / `⏭️ 跳過`) is the session's progress tracker — update it on every write. After the last document, sweep the links and the ID table.
+Create `README.md` with the folder, before §1 — the §0 route is settled at the Opening and its `⏭️ 跳過（原因）` row needs somewhere to go that same moment. Give it placeholder rows for §1–§9 and a `v0.1 — Initial draft` revision row. Its **狀態 column** (`✅ v0.1` / `⬜ 待產` / `⏭️ 跳過`) is the session's progress tracker — update it on every write. After the last document, sweep the links and the ID table.
+
+**The README carries the index and nothing else.** It has no §7.2, no requirement list, no summary of what the documents decided — a reader who wants those opens the document that owns them, and a copy in the README is one that goes stale on the next edit. Nothing checks it mechanically, so it is the one file where a stale copy survives to the end.
 
 **Resuming a broken session**: read the README's 狀態 column to find where work stopped, re-read the documents already on disk — they are the source of truth — and re-enter the loop at the first `⬜ 待產`.
 
@@ -151,26 +164,13 @@ Then offer the two branches the spec feeds:
 
 ## ID system
 
-| Prefix | Meaning | Defined in |
-|--------|---------|------------|
-| MS-N | Market Segment | §0.2 |
-| CMP-N | Competitor / Comparable | §0.3 |
-| PER-N | Persona | §0.4 |
-| OPP-N | Differentiation Opportunity | §0.6 |
-| FR-N | Functional Requirement | §2.1 |
-| NFR-N | Non-Functional Requirement | §2.2 |
-| BR-N | Business Rule | §3.4 |
-| SF-N | System Flow | §4.1 |
-| EF-N | Error Flow | §4.2 |
-| EC-N | Edge Case | §4.3 |
-| UF-N | User Flow | §5.3 |
-| C-N | Component | §5.6 |
-| P-N | Page | §5.7 |
-| T-N | Page Section | §5.7 |
-| D-NNNN | Decision (ADR) | `decisions/` |
-| AC-* | Acceptance Criteria | §8 |
+The full prefix table ships in `templates/README.template.md` and lands in the spec folder before §1 — read it there rather than from a second copy.
 
-Domain events (§3.5) are referenced by PascalCase name — `TemplateImported` — with no ID. §6's error codes (`UPPER_SNAKE_CASE`) and §9's runbooks (`RB-N`) are **document-local**: cite them freely inside their own document, and don't expect them to resolve from elsewhere.
+Domain events (§3.5) are referenced by PascalCase name — `TemplateImported` — with no ID. §6's error codes (`UPPER_SNAKE_CASE`) and §9's runbooks (`RB-N`) are **document-local**: cite them freely inside their own document, and don't expect them to resolve from elsewhere. §5.7's sections (`T-N`) are narrower still — **page-local**, restarting at `T-1` under every `P-N`.
+
+**Endpoints have no numeric ID** — cite them as `§6.2 (METHOD /path)`, because the path already is the identifier: stable, self-describing, and unique. Numbering them `§6.2.1`… would coin a second key for one object and renumber every citation the moment an endpoint is inserted.
+
+**Section numbers belong to the same system.** `§X.Y` is cited by other documents and resolved by both scripts, and `templates/` owns it — a document never extends, renumbers or drops one. Content with nowhere to go gets an unnumbered heading under the section that owns it.
 
 Cite by ID, always: `FR-3`, never "the third requirement". When a section gains an item, assign the next number in sequence and say so out loud — "adding this as FR-3".
 
@@ -180,21 +180,11 @@ Cite by ID, always: `FR-3`, never "the third requirement". When a section gains 
 
 # Branch: Map
 
-For work that **does not fit one context window** — charted as decision tickets and resolved one per session, until the way to the destination is clear and the Spec branch can run normally. Read `references/map.guide.md` before step 1; templates are `templates/map.template.md` and `templates/map-ticket.template.md`.
+For work that **does not fit one context window** — charted as decision tickets and resolved one per session, until the way to the destination is clear and the Spec branch can run normally. Read `references/map.guide.md` before either mode below; templates are `templates/map.template.md` and `templates/map-ticket.template.md`.
 
 **The user brings you here.** 「這件事很大」、「先幫我理清楚」, or §1's fog count showing them what nobody can answer yet and what it blocks. Escalating into a heavier process is their call — §1 makes the cost visible and recommends; it doesn't switch branches on its own. `references/1-problem-scope.guide.md` carries the count.
 
-**Fog** is a decision you can name but **cannot write options for**, which **also blocks §2 onward**. Both conditions — an unphrasable decision that doesn't block is a §7.2 Open Question, and ten decisions you *can* write options for are a spec run however long the list.
-
-**Two modes.**
-
-**Chart** — name the destination first, since it fixes the scope. Then grill **breadth-first** across the whole space rather than deep on one thread. If that surfaces no fog, stop and say so: the work fits, and a map for it is pure overhead. Otherwise write `map.md`, write the tickets you can phrase, wire the blocking edges in a second pass, name the frontier, and stop. Charting resolves nothing.
-
-**Work through** — read the map, take a frontier ticket, claim it before any work, resolve it, record the answer in the ticket and one line on the map. Then update the edges: graduate fog that became phrasable, rule out anything the answer pushed past the destination. **One ticket per session**, research excepted.
-
-**Plan, don't do.** Every ticket resolves a decision. The urge to just build it is the signal you've reached the edge of the map — hand off there. A `task` ticket is the one that does rather than decides, and it earns that by unblocking a decision, never by delivering the destination.
-
-**A HITL ticket only resolves through live exchange with the human.** An agent that answers its own grilling questions has broken the single rule this branch has.
+**Two modes — `chart` and `work through`.** The guide carries both, and the rules that keep them honest: every ticket resolves a decision rather than delivering one, one ticket per session, and a HITL ticket only resolves through live exchange with the human.
 
 Map items are **questions** and land in `map/`; Tickets items are **slices** and land in `issues/`. Both have blocking edges and a frontier, which is why they get confused — the Map's frontier is what can be **decided** now, the Tickets frontier is what can be **built** now. A Map never writes into `issues/`.
 
@@ -224,7 +214,7 @@ Each ticket cites the spec IDs it implements (`FR-3`, `UF-2`, `AC-3.1`) so the i
 
 Writes `CLAUDE.md`, `CLAUDE.local.md` and `.claude/{rules,skills,agents,references}` into a target repo. `scaffold/scripts/scaffold.py` does the substitution and verifies its own output; your job is the interview and the config.
 
-**1. Interview.** Required: project name, one-line description, stack, install / test / lint / dev commands, entry point, target directory (defaults to cwd). Optional: deploy target, which of the five agents (`planner`, `tester`, `implementer`, `reviewer`, `researcher`), and whether to gitignore `PLAN.md` / `FIX_PLAN.md`. Skip whatever the user already told you.
+**1. Interview.** Required: project name, one-line description, stack, install / test / lint / dev commands, entry point, target directory (defaults to cwd). Optional: deploy target — and where there is one, its build and deploy commands too — plus whether to add `researcher` to the four pipeline agents, and whether to gitignore `PLAN.md` / `FIX_PLAN.md`. Skip whatever the user already told you.
 
 **2. Write the config** to a JSON file in the scratchpad. Field-by-field schema, the multi-language form, and which stacks have specialised templates: `references/scaffold.guide.md`.
 
@@ -234,7 +224,7 @@ Writes `CLAUDE.md`, `CLAUDE.local.md` and `.claude/{rules,skills,agents,referenc
 python3 scaffold/scripts/scaffold.py --config <config.json> --target <target-dir>
 ```
 
-Add `--dry-run` first when the target is uncertain. The script refuses a target that already holds `CLAUDE.md`, `.claude/`, or `CLAUDE.local.md` — ask the user, then re-run with `--force` on their say-so.
+Add `--dry-run` first when the target is uncertain. The script refuses a target that already holds one of the paths it writes — `CLAUDE.md`, `CLAUDE.local.md`, or `.claude/{agents,rules,skills,references}` — and ignores everything else under `.claude/`, `settings.local.json` included, because Claude Code puts that there itself. Ask the user, then re-run with `--force` on their say-so.
 
 **4. Report** in a few lines: point at the project-overview section CLAUDE.md leaves as a TODO, and name the two git steps — commit `CLAUDE.md .claude/ .gitignore` as team config; `CLAUDE.local.md` stays local and is already gitignored.
 

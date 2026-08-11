@@ -43,7 +43,7 @@ Pull the pieces out of the user's opening 重點 + 方向 + 結果.
 
 | Target | Source |
 |---|---|
-| §1.1 Problem Statement | With §0: sharpest pain from §0.5/§0.6 + §0.0 problem framing. Without: the "what's broken / what's missing" in the description, plus the reverse-engineered cost of not solving it |
+| §1.1 Problem Statement | With §0: sharpest pain from §0.5/§0.6, framed by the §0.7 implications row that names §1.1 as its target. Without: the "what's broken / what's missing" in the description, plus the reverse-engineered cost of not solving it |
 | §1.2 Background | Existing systems and "why now" the user mentioned (omit the optional section if unmentioned) |
 | §1.3 Personas | With §0: cite §0.4 PER-N (name the PER-X and its label as the target persona). Without: who the user said it's for, plus the reverse-engineered "who else is indirectly affected" |
 | §1.4 Success Criteria (required part) | Reverse-engineered from the outcome the user described; with §0, benchmark quantitative targets against §0.1 and competitors |
@@ -53,12 +53,6 @@ Pull the pieces out of the user's opening 重點 + 方向 + 結果.
 | §1.5 Future | Expansion the user mentioned wanting later, or a reasonable inferred direction |
 | §1.5.1 POC table | Where the user said "POC" or "簡單版 first", list the likely "simple now vs expand later" issues. `Related ADR` stays `—` at this stage; §7 backfills it |
 | §1.6 Assumptions & Constraints | Inferred from context — a 5MB limit the user mentioned is a constraint |
-
-### Marking rules
-
-Inferred content takes `[需確認]`: quantitative targets, persona pain points the user never stated, out-of-scope entries you added yourself.
-
-A genuine fork takes `[待拍板]` with options and a recommendation. Missing information takes `[待拍板]` too, pending the user. Neither is a licence to invent.
 
 ## `.out-of-scope/` — the declined-request record
 
@@ -131,18 +125,14 @@ Everyday language, the whole frontier in one round:
 ```
 有幾件事需要你拍板:
 
-1. 你說想做匯入功能 — 是只想支援「使用者上傳檔案」,還是
-   也要支援「使用者貼上 JSON 文字」?
-   (影響 in scope 範圍)
+❓ **Q1** — **匯入來源**:(a) 只支援上傳檔案 (b) 加上貼上 JSON 文字
+➡️ 建議 (a) —— 貼上 JSON 對非技術使用者幫助有限,POC 先不做(影響 in scope 範圍)
 
-2. 你提到 AI 生成也走匯入路徑 — 如果 AI 生成的 JSON 不合法,
-   你希望系統怎麼處理?
-   (a) 直接報錯,使用者重新生成
-   (b) 自動修正能修的部分
-   (c) 視為「AI 生成失敗」走既有失敗流程
+❓ **Q2** — **AI 生成的 JSON 不合法時**:(a) 直接報錯,使用者重新生成 (b) 自動修正能修的部分 (c) 視為「AI 生成失敗」走既有失敗流程
+➡️ 建議 (c) —— 跟手動匯入共用同一條失敗路徑,體驗一致、維護單一
 
-3. 你說這是 POC — 那 POC 結束後預期會進入什麼階段?是 MVP
-   還是正式上線?(影響我幫你規劃 future work 的範圍)
+❓ **Q3** — **POC 之後的下一站**:(a) MVP (b) 直接正式上線
+➡️ 建議 (a) —— 影響我幫你規劃 future work 的深度
 ```
 
 ## Where you'll get stuck
@@ -189,7 +179,11 @@ Count the **fog** items §1 surfaced, against the two conditions in `SKILL.md`'s
 | Can write options, doesn't block | A `[待拍板]`, or §7.2 if deferred |
 | Can't write options **and** it blocks | **Fog** |
 
-**Report it as a number, in the closing summary.** 「fog 檢查:0 項」 is checkable — a reader can ask which decisions you counted. The closing summary comes after the close, which is where the count is taken.
+**The user's own words settle which row.** 「不知道,要查了才知道」 names fog — a fact has to be found before the question can even be phrased, and a plan to gather it in parallel describes paying the rewrite rather than changing what it is. 「沒想過,你建議呢」 is a `[待拍板]`: they can decide the moment you put options up, and ten of those are ten answerable questions that fit one window.
+
+**Take the count the moment Q-Stage settles the Path**, above — early enough for the answer to change what gets written; at the close, the whole §1 conversation has already run on a picture it might have overturned. Then **report it as a number in the closing summary**: 「fog 檢查:0 項」 is checkable, because a reader can ask which decisions you counted.
+
+**Zero → §2 opens normally.**
 
 **Non-zero — say what it costs, then stop and hand back.** Name each item, name the section it would change, and say the one thing the user can't see for themselves: those sections would be written from a guess and rewritten when the fact lands. Then put it to them, with the Map as your recommendation:
 
@@ -206,24 +200,7 @@ Count the **fog** items §1 surfaced, against the two conditions in `SKILL.md`'s
 要這樣走嗎?
 ```
 
-**The reading is done when the user has answered.** Escalating a session into a heavier process is their call — the cost of guessing wrong lands on them — and your job is that they can see it clearly enough to make it. The completion criterion is theirs, not yours: the count, each item's blocked section, and the rewrite cost are in front of them, and they have said which way to go.
-
-**The user's own words settle whether an item counts.** 「不知道,要查了才知道」、「要先有人把資料撈出來看過才有辦法談」 — a user saying the answer needs someone to go and *find a fact* has named fog. A plan to run the spec in parallel while the fact is gathered doesn't change what it is; it describes paying the rewrite.
-
-**Calibration, both directions.** Ten decisions you can write options for are ten answerable questions and they fit one window — that is a spec run, however long the list. One 「要查了才知道」 about something §3 or §6 is built on is fog.
-
-**Zero → §2 opens normally**, and the closing summary reports the zero with what you counted.
-
-What separates them is **what the user needs in order to answer**:
-
-| The user says | It is |
-|---|---|
-| 「不知道,**要查了才知道**」 | **fog** — a fact has to be found before the question can even be phrased |
-| 「沒想過,**你建議呢**」 | a `[待拍板]` — they can decide the moment you put options up |
-
-The count that matters is of what you *can't* phrase, never of what's open.
-
-The user saying 「不用畫地圖,直接寫規格」 closes this — record the fog items as §7.2 Open Questions and carry on, noting that the documents downstream of them are provisional.
+**The reading is done when the user has answered** — escalating the session is their call, and the count, each item's blocked section, and the rewrite cost are what let them make it. 「不用畫地圖,直接寫規格」 closes it: record the fog items as §7.2 Open Questions and carry on, noting that the documents downstream of them are provisional.
 
 **Entering from a cleared Map**, count what remains, never what the map already answered. Its Decisions so far are settled input — they arrive as answers, not as `[待拍板]`, and re-opening them is how a map→spec handoff turns into a loop. A cleared map normally counts zero; anything above zero is fog that surfaced *since* it cleared, which belongs on the map as a new ticket rather than restarting §1.
 
@@ -237,7 +214,12 @@ The user saying 「不用畫地圖,直接寫規格」 closes this — record the
 - [ ] §1.5 in scope is itemized, not a single line like 「做匯入匯出功能」
 - [ ] §1.5 out of scope has at least 2 entries — the section people new to specs most often skip
 - [ ] §1.5.1 POC table exists, where this is a POC
-- [ ] No marker reached disk — `grep -n "\[需確認\|\[待拍板" 1-problem-scope.md` returns nothing
+
+Then run the three checks from inside the spec folder and **say what they printed**:
+
+- [ ] `grep -c "\[需確認\|\[待拍板" 1-problem-scope.md` → `0`
+- [ ] `python3 <skill-path>/scripts/check-sections.py .` → ✓
+- [ ] `python3 <skill-path>/scripts/check-example-ids.py .` → ✓
 
 Anything unconfirmed gets finished before §2 starts.
 

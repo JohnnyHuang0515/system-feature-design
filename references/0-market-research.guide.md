@@ -11,9 +11,9 @@ Before §1 problem-scope is written, answer: **what does this market look like, 
 
 The research feeds the rest of the spec:
 
-- §0.4 personas → §1.3 target personas, now research-backed rather than reverse-engineered from one sentence
+- §0.4 personas → §1.3 target personas (research-backed rather than reverse-engineered from one sentence), the Persona column of §2.1 FRs, §5.2 user stories
 - §0.6 differentiation opportunities → §2 FR priority, §1.4 success criteria benchmarks
-- §0.1 sizing → whether §1.4's quantitative targets are plausible
+- §0.1 sizing → §1.4's quantitative targets, and whether they are plausible
 
 > Positioning: this is **market research inside a feature-design flow**, not a business plan. Even at full PM depth (TAM/SAM/SOM + segments + competitors + personas + sentiment + differentiation), the point remains **how these findings change the feature we're about to design**. Every section closes by answering "so what — what does this imply for §1 and §2?"
 
@@ -127,7 +127,7 @@ Most of §0 is research, but a few directional things need the user:
 - **Sizing mode** — is this feature monetized independently, or supporting the existing product? (Decides TAM vs demand sizing. You can usually judge it from the feature's nature and mark `[需確認]`; ask only when unsure)
 - **Known competitors** — the list already in the user's head, folded into §0.3 before you search outward
 
-Ask in everyday language, **3 at a time, maximum**. Everything else — how to cut segments, what the personas look like, where the opportunity is — is research and synthesis, shown for verification rather than handed back as a question.
+Ask in everyday language, and ask them as one round — they have no prerequisites on each other, so `Which questions go together` in `0-skill-mode.md` puts them together. Everything else — how to cut segments, what the personas look like, where the opportunity is — is research and synthesis, shown for verification rather than handed back as a question.
 
 ## Open question candidates
 
@@ -192,11 +192,7 @@ This is the best possible fuel for §0.5 sentiment. Split by segment, score sent
 
 ### The user amends §0 and it needs to propagate
 
-§0 is the head of the chain, so the blast radius is large. Follow `Amending earlier documents` in `0-skill-mode.md`, sweeping in particular:
-
-- §0.4 persona changed → §1.3 target personas, the Persona column of §2.1 FRs, §5.2 user stories
-- §0.6 opportunity changed → §2 FR priority, §1.4 success criteria
-- §0.1 sizing changed → §1.4 quantitative targets
+§0 is the head of the chain, so the blast radius is large. Follow `Amending earlier documents` in `0-skill-mode.md`, sweeping the feed list under `Purpose` — those arrows run backwards when §0 changes.
 
 ## Reflection check, before §1
 
@@ -207,7 +203,12 @@ This is the best possible fuel for §0.5 sentiment. Split by segment, score sent
 - [ ] Every §0.6 OPP points at something actionable, not a vague 「做得更好」
 - [ ] Every §0.4 PER-N and §0.6 OPP-N named in §0.7 says which part of §1 or §2 it feeds — a blanket 「餵給 §1/§2」 covers nothing
 - [ ] Every low-confidence item is in the §0.8 to-verify list
-- [ ] No marker reached disk — `grep -n "\[需確認\|\[待拍板" 0-market-research.md` returns nothing
+
+Then run the three checks from inside the spec folder and **say what they printed**:
+
+- [ ] `grep -c "\[需確認\|\[待拍板" 0-market-research.md` → `0`
+- [ ] `python3 <skill-path>/scripts/check-sections.py .` → ✓
+- [ ] `python3 <skill-path>/scripts/check-example-ids.py .` → ✓
 
 ## Closing summary
 

@@ -24,11 +24,11 @@ Define the system's core domain model — entities, states, business rules. **Th
 
 | Target | Source |
 |---|---|
-| §3.1 Bounded Contexts | Responsibility blocks inferred from §1.5 in scope (one line for a small feature) |
+| §3.1 Bounded Contexts | Responsibility blocks inferred from §1.5 in scope. A small feature needs one; many entities may split into a 「管理 X」, an 「匯入匯出 X」 and a 「驗證 X」 context. Uncertain how to cut → one context, because over-design costs more than the split saves |
 | §3.2 Entities | Reverse-engineered from the nouns and verbs in §2.1 FRs — 「使用者建立訂單」 → an Order entity |
 | §3.2 Entity fields | Required fields from the FRs, plus inferred standard fields (id, created_at, updated_at) |
-| §3.3 State Machines | Where an entity has a status concept, derive its transitions — Draft → Submitted → Paid |
-| §3.4 Business Rules | Constraints in §1.5, §2.2 NFRs, and the invariants implied by FRs |
+| §3.3 State Machines | Every entity with a status field gets one: initial state, main states, terminal states, and each transition's trigger, guard and side effect — Draft → Submitted → Paid |
+| §3.4 Business Rules | The 「絕對不能違反」 rows of the §1.5.1 POC table, the security and compliance rules implied by §2.2 NFRs, constraints stated in FRs (「至少 1 個 Node 才能 Activate」), and standard domain sense (「金額不可為負」) |
 | §3.5 Domain Events | State transitions plus cross-context interactions |
 
 ### Worked entity derivation
@@ -38,20 +38,6 @@ From FR-2 "Allow users to import an automation template":
 - Noun: template → a Template entity
 - Implied: what a template contains → Node, Connection entities
 - Required fields: id, name, status, workspace_id, created_at…
-
-### Bounded contexts
-
-A small feature usually needs one. With many entities you might split: a 「管理 X」 context, a 「處理 X 的 import/export」 context, a 「驗證 X」 context.
-
-Uncertain how to cut it → use a single context. Over-design costs more than the split saves.
-
-### State machines
-
-Every entity with a status field gets one: initial state, main states, terminal states, and each transition's trigger, guard and side effect.
-
-### Business rules
-
-Sources: the "absolutely must not be violated" items in the §1.5.1 POC table; the security and compliance rules implied by §2.2 NFRs; constraints stated in FRs (「至少 1 個 Node 才能 Activate」); and standard domain sense (「金額不可為負」).
 
 ## Questions you must ask
 
@@ -91,14 +77,14 @@ Show §3.1 through §3.5 in order. With many entities, give 1–2 at a time so t
 ```
 有幾件事需要你拍板:
 
-1. Template 的 status 我設計成「草稿 → 啟用中 → 已封存」三個狀態,
-   合理嗎?還是你心中有別的流程(例如需要審核狀態)?
+❓ **Q1** — **Template 狀態**:(a)「草稿 → 啟用中 → 已封存」三態 (b) 中間再加一個「待審核」
+➡️ 建議 (a) —— 沒有人提到審核流程,加了就要連帶設計審核者與權限
 
-2. 業務規則「Template 名稱在 workspace 內必須唯一」 — 大小寫敏感嗎?
-   (「訂單流程」跟「訂單流程 」算同一個還是不同?)
+❓ **Q2** — **名稱唯一性怎麼比**:(a) 大小寫與前後空白都忽略 (b) 完全相符才算重複
+➡️ 建議 (a) —— 「訂單流程」跟「訂單流程 」對使用者是同一個,判成不同會讓人困惑
 
-3. 我推測會發出 TemplateImported / Exported / Activated 三個事件,
-   有需要的事件我漏了嗎?
+❓ **Q3** — **Domain events**:(a) 就 TemplateImported / Exported / Activated 三個 (b) 再加 TemplateArchived
+➡️ 建議 (a) —— 這三個對應狀態機上的三次轉換;封存目前沒有任何消費者
 ```
 
 ## Where you'll get stuck
@@ -135,7 +121,12 @@ Two things follow for how you write §3:
 - [ ] Every BR names its enforcement mechanism
 - [ ] Fields use logical types (UUID, Timestamp…), not DB types (BIGSERIAL…)
 - [ ] One canonical word per concept across the whole spec, with rejected synonyms noted — this is what seeds the repo's `CONTEXT.md`
-- [ ] No marker reached disk — `grep -n "\[需確認\|\[待拍板" 3-domain-model.md` returns nothing
+
+Then run the three checks from inside the spec folder and **say what they printed**:
+
+- [ ] `grep -c "\[需確認\|\[待拍板" 3-domain-model.md` → `0`
+- [ ] `python3 <skill-path>/scripts/check-sections.py .` → ✓
+- [ ] `python3 <skill-path>/scripts/check-example-ids.py .` → ✓
 
 ## Closing summary
 

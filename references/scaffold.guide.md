@@ -22,7 +22,12 @@ Disclosed reference for the **Scaffold** branch: the config schema, the failure 
 }
 ```
 
-`deploy_target`, `agents` and `gitignore_plans` are optional — everything else is required. Omitting `deploy_target` skips the deploy skill. `agents` accepts only those five names. `gitignore_plans` defaults to true.
+`deploy_target`, `agents`, `gitignore_plans`, `build_cmd` and `deploy_cmd` are optional — everything else is required.
+
+- `deploy_target` — omitting it skips the deploy skill entirely.
+- `build_cmd` / `deploy_cmd` — only the deploy skill reads them, so they matter only alongside `deploy_target`. Left out, each renders as a `# TODO` line in the shipped skill: a visible gap the user fills, rather than a plausible wrong command. **Ask for both whenever `deploy_target` is set.**
+- `agents` — the five names, and the four pipeline roles (`planner`, `tester`, `implementer`, `reviewer`) ship together or not at all. CLAUDE.md and the shipped rules route work through all four, so a subset would write a repo that dispatches agents it does not have; the script refuses it. `["researcher"]` alone is legal, and CLAUDE.md then carries no pipeline line.
+- `gitignore_plans` — defaults to true.
 
 **Specialised templates** exist for languages `python` / `typescript` / `javascript` / `go`, and two testing ones: `pytest`, and a JS-runner template shared by `jest` / `vitest` / `mocha`. Anything else resolves to the generic template.
 
@@ -115,6 +120,20 @@ The separation is what buys you a plan-stage quality gate (cheaper than fixing c
 **Five is the ceiling, not a target.** Anthropic recommends 3–5 for most workflows; token cost scales linearly with agent count while benefit does not. This bundle sits at the top of that range because `tester` earns a distinct seat — translating an approved plan into executable tests is its own job. Split further only against a concrete pain point, such as a dedicated `prompt-reviewer` on an AI-heavy codebase.
 
 Design rules for any agent you add: one responsibility each; an action-oriented description ("Use PROACTIVELY when…") so Claude auto-delegates; tools scoped to the role (`planner` / `reviewer` / `researcher` read-only on `Read, Grep, Glob, Bash`; `tester` writes test files; `implementer` writes both); `sonnet` by default, `opus` for the heaviest reasoning, `haiku` for simple scans.
+
+### .claude/references/
+
+Three files the **agents** read mid-task — not human documentation, and not loaded unless
+an agent reaches for them:
+
+| File | Read by | Holds |
+|---|---|---|
+| `plan-schema.md` | `planner` writes to it, `tester` and `implementer` read from it | the exact shape of `PLAN.md` and `FIX_PLAN.md` — every section, including the verification checklist and the four-angle self-review |
+| `testing-tdd.md` | `tester`, `implementer`, `reviewer` | the red-green discipline the pipeline runs on, and what counts as a seam |
+| `review-lenses.md` | `reviewer` | the per-lens checklists a diff gets read against |
+
+They ship on every scaffold. The scaffolder refuses to run when one is missing rather than
+writing a repo whose agents point at documents it does not have.
 
 ### Not generated here
 `settings.json` / `settings.local.json` are Claude Code's own — direct the user to `/init` and the permissions UI. `commands/` is too project-specific to template; help the user write one as a one-off.

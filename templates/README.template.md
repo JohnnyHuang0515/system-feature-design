@@ -10,7 +10,7 @@
 
 | # | File | What's inside | 狀態 |
 |---|------|---------------|------|
-| 0 | [market-research.md](./0-market-research.md) | 市場規模、客群分群、競品、研究型 persona、情感、差異化機會（選做，餵 §1/§2） | ⬜ 待定 |
+| 0 | [market-research.md](./0-market-research.md) | 市場規模、客群分群、競品、研究型 persona、情感、差異化機會（選做，餵 §1/§2） | ⬜ 待產 |
 | 1 | [problem-scope.md](./1-problem-scope.md) | 要解決的問題、目標使用者、成功指標、scope 邊界 | ⬜ 待產 |
 | 2 | [requirements.md](./2-requirements.md) | 功能需求清單（FR）、非功能需求（NFR）、優先級 | ⬜ 待產 |
 | 3 | [domain-model.md](./3-domain-model.md) | 核心 entity、欄位、狀態機、業務規則 | ⬜ 待產 |
@@ -19,7 +19,7 @@
 | 6 | [interfaces.md](./6-interfaces.md) | 對外 API、事件、整合點、錯誤回應格式 | ⬜ 待產 |
 | 7 | [decisions.md](./7-decisions.md) | 關鍵設計決策索引、待決議事項 | ⬜ 待產 |
 | 8 | [acceptance.md](./8-acceptance.md) | 每個 FR 對應的驗收情境（Given-When-Then） | ⬜ 待產 |
-| 9 | [rollout.md](./9-rollout.md) | 上線策略、監控、Runbook（選填） | ⬜ 待定 |
+| 9 | [rollout.md](./9-rollout.md) | 上線策略、監控、Runbook（選填） | ⬜ 待產 |
 
 > 狀態值：`✅ vN`（已落盤）/ `⬜ 待產` / `⏭️ 跳過（原因）`。每份文件落盤時更新本欄 — 這是 session 中斷後恢復進度的依據。
 
@@ -40,7 +40,7 @@
 | UF-N | User Flow | 5-presentation-spec.md §5.3 |
 | P-N | Page / Screen | 5-presentation-spec.md §5.7 |
 | C-N | Component | 5-presentation-spec.md §5.6 |
-| T-N | Page Section / Region | 5-presentation-spec.md §5.7 |
+| T-N | Page Section / Region | 5-presentation-spec.md §5.7，page-local：每個 P-N 底下從 T-1 重新編 |
 | D-NNNN | Decision (ADR) | decisions/ |
 | AC-* | Acceptance Criteria | 8-acceptance.md |
 

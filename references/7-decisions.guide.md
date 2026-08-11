@@ -37,19 +37,11 @@ The ADRs are split: `7-decisions.md` is the index, and each decision gets its ow
 | §4.1 SF | How services interact (sync vs async) |
 | §6.2 API | Significant API design choices (single-stage vs two-stage) |
 | §6.6 Versioning | The versioning strategy |
-| Every `[待拍板]` in the spec | All become open-question candidates |
+| Every `decisions/NNNN-*.md` whose Status is `Proposed` | Already an open question — it gets a §7.2 row, not a new file |
 
 ### ADR content
 
-| Field | Source |
-|---|---|
-| Title | One sentence naming the decision |
-| Context | Why this decision was needed, from the earlier documents |
-| Decision | The call that was made |
-| Rationale | Why it was made that way, from the earlier documents |
-| Alternatives | Derive 2–3 alternatives unprompted, each with pros and cons |
-| Consequences | Positive and negative effects |
-| Affects | References to specific §X.Y |
+`templates/decisions/NNNN-template.md` carries the fields; Context, Decision and Rationale all come out of the earlier documents. Two things it can't tell you: **derive 2–3 Alternatives unprompted** rather than waiting to be asked, and **Affects references a specific §X.Y**, not a document.
 
 ### The ADR threshold
 
@@ -72,21 +64,27 @@ Note: the example feature ships 11 ADRs because it is large — **that is not a 
 
 ### Open questions
 
-Every `[待拍板]` in the spec collects into §7.2 and expands into an ADR file with Status: Proposed.
+**§7.2 is built by listing `decisions/`, not by grepping the spec.** A deferred `[待拍板]` got its `D-NNNN` and its file at the moment it was deferred — that is what let the marker leave the document — so by the time §7 runs there is no marker anywhere to find, and every closing bar has already proved it with `grep -c` returning `0`. Looking for markers here finds nothing and concludes there are no open questions.
+
+So: `ls decisions/`, read each file's Status, and give every `Proposed` one a §7.2 row. The file already exists — §7 indexes it without renumbering and without rewriting it.
+
+**The door back out.** A `[待拍板]` deferring into §7.2 has been specified from the start; the return trip had not, and a document with an "Open Questions" heading and no "Decided" one reads as though the second is missing. It is not — **§7.1 is the only home an accepted decision has.** When the user settles one:
+
+1. the file's Status becomes `Accepted`, its Options section is rewritten as Decision + Rationale, and Owner / Target Date can go
+2. its row moves out of §7.2 and into §7.1's Accepted table
+3. §7.2 left with nothing keeps its heading and says 「無」
+
+A third section for decided items would be a second home for what §7.1 already holds — the same failure the README rule names, and worse here, because rows written outside §7.1 never get a `D-NNNN` and are invisible to `check-example-ids.py`.
+
+### Keeping §1.5.1 in sync
+
+§1.5.1's POC table and the matching §7 ADR are **two renderings of one decision** — the table is the scannable view, the ADR is the record. §7 is the source of truth: rationale, alternatives and consequences live there, and only the expanded rows carry a `Related ADR`; the rest keep `—`.
+
+A change here propagates back: a retitled ADR updates the 議題 column, a changed decision updates 當前決定, a new ADR means checking whether §1.5.1 needs a row, and a superseded one strikes its row and points at the replacement.
 
 ## Questions you must ask
 
-Once the ADRs are written, **put every open question to the user**:
-
-```
-有 {N} 個待拍板事項,我幫你整理選項,你決定:
-
-D-{N}: {議題}
-建議方向:{Claude 的傾向,但需你決定}
-- (a) {選項 A} (Pros: ... Cons: ...)
-- (b) {選項 B} (Pros: ... Cons: ...)
-- (c) 先放著 → 列入 §7.2 待解
-```
+Once the ADRs are written, **put every open question to the user**, in the `0-skill-mode.md` display format — script under `Step 3` below.
 
 ## Open question candidates
 
@@ -99,7 +97,7 @@ A genuinely new one here means an earlier section has a gap. Go back and fill it
 ### Step 1: summary
 
 ```
-我從前面 6 份文件掃描出 {N} 個 ADR 候選:
+我從前面 {M} 份文件掃描出 {N} 個 ADR 候選:
 
 Accepted({M} 個,已做的決定):
 - D-0001: Task 欄位採內嵌儲存
@@ -130,19 +128,13 @@ OK 嗎?有要補的 alternative 或 consequence?
 ### Step 3: settle each open question
 
 ```
-D-0010: Schema 升版機制(待拍板)
+需要你拍板的決策:
 
-背景:目前 schema_version = v0.1,未來可能升 v0.2、v0.3...
-     需要決定怎麼處理舊版檔案的相容性。
+❓ **D-0010** — **Schema 升版機制**:(a) 永久向後相容,支援所有歷史版本 (b) 滾動 window,只支援前一版 (c) 提供升版工具讓使用者 migrate 舊檔
+➡️ 建議 (b) —— 平衡相容性跟維護成本;(a) 的維護成本會隨版本數線性長
 
-選項:
-(a) 永久向後相容:支援所有歷史版本,維護成本高
-(b) 滾動 window:只支援前一版,deprecate 舊版
-(c) 提供升版工具:讓使用者把舊檔案 migrate 為新版
-
-建議方向:(b) 滾動 window — 平衡相容性跟維護成本
-
-你的決定?(可以選一個,或說「現在不決定先放著」)
+背景:目前 schema_version = v0.1,未來可能升 v0.2、v0.3,要決定舊檔怎麼相容。
+選一個,或說「現在不決定先放著」——先放著就進 §7.2,要給 Owner 跟 Target Date。
 ```
 
 ## Where you'll get stuck
@@ -161,13 +153,18 @@ Accept 「先放著」 and record it in §7.2 for later, with an Owner and a Tar
 
 ## Reflection check, before §8
 
-- [ ] Every `[待拍板]` in the spec is handled — settled into Accepted, or parked in §7.2
+- [ ] Every `Proposed` file in `decisions/` has a §7.2 row — `grep -lE "Status\**:[[:space:]]*Proposed" decisions/*.md | wc -l` equals the §7.2 row count. The `\**` is load-bearing: the ADR template writes `- **Status**: Proposed`, so a pattern without it matches nothing and agrees with an empty §7.2
 - [ ] Every Accepted ADR has at least one Alternative Considered
 - [ ] Every ADR's Affects column references a real §X.Y
 - [ ] Every open question has Owner and Target Date
 - [ ] Every §1.5.1 POC row was judged against the ADR threshold — expanded rows carry `Related ADR`, the rest carry `—`
 - [ ] §1.5.1 is propagated in sync (new ADRs checked against the table; ADR title and Decision changes reflected)
-- [ ] No marker reached disk — `grep -n "\[需確認\|\[待拍板" 7-decisions.md` returns nothing
+
+Then run the three checks from inside the spec folder and **say what they printed**:
+
+- [ ] `grep -c "\[需確認\|\[待拍板" 7-decisions.md` → `0`
+- [ ] `python3 <skill-path>/scripts/check-sections.py .` → ✓
+- [ ] `python3 <skill-path>/scripts/check-example-ids.py .` → ✓
 
 ## Closing summary
 

@@ -9,6 +9,10 @@
 
 > Status 為 Proposed（Open Question）時：「Decision」節改寫為「Options」 —
 > 列 (a)(b)(c) 選項（各附 Pros / Cons）+ 建議方向；使用者拍板後再改寫成正式 Decision + Rationale。
+>
+> **選項寫不出來的那種，寫「Unknown」而不是硬湊三個。** 這種待決事項缺的是一個
+> 事實而不是一個選擇，所以該寫的是「要知道什麼才能開始列選項」與「誰去查、什麼時候」。
+> 湊出來的選項會被下游當成真的取捨讀。
 
 ## Context
 

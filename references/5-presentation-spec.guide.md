@@ -48,8 +48,6 @@ Mark the inferred type `[需確認]` — a feature can have several.
 | CLI | Command Story | Command Flow | skip |
 | Notification | Recipient Story | Trigger Flow | skip |
 
-> §5.4 User Journey and §5.9 Design Handoff are GUI-only. For other types the "journey" is already carried by §5.3's consumer or execution flow, and with no visual artefact there is nothing for §5.9 to hand off.
-
 ### User stories
 
 From §1.3 personas plus §2.1 FRs: pair each persona with the FRs they'd use, in the 「作為 X,我想要 Y,以便 Z」 form. A persona usually gets 1–3 stories.
@@ -73,7 +71,7 @@ Why the extra layer: a UF is step-by-step operation, a journey is the shape of t
 
 From the user flows: the UI elements a step touches → components (C-N); the screen a step happens on → pages (P-N); a page's areas of responsibility → sections (T-N).
 
-**Name them; don't draw them.** A component gets a role, what it must carry, and its behavioural states. A page gets its entry points, its responsibility, and which section owns what.
+A component gets a role, what it must carry, and its behavioural states. A page gets its entry points, its responsibility, and which section owns what.
 
 Where the arrangement genuinely matters, write it as a **constraint with its reason** rather than a picture — 「T-1 與 T-2 必須同時可見,因為改 T-1 會即時改變 T-2 的可選項」. That is spec: it holds however the page is drawn. A box diagram is one way of satisfying it, chosen before anyone has seen the real content.
 
@@ -83,7 +81,7 @@ The `因為` is what does the work here. A constraint you can't finish that sent
 
 ### Design handoff (§5.9, GUI only)
 
-§5 carries structure and interaction. **Visuals — mockups, colour, type scale — are downstream and out of this spec.** §5.9 turns that boundary from a silent hole into an explicit gap with directions:
+§5.9 turns the Purpose boundary from a silent hole into an explicit gap with directions:
 
 - **Design System status** (aligned with the §5.5 decision): exists → record the source link; **absent → flag it as a prerequisite for frontend work**, recommend a tool or skill to produce one (ckm-design-system / ui-ux-pro-max / design-taste-frontend / Pencil MCP), and log an OQ or ADR in §7 with Owner and Target Date
 - **How mockups get made**: feed §5.6 components + §5.7 pages (responsibilities and layout constraints) + §5.8 interaction decisions to the design tool for hi-fi output. The tool's output is authoritative for visuals; on conflict, sync the spec back
@@ -122,15 +120,11 @@ Once GUI is confirmed, walk all 8 dimensions:
    - POC fast mode: **not silent defaults** — use a **one-shot confirmation pack**, listing every relevant dimension's recommended value at once: 「前端體驗我建議這樣:(清單)。有要改的嗎?都 OK 我就照這個寫」. The whole pack counts as one hard stop
 4. **Write it down.** Results go into the §5.8 decision table (N/A plus a reason for the dimensions that don't apply). Anything shaping the data model or irreversible — a partial-success strategy that drives API design, say — is escalated to an ADR.
 
-### Why silent defaults don't work for the frontend
-
-The frontend is the only part the user sees directly. A wrong backend structure is only discovered by reading the document; a wrong frontend experience is rejected on sight — by which point it's already been built. One extra confirmation round in §5 is far cheaper than rebuilding after implementation.
-
 ## Questions you must ask
 
 1. **Confirm the presentation type** after inferring it
-2. **The frontend experience checklist** (GUI only) — see above: recommended value per relevant dimension, packaged for decision
-3. **Whether a Design System exists** (GUI only) — the pivotal §5.5 / §5.9 call: reuse an existing one (ask for the source) or none yet (flag the prerequisite). Phrasing below
+2. **The frontend experience checklist** (GUI only) — above
+3. **Whether a Design System exists** (GUI only) — the pivotal §5.5 / §5.9 call; phrasing and the two branches are under `Where you'll get stuck`
 4. **Component visual detail** — ask where the user has a specific requirement (a node card that must be 160×140)
 
 ## Open question candidates
@@ -188,8 +182,6 @@ For GUI: user stories first (fast), then user flows (medium), then the user jour
 不適用:操作模式(無多步驟表單)、即時性(單人編輯)、裝置(僅桌機)
 ```
 
-**The dimensions are mostly independent, so they are one frontier** — put every applicable one in the same round rather than holding some back.
-
 Use AskUserQuestion where available; a frontier past four questions splits across calls without splitting the round.
 
 ## Where you'll get stuck
@@ -231,17 +223,24 @@ Propose: 「我幫你列幾個可能的 component:[列舉]。看哪些符合你�
 
 - [ ] Presentation type is confirmed
 - [ ] Every user story maps to at least one persona and one FR
-- [ ] Every user flow maps to an SF (GUI)
-- [ ] Every user journey stage references real UFs and Pages, with stall points aligned to §4 EF / EC (GUI)
 - [ ] Every §4 SF's "Related UF" column is backfilled
-- [ ] Every component a page uses is defined in §5.6 (GUI)
-- [ ] Every component appears on at least one page — no orphans (GUI)
-- [ ] §5.6 and §5.7 entries carry role, responsibility and behavioural states; every layout constraint gives its reason, and appearance is left to §5.9's handoff (GUI)
-- [ ] All 8 frontend dimensions were reviewed: the relevant ones decided, the rest marked N/A (GUI)
-- [ ] Decisions are written into the §5.8 table, with major ones escalated to ADRs (GUI)
-- [ ] Design System status is decided — reuse existing, or none yet → §5.9 prerequisite + §7 OQ (GUI)
-- [ ] The §5.9 handoff list is filled, with missing prerequisites explicitly flagged (GUI)
-- [ ] No marker reached disk — `grep -n "\[需確認\|\[待拍板" 5-presentation-spec.md` returns nothing
+
+GUI adds:
+
+- [ ] Every user flow maps to an SF
+- [ ] Every user journey stage references real UFs and Pages, with stall points aligned to §4 EF / EC
+- [ ] Every component a page uses is defined in §5.6, and every component appears on at least one page — no orphans
+- [ ] §5.6 and §5.7 entries carry role, responsibility and behavioural states; every layout constraint gives its reason, and appearance is left to §5.9's handoff
+- [ ] All 8 frontend dimensions were reviewed: the relevant ones decided, the rest marked N/A
+- [ ] Decisions are written into the §5.8 table, with major ones escalated to ADRs
+- [ ] Design System status is decided — reuse existing, or none yet → §5.9 prerequisite + §7 OQ
+- [ ] The §5.9 handoff list is filled, with missing prerequisites explicitly flagged
+
+Then run the three checks from inside the spec folder and **say what they printed**:
+
+- [ ] `grep -c "\[需確認\|\[待拍板" 5-presentation-spec.md` → `0`
+- [ ] `python3 <skill-path>/scripts/check-sections.py .` → ✓
+- [ ] `python3 <skill-path>/scripts/check-example-ids.py .` → ✓
 
 ## Closing summary
 

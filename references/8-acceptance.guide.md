@@ -27,7 +27,7 @@ Define what "done" means. This is the contract engineering and QA work against. 
 | §8.3 AC for Business Rules | A verification scenario per §3.4 BR (or a reference to another AC) |
 | §8.4 AC for Error & Edge | One per §4.2 EF and §4.3 EC |
 | §8.5 AC for NFR | How each §2.2 NFR is measured, and what passing looks like |
-| §8.6 Coverage Matrix | Generated automatically |
+| §8.6 Coverage Matrix | Generated from §8.1–§8.5. **Selfsame gate as §2.4: write it when FR + NFR exceeds 10, skip it below** — under that, the matrix restates a list short enough to read |
 
 ### Writing the BDD
 
@@ -37,13 +37,13 @@ Define what "done" means. This is the contract engineering and QA work against. 
 
 **Then** — the side effect, taken from the SF / EF / state machine. **Every outcome must be verifiable**: a return value, a DB change, an emitted event, a Toast shown.
 
-### Minimum coverage
+### How many ACs an FR gets
 
-- **Write-side FRs** (POST/PUT/DELETE/state change) — at least 1 happy + 1 failure
-- **Read-only FRs** — at least 1 happy; failures are covered by the §6.5 error model
-- **FRs involving authorization** — an extra unauthorized AC is mandatory
-- **Every state transition** — legal + violation + catch-all. Where no interface can trigger the violation, write 「不適用 + 原因」 rather than inventing an error code (see the template's AC-S.99 note)
-- **Every BR** — its own AC, or a reference
+The table above sets the count everywhere else; §8.1 is the one that varies:
+
+- **Write-side** (POST/PUT/DELETE/state change) — at least 1 happy + 1 failure
+- **Read-only** — at least 1 happy; failures are covered by the §6.5 error model
+- **Involving authorization** — an extra unauthorized AC is mandatory
 
 ### UI behaviour
 
@@ -53,13 +53,11 @@ UI behaviour — navigation, Toast, Modal — belongs in the FR's Then clause. V
 
 Usually none. Derive the ACs, then show them for the user to confirm, add to or cut.
 
-The exception: NFR targets were confirmed in §2.2, but §8.5 describes *how* they're verified, which may need the user to confirm the test environment.
+The one exception, and §8's only likely open question: NFR targets were settled in §2.2, but §8.5 describes *how* they're verified, and the test environment may be the user's to name.
 
 ## Open question candidates
 
 §8 rarely raises new ones. A new one means an earlier section is ambiguous — go back and clarify it first.
-
-The plausible case: an uncertain NFR test environment (staging spec unknown) → `[待拍板]`.
 
 ## Display format
 
@@ -90,11 +88,13 @@ Once the user approves the §8.1 format, batch the remaining sections.
 
 ### Step 3: the decisions, if any
 
-§8 usually needs none. Where §8.5 NFR verification environment is uncertain:
+§8 usually needs none. Where the §8.5 verification environment is uncertain:
 
 ```
-NFR-1 測試:我推測在 staging 跑 load test(50 concurrent users, 10 分鐘)。
-你們的 staging 規格大概是 prod 多少比例?需要調整測試設定嗎?
+❓ **NFR-1 的驗證環境**:(a) staging 完整驗證 (b) staging 打折驗證,再標註與 prod 的差距
+➡️ 建議 (a) —— 除非你們 staging 規格明顯小於 prod,那就走 (b) 並在 §8.5 寫下比例
+
+我先假設在 staging 跑 load test(50 concurrent users, 10 分鐘)。
 ```
 
 ## Where you'll get stuck
@@ -107,10 +107,6 @@ Expected — BDD is finer-grained than a bullet list, so the count is naturally 
 
 Take their example — 「AC-2.1 跟 AC-EF.1 看起來像」 — and name the difference: 2.1 is the happy path, EF.1 is the error path.
 
-### The NFR test environment is uncertain
-
-Accept `[待拍板]`, or default to 「staging 完整驗證」 with a note that real environment differences need filling in.
-
 ## Reflection check, before §9
 
 - [ ] Every §2.1 FR has an AC
@@ -118,9 +114,14 @@ Accept `[待拍板]`, or default to 「staging 完整驗證」 with a note that 
 - [ ] Every §3.4 BR has an AC or a reference
 - [ ] Every §4.2 EF and §4.3 EC has an AC
 - [ ] Every §2.2 NFR has an AC plus a verification level
-- [ ] Every row of the §8.6 Coverage Matrix carries a specific AC number, with no blanks
+- [ ] §8.6 exists where FR + NFR exceeds 10, and where it exists every row carries a specific AC number with no blanks
 - [ ] ACs use BDD format, and every Then clause is verifiable
-- [ ] No marker reached disk — `grep -n "\[需確認\|\[待拍板" 8-acceptance.md` returns nothing
+
+Then run the three checks from inside the spec folder and **say what they printed**:
+
+- [ ] `grep -c "\[需確認\|\[待拍板" 8-acceptance.md` → `0`
+- [ ] `python3 <skill-path>/scripts/check-sections.py .` → ✓
+- [ ] `python3 <skill-path>/scripts/check-example-ids.py .` → ✓
 
 ## Closing summary
 
@@ -132,11 +133,13 @@ Accept `[待拍板]`, or default to 「staging 完整驗證」 with a note that 
 - AC for BR:{N} 個(含 reference)
 - AC for Error & Edge:{N} 個
 - AC for NFR:{N} 個
-- Coverage Matrix:完成
+- Coverage Matrix:[完成 / 跳過(FR + NFR ≤ 10)]
 
 整份 spec 已涵蓋 8 份核心文件。
 
-接下來最後一份 §9 rollout(選填)— 上線策略、監控、Runbook。
+接下來最後一份 §9 rollout — 上線策略、監控、Runbook。
 
 要做 §9 嗎?還是 spec 到這裡結束?
 ```
+
+**Check the README's §9 row first.** §1's path may have already settled it — `⏭️ 跳過` means say so and close rather than re-opening a decision the user made. Ask only where the row is still `⬜ 待產`. On the production route §9 is not optional and there is nothing to ask.

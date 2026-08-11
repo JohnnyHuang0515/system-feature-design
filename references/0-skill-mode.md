@@ -8,18 +8,6 @@
 
 The user supplies **重點 + 方向 + 結果** — the gist, the direction, the outcome. You derive every piece of structure from it.
 
-```
-使用者輸入：一段話（要做什麼、給誰、重點是什麼）
-   ↓
-Claude 推導：FR / entity / flow / API / AC 等所有結構
-   ↓
-展示給使用者：用容易理解的方式呈現
-   ↓
-使用者驗證：確認 / 修正 / 拍板必要決策
-   ↓
-進入下一份文件
-```
-
 Four rules run through the whole session:
 
 - You derive; the user verifies, corrects and decides. Structural decomposition is where they are weakest, so it stays on your side.
@@ -55,13 +43,7 @@ Four rules run through the whole session:
 （你已經很清楚市場、想直接設計的話，跟我說就跳過。）
 ```
 
-Three routes:
-
-- **Wants it, or has research to fold in** → run §0 (opening and method in `0-market-research.guide.md`)
-- **Declines, or it's a pure internal tool with no market dimension** → skip to §1, mark `⏭️ 跳過` in the README
-- **The request *is* market research / competitive analysis** → §0 is the main event; offer the rest of the spec once it lands
-
-§1 problem-scope starts after §0 completes or is skipped.
+The three routes and the rule about what reason gets recorded are in `SKILL.md`'s `Opening`.
 
 ### When the description is too thin
 
@@ -95,27 +77,27 @@ A bare 「我想做 X 功能」 gets caught, not returned. Fill the gap with 1�
 [展示填好的 template 內容]
 ```
 
-**Close with the decisions you need**:
+**Close with the decisions you need.** Every question takes this shape, whatever raised it — a `[待拍板]` fork, a `[需確認]` value you inferred, anything else you are putting to the user:
 
 ```
 需要你拍板的決策：
 
-1. [生活化問題 1]
-   例如：A 還是 B？你比較傾向哪個？
+❓ **Q1** — **[標題]**:(a) [選項] (b) [選項] (c) [選項]
+➡️ 建議 (b) —— [一句為什麼]
 
-2. [生活化問題 2]
-   ...
+❓ **Q2** — **NFR-1 延遲**:(a) p99 < 500ms (b) p99 < 1s
+➡️ 建議 (a) —— [一句為什麼是這個而不是隔壁那個]
+
+其餘我先照建議值填了:可用性 99.5%、保留 3 年、併發 200 —— 要改再說。
 ```
 
-## Five kinds of feedback
+**Every question is options plus a pick** — including the values you inferred. A number you already wrote has no recommendation to give until the neighbouring value sits beside it; then 建議 (a) is a choice again.
 
-| The user says | You do |
-|---|---|
-| 「OK 沒問題」 | Write to disk, move to the next document |
-| 「persona 改成 X」 (small fix) | Correct it, confirm again |
-| 「整個 scope 不對，應該是 Y」 (major change) | Re-derive that section |
-| 「§1.3 的 persona 我想改」 (back-edit) | Amend, then propagate downstream — see [Amending earlier documents](#amending-earlier-documents) |
-| 「§3.2 詳細展開給我看」 | Give the full content |
+**One decision per `❓`, one value in play.** Where you inferred four numbers, ask about the one that moves the design and announce the rest, the way the block above does. And one `❓` per decision: 同日申請 belongs to whichever section owns it, asked once there.
+
+**The `➡️` is a field, not a reminder.** A `❓` without one is a half-rendered message, and it shows — so the questions that have no recommendation to carry stay outside this block and carry no `❓`: the Opening's 1–3 follow-ups, and facts you simply do not have like the company's own tenure brackets or how many staff there are.
+
+**The `➡️` line ends the question.** Adding 「不過你們公司有既定規則嗎?」 after it hands the generating back and undoes the line above.
 
 ## Derive vs ask
 
@@ -136,7 +118,7 @@ A bare 「我想做 X 功能」 gets caught, not returned. Fill the gap with 1�
 
 **Cross-feature logic** — should this event notify other services? Which side owns the source of truth for this field?
 
-**Frontend experience** (the 前端體驗決策清單 in `5-presentation-spec.guide.md`) — where does the feature get entered from: a new sidebar item, or a button on an existing page? Its own page, a modal, or a drawer? What does the user see on an empty state or a failure? Mobile support? Does the view refresh itself?
+**Frontend experience** — the 前端體驗決策清單 in `5-presentation-spec.guide.md`, always run where there is a GUI.
 
 > The frontend dividing line: *which* components and pages exist is structural derivation, yours to do. What they look like, how they behave, what happens on failure is experience — you propose, the user decides. Filing all of the frontend under "structural" is how the discussion gets skipped.
 
@@ -146,7 +128,7 @@ Once §1 establishes the stage as POC or side project, later documents run fast:
 
 - **Low-risk calls don't stop the user.** Where an industry convention or an obvious default exists and reversing later is cheap — naming, loose NFR numbers, reversible structural choices — take the recommendation and announce it in one line: 「以下 N 項我直接採建議值（列清單），要改再說」.
 - **§5 frontend is the exception.** It is the only part the user sees directly. Use a **one-shot confirmation pack** instead: list the recommended value for each relevant dimension of the frontend checklist and confirm the whole set at once, counting as a single hard stop.
-- **§0 runs compressed**: 3 competitors instead of 5, rough demand sizing instead of full TAM/SAM/SOM, weight on the differentiation angle (§0.6); with no feedback data, §0.5 gives web demand signals only. Sourcing discipline holds — a POC is no licence to invent numbers. §0's single hard stop is the **direction check before the research run** (see `0-market-research.guide.md`): confirm once, run to completion, then show results.
+- **§0 runs compressed** — `0-market-research.guide.md` says how far. Its single hard stop is the **direction check before the research run**: confirm once, run to completion, then show results.
 - **Hard-stop only on high-risk forks.** Any one of these qualifies:
   - (a) Irreversible — account locking, deletion, publishing outward
   - (b) Money or directional rules — who pays more, who goes first
@@ -187,18 +169,7 @@ empty state →「使用者第一次進來、一筆資料都沒有的時候，�
 
 The same swap covers state machines (「訂單從建立到結束會經過哪些階段？」), business rules (「有沒有什麼規則是『絕對不可以違反』的？」) and entry points (「使用者要從哪裡進到這個功能？」).
 
-### Giving options
-
-When the user can't answer off the top of their head, give concrete options rather than handing the jargon back:
-
-```
-✅ 「同名模板要怎麼處理？常見的做法有三種：
-    (a) 直接拒絕，請使用者改名後再匯入
-    (b) 自動覆蓋
-    (c) 跳出選單讓使用者選『覆蓋 / 建立新的 / 取消』
-
-    我建議 (c) — 平衡彈性跟誤操作風險。你覺得呢？或有別的想法？」
-```
+Where the user can't answer off the top of their head, give concrete options rather than handing the jargon back — `Iron rule` below is the shape.
 
 ### Which questions go together
 
@@ -212,8 +183,8 @@ Then the user's answers push the frontier outward. Recompute it and ask the next
 
 Where the tool exists, every decision goes through it — clicking beats typing:
 
-- **The tool takes at most 4 questions per call.** A frontier larger than that gets split across consecutive calls, or asked in numbered prose instead — either way the split is a **rendering** decision, so keep questions that belong to the same round in the same round rather than inventing an order to make them fit.
-- Style each option as above: outcome-shaped label, pros and cons in the description, recommended option first and marked 「(推薦)」.
+- **The tool takes at most 4 questions per call.** A frontier larger than that gets split across consecutive calls, or asked in the `❓` / `➡️` form above instead — either way the split is a **rendering** decision, so keep questions that belong to the same round in the same round rather than inventing an order to make them fit.
+- The recommendation is the same field in a different skin: outcome-shaped option labels, pros and cons in the description, **recommended option first and marked 「(推薦)」**. A call with no option so marked is the tool's version of a `❓` with no `➡️`.
 - An interruption or a refusal to answer means the user has something to say → ask what they want to clarify before re-asking the same set.
 
 ## Open questions
@@ -249,8 +220,8 @@ Decisions with a direction — who pays more or less, who goes first, keep or ov
 
 ### After the call is made
 
-- **The user picks an option** → it becomes an ADR (D-NNNN, Status: Accepted) **authored at §7's consolidation pass**. Until §7 runs, leave `Related ADR` as `—` rather than citing a number whose file does not exist yet
 - **The user says 「先放著」** → it stays an open question (Status: Proposed) in §7.2, and **must carry Owner and Target Date** (e.g. `Owner: 待補`, `Target Date: Post-POC`). An OQ without them floats forever.
+- **A parked question the user later settles** → the same door in reverse: flip the file's Status to `Accepted`, rewrite its Options as Decision + Rationale, and **move its row from §7.2 into §7.1** — that table is where accepted decisions live, and there is no third section for them.
 
 ## Markers
 
@@ -276,6 +247,10 @@ Every marker leaves by one of exactly two doors — deleted, or converted to a `
 
 A written document may only carry references pointing at §7.2 open questions. Check 5 of the full-spec review tests exactly this — a bare marker left in a file is an Error.
 
+## The closing bar
+
+Every guide ends on the same three commands, run from inside the spec folder, **printed as they printed**. Each `✗` names its own fix. One you are leaving in place is the user's call — put it in front of them rather than filing it away in a report.
+
 ## Amending earlier documents
 
 Whenever the user says they want to change §X, accept it and do two things: re-derive §X, then scan for what it affects.
@@ -287,6 +262,7 @@ Common propagation chains:
 - §1.3 persona → the Persona column of §2.1 FRs, §5.2 user stories
 - §3.2 entity fields → §6.2 API request/response schemas, §8 AC
 - §3.3 state machine → the state transitions described in §4.1 SFs, §8.2 AC for state
+- §7 ADR ↔ §1.5.1 POC table — two renderings of one decision; `7-decisions.guide.md` carries the sync rules
 
 ### Propagation
 
@@ -303,18 +279,6 @@ After amending an earlier section, scan forward and lay the impact out:
 
 Update everything affected in one pass once the user confirms.
 
-### Two-way propagation: §1.5.1 POC table ↔ §7 ADR
-
-The `§1.5.1` POC trade-off table is **a scannable view for humans**; the matching `§7` ADR is **the full decision record for AI and engineers**. Two renderings of one thing, kept in sync.
-
-1. **§7 ADR is the source of truth** — rationale, alternatives and consequences all live there
-2. **§1.5.1 is the condensed view** — issue / current decision / future direction / related ADR only
-3. **Not every §1.5.1 row becomes an ADR** — apply the ADR threshold in the §7 guide
-4. **A change to a §7 ADR propagates back to §1.5.1 automatically**: title changes → the 議題 column; decision changes → the 當前決定 column; a new ADR → check whether §1.5.1 needs a row; a superseded ADR → strike the row and reference the replacement
-5. **A §1.5.1 row with no ADR** (too minor to expand) → leave `Related ADR` as `—`
-
 ## Full-spec review
 
-After the last document lands (§9, or §8 when §9 is skipped), **offer to run a full-spec review** — the cross-document pass that catches what per-document work cannot: numbered references that don't resolve, one concept described two ways, orphans, omissions.
-
-The wording, the seven checks (0–6, opening with a mechanical grep pass) and the result bucketing all live in `references/full-spec-review.md`. Read it when you get there, not before — it is a third of this file's weight and it earns nothing until the spec is complete.
+Offered after the last document; everything about it lives in `references/full-spec-review.md`. Read it when you get there, not before — it earns nothing until the spec is complete.

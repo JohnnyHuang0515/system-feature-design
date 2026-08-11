@@ -51,7 +51,7 @@ Two rules keep it a gate:
 
 Calibration: a 50-user internal tool usually fires two — Security, plus Performance where someone named a number. A public revenue-carrying service usually fires most of them. Landing on five or six for something small means the table was read as a checklist.
 
-Every NFR Target is an inferred value marked `[需確認]`.
+Every NFR Target is an inferred value marked `[需確認]`. **The marker lives in the draft you show, never in the file you write** — §2 creates more of them than any other document, and the closing bar greps this file for exactly that token. Show the tables, take the user's corrections, then write the settled numbers with the markers stripped. Running with nobody to answer does not license writing them to disk: write your recommended value as the target, and record in §1.6 that it was adopted unconfirmed. That is an assumption, not an open question — §7.2 is for decisions still waiting on someone.
 
 ### Priority Summary
 
@@ -98,8 +98,11 @@ Show the §2.1 FR table and the §2.2 NFR tables per category, against the templ
 ```
 有幾個我推測的數字想跟你確認:
 
-1. NFR-1 我推測 p99 latency < 500ms,合理嗎?或你心中有別的目標?
-2. FR-9 (結構警告) 我預設 Should,要不要提升到 Must?
+❓ **Q1** — **NFR-1 延遲目標**:(a) p99 < 500ms (b) p99 < 1s
+➡️ 建議 (a) —— 內部工具的常見水準;對外服務才需要更嚴,你這個不是
+
+❓ **Q2** — **FR-9 結構警告的優先級**:(a) Should (b) Must
+➡️ 建議 (a) —— 它不阻擋匯入,少了功能照樣能用
 ```
 
 ## Where you'll get stuck
@@ -121,11 +124,16 @@ Give an industry-typical value plus a reason their situation might differ, so th
 
 - [ ] Every §1.5 in-scope item maps to at least one FR
 - [ ] Every FR's Persona maps to a persona listed in §1.3
-- [ ] Where §0 ran, every §0.6 OPP-N maps to an FR whose priority was raised — no opportunity dropped
+- [ ] Where §0 ran, every §0.6 OPP-N maps to an FR, and that FR is marked 差異化核心 in §2.4 — Must alone doesn't show it, because most table stakes are Must too
 - [ ] NFRs cover Security & Authorization at minimum
 - [ ] Every other NFR category present can point at the fact that fired it — and none contradicts something the user said
 - [ ] A Priority Summary exists where FR + NFR exceeds 10
-- [ ] No marker reached disk — `grep -n "\[需確認\|\[待拍板" 2-requirements.md` returns nothing
+
+Then run the three checks from inside the spec folder and **say what they printed**:
+
+- [ ] `grep -c "\[需確認\|\[待拍板" 2-requirements.md` → `0`
+- [ ] `python3 <skill-path>/scripts/check-sections.py .` → ✓
+- [ ] `python3 <skill-path>/scripts/check-example-ids.py .` → ✓
 
 ## Closing summary
 

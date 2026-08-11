@@ -35,7 +35,7 @@ Scan §4.1 SFs for boundary-crossing points and collect them into the overview t
 
 ### Error model
 
-Reverse-engineer error codes from every §4.2 EF. HTTP status maps to the EF's failure type; codes are UPPER_SNAKE_CASE; the same code returns the same status on every endpoint.
+Reverse-engineer error codes from every §4.2 EF. HTTP status maps to the EF's failure type; the same code returns the same status on every endpoint; codes are UPPER_SNAKE_CASE and specific — `404 TEMPLATE_NOT_FOUND`, not `404 NOT_FOUND`.
 
 **Every code used by a §6.2 endpoint must be registered in the §6.5 catalog.** Build the catalog as you derive.
 
@@ -103,15 +103,14 @@ Once every endpoint is covered, show the full catalog.
 ```
 有幾件事需要你拍板:
 
-1. 匯入流程:我設計成「兩階段」 — 先 POST /import 取得預覽 token,
-   再 POST /import/confirm 寫入。這樣可以在預覽頁停留時驗證結果保留。
-   你比較想要這樣,還是「單階段」(POST 一次直接寫入)?
+❓ **Q1** — **匯入流程幾階段**:(a) 兩階段 —— 先 POST /import 取預覽 token,再 POST /import/confirm 寫入 (b) 單階段 —— POST 一次直接寫入
+➡️ 建議 (a) —— 預覽頁停留時驗證結果還在,使用者不必重傳一次檔案
 
-2. 失敗時的 error message 要不要包含「具體錯誤位置」(例:
-   `path: "/nodes/0/name"`)?好處是 client 可以精準指出哪裡錯,
-   壞處是 schema 細節曝光。
+❓ **Q2** — **失敗訊息帶不帶錯誤位置**(例 `path: "/nodes/0/name"`):(a) 帶 (b) 不帶
+➡️ 建議 (a) —— 這是內部工具,而「不知道哪裡錯」是匯入最常見的挫折
 
-3. Rate limiting:POC 階段需要做嗎?還是先不做?
+❓ **Q3** — **Rate limiting**:(a) POC 先不做 (b) 現在就做
+➡️ 建議 (a) —— 內部試用流量小,而 §9 的 feature flag 已經能緊急止血
 ```
 
 ## Where you'll get stuck
@@ -126,16 +125,21 @@ Hold the conversation at the contract level, and note that implementation detail
 
 ### Error-code naming goes in circles
 
-Give the naming rule: UPPER_SNAKE_CASE, HTTP status plus a specific description — `404 TEMPLATE_NOT_FOUND`, not `404 NOT_FOUND`.
+Give them the naming rule from `Error model` above and pick for them.
 
 ## Reflection check, before §7
 
-- [ ] Every §2.1 FR maps to at least one endpoint, inbound event / webhook (§6.3), or background job trigger
+- [ ] Every §2.1 FR maps to a named §6 item — an endpoint (§6.2), an inbound event or webhook (§6.3), or a published event (§6.4.1). An FR whose only answer is 「背景工作做的」 has no interface written, so name the event that starts it
 - [ ] Every endpoint maps to at least one SF
 - [ ] Every endpoint's errors are registered in the §6.5 catalog
 - [ ] Every published event is listed in §3.5
 - [ ] Every external integration has timeout + retry + failure handling
-- [ ] No marker reached disk — `grep -n "\[需確認\|\[待拍板" 6-interfaces.md` returns nothing
+
+Then run the three checks from inside the spec folder and **say what they printed**:
+
+- [ ] `grep -c "\[需確認\|\[待拍板" 6-interfaces.md` → `0`
+- [ ] `python3 <skill-path>/scripts/check-sections.py .` → ✓
+- [ ] `python3 <skill-path>/scripts/check-example-ids.py .` → ✓
 
 ## Closing summary
 

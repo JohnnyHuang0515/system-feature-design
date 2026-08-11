@@ -12,15 +12,12 @@
 
 ## 2.2 Non-Functional Requirements
 
-> 按以下分類整理。**不是每個分類都需要填**，沒適用的省略整個小節。
->
-> 建議的最低集合：
-> - 任何 feature：Security & Authorization
-> - 對外服務：加上 Performance、Reliability、Observability
-> - 處理使用者資料：加上 Compliance & Audit
-> - 預期成長快：加上 Scalability
+> **這是 gate 不是 menu。** 每個小節下方寫著它的觸發條件 —— 條件沒發生就整節省略。
+> 「為了完整性」加進來的分類，會生出一個沒人量的目標值和一條 §8 沒人寫的 AC。
 
 ### 2.2.1 Performance
+
+> 選填。觸發條件：對外服務，或使用者講了一個效能數字。
 
 | ID | Requirement | Target | Notes |
 |----|-------------|--------|-------|
@@ -28,11 +25,15 @@
 
 ### 2.2.2 Security & Authorization
 
+> 唯一無條件的分類 —— 至少要有認證與授權。
+
 | ID | Requirement | Target | Notes |
 |----|-------------|--------|-------|
 | NFR-X | {認證 / 授權 / 資料保護} | ... | ... |
 
 ### 2.2.3 Reliability
+
+> 選填。觸發條件：對外服務，或業務關鍵。
 
 | ID | Requirement | Target | Notes |
 |----|-------------|--------|-------|
@@ -40,17 +41,23 @@
 
 ### 2.2.4 Observability
 
+> 選填。觸發條件：對外服務，或有人要 on call。
+
 | ID | Requirement | Target | Notes |
 |----|-------------|--------|-------|
 | NFR-X | {Logging / Metrics / Tracing / Alerting} | ... | ... |
 
 ### 2.2.5 Scalability
 
+> 選填。觸發條件：預期會快速成長。
+
 | ID | Requirement | Target | Notes |
 |----|-------------|--------|-------|
 | NFR-X | {預期成長 / 擴展點} | ... | ... |
 
 ### 2.2.6 Compliance & Audit
+
+> 選填。觸發條件：處理金流、醫療紀錄，或受規範的個人資料。
 
 | ID | Requirement | Target | Notes |
 |----|-------------|--------|-------|

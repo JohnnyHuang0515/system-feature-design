@@ -33,7 +33,7 @@ A 「不做」 goes straight to the flow in `references/full-spec-review.md`.
 ```
 進入第九份(最後一份):上線與運維。
 
-最小必寫集合:
+最小必寫集合(POC 可以只寫這三節,而且只寫 §9.3.2 logs + §9.6 Level 1):
 - §9.1 Rollout Strategy
 - §9.3 Observability
 - §9.6 Rollback Plan
@@ -91,9 +91,10 @@ Every trigger is quantified, never subjective.
 
 ## Questions you must ask
 
-1. **POC vs MVP vs production** — sets how detailed the stages get
-2. **Any SLA commitment** — sets alert thresholds
-3. **Rollback rehearsal sign-off** — who is the tech lead
+1. **Any SLA commitment** — sets alert thresholds
+2. **Rollback rehearsal sign-off** — who is the tech lead
+
+The stage is not one of them: §1's Q-Stage settled it, and `Rollout strategy` above reads it from there.
 
 ## Open question candidates
 
@@ -120,31 +121,28 @@ Every trigger is quantified, never subjective.
 
 ### Step 2: section by section
 
-For a POC, foreground §9.1 + §9.3 + §9.6. Offer the other sections as 精簡版 or 完整版 and let the user pick.
+For a POC, foreground the minimum set from `Opening`. Offer the other sections as 精簡版 or 完整版 and let the user pick.
 
 ### Step 3: the decisions
 
 ```
 有幾件事需要你拍板:
 
-1. 你說這是 POC,我給 3 個 stages(dogfood → beta → GA)。對嗎?
-   還是你希望加入 1% canary?
+❓ **Q1** — **Rollout 階段**:(a) 3 段(dogfood → beta → GA) (b) 加一段 1% canary
+➡️ 建議 (a) —— 內部先行的 POC,canary 要的流量規模還不存在
 
-2. NFR-1 latency p99 < 500ms,對應 alert 我設「p99 > 1s 持續 10 分鐘」。
-   太敏感還是不夠?
+❓ **Q2** — **告警門檻**(NFR-1 是 p99 < 500ms):(a) p99 > 1s 持續 10 分鐘 (b) p99 > 500ms 立即告警
+➡️ 建議 (a) —— 兩倍緩衝加上持續時間可以濾掉單點抖動,(b) 會在每次尖峰吵醒人
 
-3. Rollback 演練 sign-off 由誰負責?(影響 release gate 設計)
+❓ **Q3** — **Rollback 演練的 sign-off**:(a) 你自己 (b) 指定一位 on-call
+➡️ 建議 (b) —— 演練的價值在於當天值班的人做過一次(影響 release gate 設計)
 ```
 
 ## Where you'll get stuck
 
-### The user has never planned a rollout
+### The user has never planned a rollout, or thinks it's too much
 
-Push a full version and let them delete what they don't need. Deleting is easier than starting from a blank page.
-
-### A POC user thinks it's too much
-
-Offer the POC-lite vs MVP-full comparison. A POC can run on §9.1 + §9.3.2 (logs) + §9.6 Level 1 alone.
+Push a full version and let them delete what they don't need — deleting is easier than starting from a blank page. Where they push back on the volume, put the minimum set beside the full one and let them pick the line.
 
 ### The runbook content won't come
 
@@ -153,12 +151,17 @@ Accept the skeleton-plus-placeholder form. Inventing operational steps is worse 
 ## Reflection check, before the full-spec review
 
 - [ ] Every §9.1 stage has its own quantified success and abort criteria
-- [ ] Every §9.3 metric traces to a specific §2.2.4 NFR ID
+- [ ] Every §9.3 metric names where it came from — an NFR ID for the SLIs, a §1.4 success criterion for the business metrics. A metric tracing to neither is one nobody asked for
 - [ ] Every §9.4 alert has a §9.5 runbook
 - [ ] §9.6 rollback triggers are quantified, not subjective
 - [ ] §9.6 rehearsal has an explicit sign-off mechanism
 - [ ] Every 「由運維補」 placeholder in a runbook names what's missing and who fills it, rather than sitting blank
-- [ ] No marker reached disk — `grep -n "\[需確認\|\[待拍板" 9-rollout.md` returns nothing
+
+Then run the three checks from inside the spec folder and **say what they printed**:
+
+- [ ] `grep -c "\[需確認\|\[待拍板" 9-rollout.md` → `0`
+- [ ] `python3 <skill-path>/scripts/check-sections.py .` → ✓
+- [ ] `python3 <skill-path>/scripts/check-example-ids.py .` → ✓
 
 ## Closing summary
 

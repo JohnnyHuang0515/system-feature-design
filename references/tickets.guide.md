@@ -8,7 +8,7 @@ A **tracer bullet** is a narrow but *complete* path through every layer — sche
 
 - **Each slice cuts vertically.** One slice carries its own schema change, its own logic and its own screen. A slice of one layer is not a slice.
 - **A completed slice is demoable or verifiable on its own.** Finish it, open the browser, see it work.
-- **Each slice fits in a single fresh context window.** The implementing agent starts clean and reads only that ticket.
+- **Each slice fits in a single fresh context window.** The implementing agent starts clean and reads only that ticket. Count it rather than eyeballing it: **one entity, one or two endpoints, one screen** is the shape that fits. A slice you can only describe by listing three or more of each is two tickets.
 - **Prefactoring goes first**, as its own ticket. *Make the change easy, then make the easy change.*
 
 The failure this prevents: an agent left to plan on its own builds every table, then every service, then the screens — and nothing is testable until the last step, so a wrong table surfaces days late.
@@ -83,7 +83,7 @@ A worked set sits in `examples/automation-template-export/issues/`.
 
 **No file paths, no code snippets.** Both go stale within days, and a ticket carrying a stale path sends the implementing agent to the wrong file with full confidence.
 
-The exception, borrowed from §7: a snippet that encodes a *decision* more precisely than prose can — a state machine, a reducer, a schema, a type shape. Inline it, note where it came from, and trim to the decision-rich part.
+The exception is a snippet a **prototype produced** that encodes a *decision* more precisely than prose can — a state machine, a reducer, a schema, a type shape. Inline it, note where it came from, and trim to the decision-rich part. A snippet you wrote to illustrate an idea is prose with syntax, and goes stale like a path does.
 
 ## Coming from a spec
 

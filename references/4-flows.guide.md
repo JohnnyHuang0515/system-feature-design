@@ -91,13 +91,11 @@ For a complex feature, show 1–2 SFs with their EFs and ECs per turn so the use
 ```
 有幾件事需要你拍板:
 
-1. EC-7:使用者短時間連點兩次匯入按鈕,系統怎麼處理?
-   (a) 建兩筆模板(同名會跳同名 Modal)
-   (b) Server 端用 idempotency key,5 分鐘內視為同一筆
-   (c) Client 端 button disable 就好
+❓ **Q1** — **EC-7 連點兩次匯入**:(a) 建兩筆(同名會跳 Modal) (b) Server 端 idempotency key,5 分鐘內視為同一筆 (c) Client 端 disable 按鈕
+➡️ 建議 (b) —— (c) 擋不住重送與網路重試,而重複匯入是使用者最難自己收拾的錯
 
-2. EF-5:DB 寫入到一半失敗(connection drop),怎麼處理?
-   你預期是 transaction rollback(整批回滾)還是部分保留?
+❓ **Q2** — **EF-5 寫入中途斷線**:(a) Transaction rollback,整批回滾 (b) 保留已寫入的部分讓使用者接續
+➡️ 建議 (a) —— §1.4 的反指標寫著「匯入失敗時不留下半成品」
 ```
 
 ## Where you'll get stuck
@@ -116,7 +114,12 @@ Group them into common vs rare. The rare ones can go if the user judges them uni
 - [ ] Every SF has at least 1–2 EFs — an SF with no failure mode is suspicious
 - [ ] Every state transition and event named in an SF is defined in §3
 - [ ] All three §4.4 trigger questions are answered
-- [ ] No marker reached disk — `grep -n "\[需確認\|\[待拍板" 4-flows.md` returns nothing
+
+Then run the three checks from inside the spec folder and **say what they printed**:
+
+- [ ] `grep -c "\[需確認\|\[待拍板" 4-flows.md` → `0`
+- [ ] `python3 <skill-path>/scripts/check-sections.py .` → ✓
+- [ ] `python3 <skill-path>/scripts/check-example-ids.py .` → ✓
 
 ## Closing summary
 

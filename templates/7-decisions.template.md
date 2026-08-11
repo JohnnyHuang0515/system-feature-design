@@ -4,7 +4,11 @@
 
 ## 7.1 Decision Index
 
-### Active Decisions
+> **這張表是已拍板決策的唯一去處。** §7.2 的某條被拍板了，就把該檔的 Status 改成
+> Accepted、把那一列從 §7.2 搬過來 —— 不要另開一節放「已決事項」。門檻以下、
+> 不值得展開成 ADR 的，留在 §1.5.1 或 §2.3，也不進這裡。
+
+### Accepted Decisions
 
 | ID | Title | Status | Date | Affects |
 |----|-------|--------|------|---------|
@@ -20,6 +24,9 @@
 ## 7.2 Open Questions
 
 > 列出 Status: Proposed 的 D-N，等待決議。
+> **一條都沒有時，整節就寫一個「無」，不要寫一句話說明沒有。**
+> 標記的字面本身是被 grep 的目標 —— 一句「沒有未決事項」只要帶到那四個字，
+> 就會被收尾檢查與 full-spec-review Check 0 當成殘留標記報錯。
 
 | ID | Title | Blocking? | Owner | Target Date |
 |----|-------|-----------|-------|-------------|
