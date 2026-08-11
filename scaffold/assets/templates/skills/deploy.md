@@ -36,7 +36,7 @@ If **any** of these fail, stop and surface the issue. Don't deploy past a failur
 
 After the deploy completes:
 
-- [ ] Smoke test — name the endpoints you hit and paste each status code. 「試過了」 with nothing beside it is not a smoke test.
+- [ ] Smoke test — name the endpoints you hit and paste each status code. "tested it" with nothing beside it is not a smoke test.
 - [ ] Error monitoring — **zero new error signatures since the deploy timestamp**. Some errors is not a passing bar; state the count and the window you looked at.
 - [ ] Platform health indicators green, named one by one.
 - [ ] Where a migration shipped, the schema diff against expected is **empty** — show it.

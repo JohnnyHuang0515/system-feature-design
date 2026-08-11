@@ -1,12 +1,12 @@
-# Testing ({{TEST_FRAMEWORK}})
+# Testing — the JS runner (jest / vitest / mocha)
 
-How we test in this project using {{TEST_FRAMEWORK}}. Claude should read this before writing or modifying tests.
+How we test in this project. Claude should read this before writing or modifying tests.
 
 ## Commands
 
-- **Run all tests:** `{{TEST_CMD}}`
+- **Whole suite, every framework in this repo:** `{{TEST_CMD}}`
 
-Everything else is `{{TEST_CMD}}` plus a {{TEST_FRAMEWORK}} flag — pass them the way this project's package manager does:
+Everything below goes to **the JS runner itself**, not to the whole-suite command — where this repo runs more than one framework that command chains runners, and a flag on the end lands on the wrong one:
 
 - **Watch mode:** `--watch`
 - **One file:** the path, e.g. `path/to/file.test.ts`

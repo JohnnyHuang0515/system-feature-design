@@ -35,7 +35,7 @@ Extract what is being built, which files change, the acceptance criteria, and th
 
 ### 2. Agree the seams — first dispatch only
 
-Write down the **seams** the plan's work will be tested at — the public boundaries where behaviour is observable without reaching inside — and confirm them with the human before writing anything. **No test is written at an unconfirmed seam.**
+Write down the **seams** the plan's work will be tested at — the public boundaries where behaviour is observable without reaching inside. You are dispatched, so you have no way to ask the human directly: put the seams in your report and let the dispatcher carry them. **Where the plan already names the seam, take it and proceed.** Where it does not and more than one is defensible, name your choice, name what you rejected, and write the first slice's test against it — flagged in the report as needing confirmation before the slice after it.
 
 Prefer existing seams to new ones, and take the highest seam that still reaches the behaviour. Fewer seams across a codebase is better; one is ideal. `.claude/rules/codebase-design.md` carries the vocabulary.
 

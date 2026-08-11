@@ -12,39 +12,39 @@
 
 ### 1. Think Before Coding
 
-**Don't assume. Don't hide confusion. Surface tradeoffs.**
+**Say what you assumed, and put the fork to the human.**
 
 Before implementing:
-- State your assumptions explicitly. If uncertain, ask.
-- If multiple interpretations exist, present them — don't pick silently.
-- If a simpler approach exists, say so. Push back when warranted.
-- If something is unclear, stop. Name what's confusing. Ask.
+- State your assumptions explicitly. Where you are uncertain, ask.
+- Where the request reads two ways, present both and let the human pick.
+- Where a simpler approach exists, say so. Push back when warranted.
+- Where something is unclear, stop and name what is confusing.
 
 ### 2. Simplicity First
 
-**Minimum code that solves the problem. Nothing speculative.**
+**The minimum code that solves the problem asked for.**
 
-- No features beyond what was asked.
-- No abstractions for single-use code.
-- No "flexibility" or "configurability" that wasn't requested.
-- No error handling for impossible scenarios.
-- If you write 200 lines and it could be 50, rewrite it.
+- Build what was asked, and stop there.
+- Introduce an abstraction on its second caller.
+- Add configurability when something needs configuring.
+- Handle the failures that can actually happen.
+- Where 200 lines could be 50, rewrite it as 50.
 
 Ask yourself: *"Would a senior engineer say this is overcomplicated?"* If yes, simplify.
 
 ### 3. Surgical Changes
 
-**Touch only what you must. Clean up only your own mess.**
+**Every changed line traces to the request. Clean up after your own edits.**
 
 When editing existing code:
-- Don't "improve" adjacent code, comments, or formatting.
-- Don't refactor things that aren't broken.
-- Match existing style, even if you'd do it differently.
-- If you notice unrelated dead code, mention it — don't delete it.
+- Leave adjacent code, comments and formatting as they are.
+- Refactor what the change requires, and leave the rest working as it is.
+- Match existing style, even where you would do it differently.
+- Where you spot unrelated dead code, mention it and leave it in place.
 
 When your changes create orphans:
-- Remove imports/variables/functions that YOUR changes made unused.
-- Don't remove pre-existing dead code unless asked.
+- Remove the imports, variables and functions **your** edits made unused.
+- Leave pre-existing dead code alone until someone asks for it.
 
 **The test:** Every changed line should trace directly to the user's request.
 
@@ -69,15 +69,13 @@ Strong success criteria let you loop independently. Weak criteria ("make it work
 
 ## Project
 
-**Stack:** {{STACK}} · **Tests:** {{TEST_FRAMEWORK}}
+**Stack:** {{STACK}} · **Tests:** {{TEST_FRAMEWORK}} · **Entry point:** `{{ENTRY_POINT}}`
 
 **Commands:** install `{{INSTALL_CMD}}` · test `{{TEST_CMD}}` · lint `{{LINT_CMD}}` · dev `{{DEV_CMD}}`
 
 **Rules:** see `.claude/rules/` (code-style, testing, api-conventions, codebase-design)
 
-**Agents:** for non-trivial work, `planner` → human approves → then **`tester` and `implementer` alternate one vertical slice at a time** (one failing test → make it green → next slice) → review the whole diff by **dispatching `reviewer` twice in parallel, once with `axis: Standards` and once with `axis: Spec`**, and present both reports one after the other under their own `## Standards` / `## Spec` headings, each keeping its own verdict. Trivial changes skip the pipeline. Reconciling the two axes is the human's call, not a combined verdict.
-
-**Skills:** `grilling` before any non-trivial change — let it interrogate you until the decision tree is resolved, and it records what gets settled · `diagnosing-bugs` for any bug that resisted a first glance (build the feedback loop before theorising) · `domain-glossary` to sharpen a fuzzy term into `CONTEXT.md` or record an ADR · `improve-codebase-architecture` as upkeep every few days · `prototype` to answer a design question with throwaway code · `handoff` to carry context into a fresh session · `resolving-merge-conflicts` · `security-review`
+{{PIPELINE_LINE}}
 
 **Shared language:** read `CONTEXT.md` (if present) before naming anything, and respect ADRs in `docs/adr/` for the area you're touching.
 

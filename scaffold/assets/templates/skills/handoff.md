@@ -7,7 +7,7 @@ description: Compact the current conversation into a handoff document so a fresh
 
 Write a handoff document summarising the current conversation so a fresh agent can pick the work up. Save it to the OS temporary directory, not the workspace — it is a bridge, not an artifact.
 
-Then **open a new session and reference that file**. A handoff forks; `/compact` continues. Use a handoff when you want a fresh window but need this conversation preserved verbatim somewhere.
+Then **tell the human the path and that a fresh session should start by reading it** — opening that session is theirs to do, not yours. A handoff forks; `/compact` continues. Use a handoff when you want a fresh window but need this conversation preserved verbatim somewhere.
 
 ## What goes in
 

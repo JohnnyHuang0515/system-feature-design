@@ -30,11 +30,13 @@ Conditional lenses for the `reviewer` agent's **Standards** axis. The General le
 | Deserialization | `pickle.loads`, `yaml.load` (unsafe), `eval` on untrusted |
 
 ### Auth & secrets
-- Auth required on protected endpoints?
-- Authorization **per-object**, not just "is authenticated"?
-- Passwords hashed with argon2/bcrypt (never MD5/SHA1)?
-- Hard-coded credentials? `.env` in `.gitignore`?
-- Secrets logged or sent to third-party APIs?
+
+The full checklist — per-object authorization, password hashing, secret storage, path
+and SSRF handling — lives in the **`security-review`** skill. Read it there rather than
+from a second copy here; two copies of one standard fork the moment either is edited.
+
+What this lens adds is the diff shape: the table above is what to grep the *changed lines*
+for. `security-review` audits a change; this lens reviews a patch.
 
 ### LLM-specific (when LLMs involved)
 - **Prompt injection:** user input concatenated into system prompts without delimiters?

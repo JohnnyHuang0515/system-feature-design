@@ -30,7 +30,7 @@ For each changed file, ask:
 
 ### 2. Run the checklist
 
-For each relevant category below, go through the checks. Flag anything that fails or is unclear.
+Work every category the threat surface triggers, and **give each one a verdict: `pass`, `fail`, or `N/A` with the reason it doesn't apply.** A category you never opened and a category that came back clean look identical in a report that only lists failures — the verdict line is what tells them apart.
 
 **Input validation**
 - [ ] All user input is validated against an allow-list (not just a deny-list) where possible.
@@ -75,6 +75,15 @@ Structure the report as:
 ```
 ## Security review of <change description>
 
+### Categories
+
+| Category | Verdict | Note |
+|---|---|---|
+| Input validation | pass | |
+| Injection | fail | see 🔴 below |
+| Auth | N/A | no privileged endpoint in this change |
+| ... | | |
+
 ### Findings
 
 - 🔴 CRITICAL: <issue> in <file:line> — <why it matters> — <suggested fix>
@@ -87,7 +96,7 @@ Structure the report as:
 - SQL query on line Y is parameterized — good.
 ```
 
-If no issues found, say so explicitly. Don't pad the report.
+Every triggered category has a row. If no issues found, say so explicitly. Don't pad the report.
 
 ### 4. Hard rules
 

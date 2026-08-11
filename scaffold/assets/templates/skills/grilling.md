@@ -24,9 +24,9 @@ Map the work as a **design tree**: every decision branches into the decisions ha
 **The frontier is every decision whose prerequisites are already settled** — the questions you can ask *now* without guessing at an answer you haven't heard. **Ask the whole frontier in one round**, numbered, each carrying your recommended answer.
 
 ```
-❓ **Q1** — **<標題>**:<問題本身,可以多段,可以帶選項>
+❓ **Q1** — **<short title>**: <the question itself; several paragraphs and options are fine>
 
-➡️ <你建議的答案,以及一句為什麼>
+➡️ <your recommended answer, and one sentence of why>
 ```
 
 **A question whose answer depends on another question still open this round belongs to a later round.** That constraint is what makes batching safe: the round is exactly the frontier, never a convenient handful. Get it wrong and you are asking the human to answer something you don't yet have the context to have asked properly.
@@ -61,7 +61,7 @@ A grilling session produces decisions worth more than the conversation that made
 
 Deliberately running without a trail — a throwaway or exploratory session — is fine, but say so up front so the human knows nothing is being kept.
 
-**Completion criterion for the trail.** Before reporting the session done, state the **paths you wrote**, and confirm two things: every term settled during the session appears in `CONTEXT.md`, and every decision clearing all three ADR conditions has a file. Summarising the decisions in your reply is not the trail — a reply is gone next session, which is the entire problem this exists to solve. If you catch yourself writing 「記錄位置：…」 about a file you did not create, you have not left a trail.
+**Completion criterion for the trail.** Before reporting the session done, state the **paths you wrote**, and confirm two things: every term settled during the session appears in `CONTEXT.md`, and every decision clearing all three ADR conditions has a file. Summarising the decisions in your reply is not the trail — a reply is gone next session, which is the entire problem this exists to solve. If you catch yourself writing "recorded in …" about a file you did not create, you have not left a trail.
 
 The payoff compounds: the next session opens with the vocabulary and the settled decisions in hand instead of spending its first half rediscovering them.
 

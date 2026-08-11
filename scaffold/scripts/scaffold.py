@@ -39,7 +39,9 @@ Example config (multi-language: Node backend + Python ML):
 
 All fields are required except:
     - deploy_target (optional; omit to skip the deploy skill)
-    - agents (defaults to all five)
+    - build_cmd / deploy_cmd (only read by the deploy skill; each renders as a
+      TODO line when omitted, so ask for both whenever deploy_target is set)
+    - agents (defaults to all five; the four pipeline roles ship together)
     - gitignore_plans (defaults to true)
 
 Backward compat: "language" (string) and "test_framework" (string) still work,
@@ -72,6 +74,12 @@ TEST_TEMPLATES = {
 }
 
 DEFAULT_AGENTS = ["planner", "tester", "implementer", "reviewer", "researcher"]
+
+# The four that hand off to each other. CLAUDE.md, `grilling`, `plan-schema.md`
+# and `testing-tdd.md` all name them by role and route work between them, so a
+# config that installs three of the four writes a repo whose own instructions
+# dispatch an agent that isn't there. `researcher` stands alone and is optional.
+PIPELINE_AGENTS = ["planner", "tester", "implementer", "reviewer"]
 
 GITIGNORE_CLAUDE_BLOCK = """\
 # Claude Code personal overrides
@@ -134,6 +142,19 @@ def load_config(path: Path) -> dict:
         raise ValueError(f"Unknown agent names: {unknown}. "
                          f"Valid: {DEFAULT_AGENTS}")
 
+    # The pipeline ships whole or not at all.
+    chosen = set(cfg["agents"])
+    partial = chosen & set(PIPELINE_AGENTS)
+    if partial and partial != set(PIPELINE_AGENTS):
+        missing = [a for a in PIPELINE_AGENTS if a not in chosen]
+        raise ValueError(
+            f"The pipeline agents ship together: missing {missing}. "
+            f"CLAUDE.md and the shipped rules route work through all four "
+            f"({', '.join(PIPELINE_AGENTS)}), so installing a subset writes a repo "
+            f"that dispatches agents it does not have. Take all four, or drop to "
+            f"['researcher'] alone."
+        )
+
     return cfg
 
 
@@ -155,8 +176,24 @@ def build_replacements(cfg: dict) -> dict:
         "DEV_CMD": cfg["dev_cmd"],
         "LANGUAGE": ", ".join(languages),
         "DEPLOY_TARGET": deploy_target or "",
-        "BUILD_CMD": cfg.get("build_cmd", cfg["install_cmd"]),
+        # Defaulting build to install put `npm install` under a "Build:" heading in
+        # every deploy-enabled repo. A TODO is read as a gap; a wrong command isn't.
+        "BUILD_CMD": cfg.get("build_cmd", "# TODO: fill in build command"),
         "DEPLOY_CMD": cfg.get("deploy_cmd", "# TODO: fill in deploy command"),
+        # Only stated where the agents it routes through are actually installed.
+        "PIPELINE_LINE": (
+            "**The pipeline**, for non-trivial work: **`grilling`** until the decision "
+            "tree is settled → `planner` → human approves → then **`tester` and "
+            "`implementer` alternate one vertical slice at a time** (one failing test → "
+            "make it green → next slice) → review the whole diff by **dispatching "
+            "`reviewer` twice in parallel, once with `axis: Standards` and once with "
+            "`axis: Spec`**, and present both reports one after the other under their own "
+            "`## Standards` / `## Spec` headings, each keeping its own verdict. Trivial "
+            "changes skip the pipeline. Reconciling the two axes is the human's call, "
+            "not a combined verdict."
+            if set(PIPELINE_AGENTS) <= set(cfg["agents"])
+            else "**Skills:** see `.claude/skills/` — each says when it applies."
+        ),
         "TEST_ONE_CMD": f"{cfg['test_cmd']} <path>",
         "COVERAGE_CMD": (
             f"{cfg['test_cmd']} --cov"
@@ -170,10 +207,6 @@ def build_replacements(cfg: dict) -> dict:
         "FORMATTER": "see existing code",
         "LINE_LENGTH": "100",
         "INDENT": "4 spaces" if primary_lang == "python" else "2 spaces",
-        "DEPLOY_SKILL_LINE": (
-            f"- `deploy` — deployment workflow for {deploy_target}."
-            if deploy_target else ""
-        ),
     }
 
 
@@ -188,6 +221,29 @@ def substitute(text: str, replacements: dict) -> str:
 def find_unreplaced_placeholders(text: str) -> list[str]:
     """Return any {{FOO}} markers still present."""
     return re.findall(r"\{\{(\w+)\}\}", text)
+
+
+def check_replacements_reach_a_template(replacements: dict, templates_dir: Path) -> None:
+    """Every computed replacement has a `{{KEY}}` waiting for it somewhere.
+
+    The reverse direction — a `{{KEY}}` with no value — already surfaces as an
+    unreplaced placeholder in the output. This direction is silent: a value
+    computed for nobody writes nothing and reports nothing, so `entry_point`
+    stayed a required config field for as long as it took someone to grep.
+    A required field the interview asks for and the scaffold discards is worse
+    than a missing one — the user answered it.
+    """
+    used: set[str] = set()
+    for p in templates_dir.rglob("*"):
+        if p.is_file():
+            used |= set(re.findall(r"\{\{(\w+)\}\}", p.read_text(encoding="utf-8", errors="ignore")))
+    orphans = sorted(set(replacements) - used)
+    if orphans:
+        raise ValueError(
+            f"Replacements no template uses: {orphans}. "
+            f"Put a {{{{KEY}}}} where each belongs, or stop computing it — "
+            f"and where it came from a required config field, stop asking for it too."
+        )
 
 
 RETIRED_DIRS = ("in-progress", "deprecated")
@@ -249,13 +305,25 @@ def update_gitignore(
     """Append Claude-related entries to .gitignore without duplicating."""
     gitignore = target / ".gitignore"
     existing = gitignore.read_text(encoding="utf-8") if gitignore.exists() else ""
-    lines_to_add = []
 
-    if "CLAUDE.local.md" not in existing:
-        lines_to_add.append(GITIGNORE_CLAUDE_BLOCK)
+    # Per entry, not per block. A repo that already ignores CLAUDE.local.md on its
+    # own would otherwise skip the whole block and never ignore settings.local.json.
+    def missing(block: str) -> str:
+        wanted = [
+            l for l in block.splitlines()
+            if l.strip() and not l.startswith("#") and l.strip() not in existing.split()
+        ]
+        if not wanted:
+            return ""
+        header = next((l for l in block.splitlines() if l.startswith("#")), "")
+        return "\n".join(([header] if header else []) + wanted) + "\n"
 
-    if include_plans and "PLAN.md" not in existing:
-        lines_to_add.append(GITIGNORE_PLANS_BLOCK)
+    lines_to_add = [b for b in (missing(GITIGNORE_CLAUDE_BLOCK),) if b]
+
+    if include_plans:
+        plans = missing(GITIGNORE_PLANS_BLOCK)
+        if plans:
+            lines_to_add.append(plans)
 
     if not lines_to_add:
         log(".gitignore already up to date", "info")
@@ -314,6 +382,7 @@ def scaffold(
         raise FileNotFoundError(f"Templates directory missing: {templates_dir}")
 
     replacements = build_replacements(cfg)
+    check_replacements_reach_a_template(replacements, templates_dir)
     all_leftover: dict[Path, list[str]] = {}
 
     # 2. Copy core files.
@@ -386,14 +455,23 @@ def scaffold(
     # Only copy files that agents actually need during work (not human-facing docs).
     AGENT_REFERENCES = ["plan-schema.md", "testing-tdd.md", "review-lenses.md"]
     references_dir = skill_dir / "references"
-    if references_dir.is_dir():
-        for ref_name in AGENT_REFERENCES:
-            ref_file = references_dir / ref_name
-            if ref_file.exists():
-                jobs.append((
-                    ref_file,
-                    target / ".claude" / "references" / ref_name,
-                ))
+    # Not `if it exists` — the shipped rules and three of the five agents name these
+    # files by path. Skipping a missing one writes a repo whose own instructions point
+    # at nothing, and reports success while doing it.
+    missing_refs = [
+        n for n in AGENT_REFERENCES if not (references_dir / n).exists()
+    ]
+    if not references_dir.is_dir() or missing_refs:
+        raise FileNotFoundError(
+            f"Agent references missing: {missing_refs or [str(references_dir)]}. "
+            f"The skill's own files are incomplete — reinstall rather than scaffold "
+            f"a repo that points at documents it does not have."
+        )
+    for ref_name in AGENT_REFERENCES:
+        jobs.append((
+            references_dir / ref_name,
+            target / ".claude" / "references" / ref_name,
+        ))
 
     # 7. Execute jobs.
     for src, dst in jobs:

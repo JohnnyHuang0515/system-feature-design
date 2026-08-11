@@ -25,7 +25,7 @@ Conventions for writing TypeScript in this project. Claude should read this befo
 - Semicolons: yes
 - Quotes: single
 
-Run `{{LINT_CMD}}` before committing.
+Lint the whole repo with `{{LINT_CMD}}` before committing — in a multi-language repo that command runs every linter, this file's rules being the TypeScript share of what it checks.
 
 ## Types vs interfaces
 

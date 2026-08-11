@@ -1,12 +1,12 @@
-# Testing (pytest)
+# Testing — pytest
 
 How we test in this project using pytest. Claude should read this before writing or modifying tests.
 
 ## Commands
 
-- **Run all tests:** `{{TEST_CMD}}`
+- **Whole suite, every framework in this repo:** `{{TEST_CMD}}`
 
-Everything else is `{{TEST_CMD}}` plus a pytest argument:
+Everything below goes to **pytest itself**, not to the whole-suite command — in a repo that runs more than one framework, that command chains runners and a pytest argument on the end lands on the wrong one:
 
 - **One file:** `tests/test_foo.py`
 - **One test:** `tests/test_foo.py::test_bar`

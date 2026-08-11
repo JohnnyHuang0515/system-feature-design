@@ -25,7 +25,7 @@ Three parts in the file:
 - **Free-play buttons** for every action, always available, so they can wander into the case you didn't think to script.
 - **Guided walkthroughs** — tabs, one per scenario, each naming the situation in domain language with the buttons to press underneath in order. This is what lets a non-developer reach the edge case you actually need judged.
 
-Label everything the way *they* say it — 「員工請了半天,主管還沒批」, not `state: PENDING_HALF_DAY`. A panel written in the code's vocabulary tests whether they can read your naming, which is not the question.
+Label everything the way *they* say it — "employee took a half day, manager hasn't approved yet", not `state: PENDING_HALF_DAY`. A panel written in the code's vocabulary tests whether they can read your naming, which is not the question.
 
 ### UI — "what should this look like?"
 

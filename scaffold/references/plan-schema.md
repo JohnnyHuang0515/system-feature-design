@@ -60,8 +60,8 @@ DRAFT | APPROVED | IN PROGRESS | DONE
 
 <!-- Ordered. Each step small enough to review independently.
      Implementer executes these in order, running tests after each.
-     A plan spanning more than one vertical slice belongs in Tickets first —
-     see "One plan, one slice" in the rules below. -->
+     A plan spanning more than one vertical slice gets split into one plan per
+     slice before any code — see "One plan, one slice" in the rules below. -->
 
 1. <step — be specific about what code changes> (touches: `file_a.py`)
 2. <step> (touches: `file_b.py`)
@@ -73,6 +73,23 @@ DRAFT | APPROVED | IN PROGRESS | DONE
 - Unit tests: <what cases>
 - Integration tests: <if any>
 - Manual verification: <if needed>
+
+## Verification checklist
+
+<!-- What must be true before this plan is done. Implementer ticks these as it goes;
+     an unticked box at handoff is an unfinished plan, not an oversight. -->
+- [ ] <observable outcome, e.g. "POST /orders returns 201 with the created id">
+- [ ] `{{TEST_CMD}}` green
+- [ ] `{{LINT_CMD}}` clean
+
+## Self-review
+
+<!-- Planner writes one line per angle, naming the answer. 「clean」 with nothing
+     beside it is a verdict asserted rather than reached. -->
+- **Simpler alternative**: <the one you rejected, and why>
+- **Blast radius**: <what else this touches>
+- **Failure mode**: <what breaks first if the approach is wrong>
+- **Reversibility**: <how hard this is to back out>
 
 ## Risks and open questions
 
@@ -156,7 +173,7 @@ Test name: `test_<descriptive_name>`
 
 A `PLAN.md` covers **one vertical slice** — a narrow but complete path through every layer that lands demoable on its own. Its implementation steps sequence work *inside* that slice, so naming files there is correct.
 
-The moment a plan would span several slices — "build the schema, then the services, then the screens" — it has outgrown this file. Nothing is verifiable until the last step, so a wrong decision in step 1 surfaces days late. Break it into tickets first, one plan per ticket.
+The moment a plan would span several slices — "build the schema, then the services, then the screens" — it has outgrown this file. Nothing is verifiable until the last step, so a wrong decision in step 1 surfaces days late. Split it into one plan per vertical slice, each landing demoable on its own, and run them in dependency order.
 
 Signals a plan has outgrown one slice: more than one user-visible behaviour delivered; steps grouped by layer rather than by behaviour; no point mid-plan where you could stop and demo something.
 
